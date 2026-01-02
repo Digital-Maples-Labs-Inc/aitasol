@@ -1,0 +1,42 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Helper function to check user role
+    function isAdmin() {
+      return request.auth != null && 
+        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin';
+    }
+    
+    function isEditor() {
+      return request.auth != null && 
+        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role in ['admin', 'editor'];
+    }
+    
+    // Pages - public read, authenticated write for editors
+    match /pages/{pageId} {
+      allow read: if true;
+      allow create, update: if isEditor();
+      allow delete: if isAdmin();
+    }
+    
+    // Blogs - public read published, authenticated write for editors
+    match /blogs/{blogId} {
+      allow read: if resource.data.status == 'published' || isEditor();
+      allow create, update: if isEditor();
+      allow delete: if isAdmin();
+    }
+    
+    // Users - read own, admin write
+    match /users/{userId} {
+      allow read: if request.auth != null && request.auth.uid == userId;
+      allow create, update, delete: if isAdmin();
+    }
+    
+    // Media metadata (optional)
+    match /media/{mediaId} {
+      allow read: if true;
+      allow write: if isEditor();
+    }
+  }
+}
+
