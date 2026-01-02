@@ -9,6 +9,7 @@
     "web": "expo start --web",
     "build": "expo export:web",
     "build:web": "expo export:web",
+    "export": "expo export:web",
     "type-check": "tsc --noEmit"
   },
   "dependencies": {
