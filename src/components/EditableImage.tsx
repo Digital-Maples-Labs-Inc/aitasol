@@ -60,12 +60,12 @@ export const EditableImage: React.FC<EditableImageProps> = ({
           0.8
         );
 
-        // Upload to Firebase Storage
+        // Save image as data URL (local assets approach)
         const fileName = `image_${Date.now()}.jpg`;
-        const downloadURL = await uploadImage(compressedBlob, fileName);
+        const imageUrl = await uploadImage(compressedBlob, fileName);
 
         // Save to page/blog
-        await onSave(downloadURL);
+        await onSave(imageUrl);
         setIsEditing(false);
       } catch (error) {
         console.error('Error uploading image:', error);

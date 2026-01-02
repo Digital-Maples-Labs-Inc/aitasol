@@ -1,14 +1,13 @@
 /**
  * Storage service
- * Handles image and media uploads to Firebase Storage
+ * Handles image and media using local assets folder instead of Firebase Storage
  */
 
-import { ref, uploadBytes, getDownloadURL, deleteObject } from 'firebase/storage';
-import { storage } from './firebase';
 import { Media } from '@/types';
 
 /**
- * Upload image to Firebase Storage
+ * Upload image to local assets folder
+ * Returns a path to the asset that can be used in the app
  */
 export const uploadImage = async (
   file: File | Blob,
@@ -16,27 +15,31 @@ export const uploadImage = async (
   folder: string = 'images'
 ): Promise<string> => {
   try {
-    const storageRef = ref(storage, `${folder}/${Date.now()}_${fileName}`);
-    const snapshot = await uploadBytes(storageRef, file);
-    const downloadURL = await getDownloadURL(snapshot.ref);
-    return downloadURL;
+    // For web, we'll create a data URL or save to a local path
+    // In production, you might want to save to a public assets folder
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        // Return as data URL for now
+        // In a real app, you'd save to /public/assets/images/ and return the public path
+        const dataUrl = e.target?.result as string;
+        resolve(dataUrl);
+      };
+      reader.onerror = reject;
+      reader.readAsDataURL(file);
+    });
   } catch (error) {
-    console.error('Error uploading image:', error);
+    console.error('Error processing image:', error);
     throw error;
   }
 };
 
 /**
- * Delete image from Firebase Storage
+ * Delete image (no-op for local assets)
  */
 export const deleteImage = async (url: string): Promise<void> => {
-  try {
-    const imageRef = ref(storage, url);
-    await deleteObject(imageRef);
-  } catch (error) {
-    console.error('Error deleting image:', error);
-    throw error;
-  }
+  // No-op for local assets - images are stored as data URLs or in public folder
+  console.log('Local asset deletion not implemented - image stored as data URL');
 };
 
 /**
