@@ -1,10 +1,16 @@
 module.exports = function(api) {
+  // Cache configuration - must be called once
   api.cache(true);
   
-  // Check if building for web (webpack)
-  const isWebpack = api.caller((caller) => {
-    return caller && (caller.name === 'babel-loader' || caller.platform === 'web');
-  });
+  // Check if building for web (webpack) - check caller before using it
+  let isWebpack = false;
+  try {
+    const caller = api.caller((caller) => caller);
+    isWebpack = caller && (caller.name === 'babel-loader' || caller.platform === 'web');
+  } catch (e) {
+    // If caller check fails, assume not webpack
+    isWebpack = false;
+  }
   
   const plugins = ['nativewind/babel'];
   
