@@ -29,6 +29,26 @@ export const Footer: React.FC = () => {
 
   const footerStyles = createFooterStyles(colors);
 
+  // Add web-specific styles for grid background pattern
+  React.useEffect(() => {
+    if (Platform.OS === 'web' && typeof document !== 'undefined') {
+      const styleId = 'footer-grid-pattern-style';
+      if (!document.getElementById(styleId)) {
+        const style = document.createElement('style');
+        style.id = styleId;
+        style.textContent = `
+          .footer-grid-pattern {
+            background-image:
+              linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+              linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+            background-size: 60px 60px;
+          }
+        `;
+        document.head.appendChild(style);
+      }
+    }
+  }, []);
+
   return (
     <View 
       style={footerStyles.footer}
@@ -137,20 +157,22 @@ const createFooterStyles = (colors: any) => {
       ...(isWeb ? {
         flexDirection: 'row',
         flexWrap: 'wrap',
-        justifyContent: 'space-between',
+        justifyContent: 'flex-start',
       } : {
         flexDirection: 'column',
       }),
-      gap: isWeb ? 80 : 40,
     },
-  footerBrand: {
-    ...(isWeb ? {
-      flex: 2,
-      maxWidth: 380,
-    } : {
-      width: '100%',
-    }),
-  },
+    footerBrand: {
+      ...(isWeb ? {
+        width: '30%',
+        minWidth: 300,
+        maxWidth: 380,
+        marginRight: 60,
+      } : {
+        width: '100%',
+        marginBottom: 40,
+      }),
+    },
   logo: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -194,8 +216,9 @@ const createFooterStyles = (colors: any) => {
   },
   footerCol: {
     ...(isWeb ? {
-      flex: 1,
+      width: '18%',
       minWidth: 150,
+      marginRight: 20,
     } : {
       width: '100%',
       marginBottom: 32,
