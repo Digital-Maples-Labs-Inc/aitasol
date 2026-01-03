@@ -4,17 +4,19 @@
  */
 
 import React, { useEffect, useState } from 'react';
-import { View, Text, ScrollView, StyleSheet, ActivityIndicator } from 'react-native';
+import { View, Text, ScrollView, StyleSheet, ActivityIndicator, TouchableOpacity } from 'react-native';
 import { useRouter } from 'expo-router';
 import { getPageBySlug, updatePageSection } from '@/services/pageService';
 import { EditableText } from '@/components/EditableText';
 import { EditableImage } from '@/components/EditableImage';
 import { Page, PageSection } from '@/types';
+import { useAuth } from '@/contexts/AuthContext';
 
 export const HomeScreen: React.FC = () => {
   const [page, setPage] = useState<Page | null>(null);
   const [loading, setLoading] = useState(true);
   const router = useRouter();
+  const { user, loading: authLoading } = useAuth();
 
   useEffect(() => {
     loadPage();
@@ -94,6 +96,19 @@ export const HomeScreen: React.FC = () => {
         );
 
       case 'cta':
+        // Show login button if not logged in, otherwise show editable CTA
+        if (!authLoading && !user) {
+          return (
+            <View key={section.id} style={styles.ctaContainer}>
+              <TouchableOpacity
+                style={styles.loginButton}
+                onPress={() => router.push('/dmlabs')}
+              >
+                <Text style={styles.loginButtonText}>Login</Text>
+              </TouchableOpacity>
+            </View>
+          );
+        }
         return (
           <View key={section.id} style={styles.ctaContainer}>
             <EditableText
@@ -176,6 +191,19 @@ const styles = StyleSheet.create({
   ctaButton: {
     paddingHorizontal: 32,
     paddingVertical: 16,
+  },
+  loginButton: {
+    backgroundColor: '#007AFF',
+    paddingHorizontal: 32,
+    paddingVertical: 16,
+    borderRadius: 8,
+    alignItems: 'center',
+    minWidth: 150,
+  },
+  loginButtonText: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: '600',
   },
   errorText: {
     fontSize: 16,

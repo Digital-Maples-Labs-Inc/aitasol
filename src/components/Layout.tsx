@@ -55,13 +55,11 @@ export const Layout: React.FC<LayoutProps> = ({ children, showHeader = true }) =
                   <Text style={styles.navLink}>Sign Out</Text>
                 </TouchableOpacity>
               </>
-            ) : (
-              !loading && (
-                <TouchableOpacity onPress={() => router.push('/dmlabs')}>
-                  <Text style={styles.navLink}>Login</Text>
-                </TouchableOpacity>
-              )
-            )}
+            ) : !loading ? (
+              <TouchableOpacity onPress={() => router.push('/dmlabs')}>
+                <Text style={styles.navLink}>Login</Text>
+              </TouchableOpacity>
+            ) : null}
           </View>
         </View>
       )}
