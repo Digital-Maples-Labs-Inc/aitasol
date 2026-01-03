@@ -2,13 +2,18 @@ module.exports = function(api) {
   api.cache(true);
   
   // Detect if we're building for web
-  const isWeb = process.env.EXPO_PUBLIC_PLATFORM === 'web' || 
-                process.env.BABEL_ENV === 'web' ||
-                (api.caller && api.caller((caller) => caller?.name === 'babel-loader'));
+  // Check environment variables first, then use caller as fallback
+  let isWeb = false;
   
-  const plugins = [
-    'nativewind/babel',
-  ];
+  if (process.env.EXPO_PUBLIC_PLATFORM === 'web' || process.env.BABEL_ENV === 'web') {
+    isWeb = true;
+  } else if (api.caller) {
+    // Only call api.caller once
+    const caller = api.caller((caller) => caller);
+    isWeb = caller && (caller.name === 'babel-loader' || caller.platform === 'web');
+  }
+  
+  const plugins = ['nativewind/babel'];
   
   // react-native-reanimated plugin causes issues with webpack
   // Only include it for native builds
