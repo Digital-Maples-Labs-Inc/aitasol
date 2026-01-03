@@ -74,3 +74,6 @@ export interface AuthContextType {
   signUp: (email: string, password: string, role?: UserRole) => Promise<void>;
 }
 
+// Re-export theme types
+export * from './theme';
+

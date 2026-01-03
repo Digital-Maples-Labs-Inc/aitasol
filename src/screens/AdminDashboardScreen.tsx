@@ -57,16 +57,28 @@ export const AdminDashboardScreen: React.FC = () => {
         </TouchableOpacity>
 
         {user?.role === 'admin' && (
-          <TouchableOpacity
-            style={styles.card}
-            onPress={() => router.push('/admin/users')}
-          >
-            <Text style={styles.cardIcon}>👥</Text>
-            <Text style={styles.cardTitle}>Manage Users</Text>
-            <Text style={styles.cardDescription}>
-              Add and manage editors and admins
-            </Text>
-          </TouchableOpacity>
+          <>
+            <TouchableOpacity
+              style={styles.card}
+              onPress={() => router.push('/admin/theme')}
+            >
+              <Text style={styles.cardIcon}>🎨</Text>
+              <Text style={styles.cardTitle}>Theme & Colors</Text>
+              <Text style={styles.cardDescription}>
+                Customize global colors and styling
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.card}
+              onPress={() => router.push('/admin/users')}
+            >
+              <Text style={styles.cardIcon}>👥</Text>
+              <Text style={styles.cardTitle}>Manage Users</Text>
+              <Text style={styles.cardDescription}>
+                Add and manage editors and admins
+              </Text>
+            </TouchableOpacity>
+          </>
         )}
       </View>
     </ScrollView>

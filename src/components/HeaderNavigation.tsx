@@ -20,6 +20,7 @@ import Animated, {
   withSequence,
 } from 'react-native-reanimated';
 import { useAuth } from '@/contexts/AuthContext';
+import { useTheme } from '@/contexts/ThemeContext';
 
 interface NavLinkProps {
   label: string;
@@ -27,7 +28,13 @@ interface NavLinkProps {
   isActive?: boolean;
 }
 
-const NavLink: React.FC<NavLinkProps> = ({ label, onPress, isActive = false }) => {
+const NavLink: React.FC<NavLinkProps & { colors: any; styles: any }> = ({ 
+  label, 
+  onPress, 
+  isActive = false,
+  colors,
+  styles: navStyles,
+}) => {
   const scale = useSharedValue(1);
   const opacity = useSharedValue(1);
 
@@ -55,17 +62,17 @@ const NavLink: React.FC<NavLinkProps> = ({ label, onPress, isActive = false }) =
   };
 
   return (
-    <Animated.View style={[styles.navLinkContainer, animatedStyle]}>
+    <Animated.View style={[navStyles.navLinkContainer, animatedStyle]}>
       <TouchableOpacity
         onPress={onPress}
         onPressIn={handlePressIn}
         onPressOut={handlePressOut}
         activeOpacity={1}
       >
-        <Text style={[styles.navLink, isActive && styles.navLinkActive]}>
+        <Text style={[navStyles.navLink, isActive && navStyles.navLinkActive]}>
           {label}
         </Text>
-        {isActive && <View style={styles.activeIndicator} />}
+        {isActive && <View style={[navStyles.activeIndicator, { backgroundColor: colors.primary }]} />}
       </TouchableOpacity>
     </Animated.View>
   );
@@ -79,6 +86,7 @@ export const HeaderNavigation: React.FC<HeaderNavigationProps> = ({
   currentPath,
 }) => {
   const { user, signOut, loading } = useAuth();
+  const { colors } = useTheme();
   const logoScale = useSharedValue(1);
 
   const navigateTo = (path: string) => {
@@ -126,6 +134,8 @@ export const HeaderNavigation: React.FC<HeaderNavigationProps> = ({
     return false;
   };
 
+  const styles = createStyles(colors);
+
   return (
     <View style={styles.header}>
       <TouchableOpacity onPress={handleLogoPress} activeOpacity={0.8}>
@@ -139,11 +149,15 @@ export const HeaderNavigation: React.FC<HeaderNavigationProps> = ({
           label="Home"
           onPress={() => navigateTo('/')}
           isActive={isActive('/')}
+          colors={colors}
+          styles={styles}
         />
         <NavLink
           label="Blog"
           onPress={() => navigateTo('/blog')}
           isActive={isActive('/blog')}
+          colors={colors}
+          styles={styles}
         />
 
         {!loading && user ? (
@@ -152,6 +166,8 @@ export const HeaderNavigation: React.FC<HeaderNavigationProps> = ({
               label="Dashboard"
               onPress={() => navigateTo('/admin/dashboard')}
               isActive={isActive('/admin')}
+              colors={colors}
+              styles={styles}
             />
             <TouchableOpacity
               onPress={handleSignOut}
@@ -166,6 +182,8 @@ export const HeaderNavigation: React.FC<HeaderNavigationProps> = ({
             label="Login"
             onPress={() => navigateTo('/dmlabs')}
             isActive={isActive('/dmlabs')}
+            colors={colors}
+            styles={styles}
           />
         ) : null}
       </View>
@@ -173,7 +191,8 @@ export const HeaderNavigation: React.FC<HeaderNavigationProps> = ({
   );
 };
 
-const styles = StyleSheet.create({
+// Styles will be created dynamically with theme colors
+const createStyles = (colors: any) => StyleSheet.create({
   header: {
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -181,9 +200,9 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
     paddingVertical: 16,
     borderBottomWidth: 1,
-    borderBottomColor: '#e5e7eb',
-    backgroundColor: '#ffffff',
-    shadowColor: '#000',
+    borderBottomColor: colors.border,
+    backgroundColor: colors.background,
+    shadowColor: colors.shadow,
     shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.05,
     shadowRadius: 2,
@@ -197,7 +216,7 @@ const styles = StyleSheet.create({
   logo: {
     fontSize: 24,
     fontWeight: '700',
-    color: '#0099FF',
+    color: colors.primary,
     letterSpacing: -0.5,
   },
   nav: {
@@ -212,12 +231,12 @@ const styles = StyleSheet.create({
   },
   navLink: {
     fontSize: 15,
-    color: '#374151',
+    color: colors.textPrimary,
     fontWeight: '500',
     letterSpacing: 0.1,
   },
   navLinkActive: {
-    color: '#0099FF',
+    color: colors.primary,
     fontWeight: '600',
   },
   activeIndicator: {
@@ -226,21 +245,20 @@ const styles = StyleSheet.create({
     left: 12,
     right: 12,
     height: 2,
-    backgroundColor: '#0099FF',
     borderRadius: 1,
   },
   signOutButton: {
     marginLeft: 8,
     paddingHorizontal: 16,
     paddingVertical: 8,
-    backgroundColor: '#f3f4f6',
+    backgroundColor: colors.backgroundSecondary,
     borderRadius: 8,
     borderWidth: 1,
-    borderColor: '#e5e7eb',
+    borderColor: colors.border,
   },
   signOutText: {
     fontSize: 15,
-    color: '#374151',
+    color: colors.textPrimary,
     fontWeight: '500',
   },
 });
