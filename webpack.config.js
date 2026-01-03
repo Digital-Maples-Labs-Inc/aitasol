@@ -23,6 +23,21 @@ module.exports = async function (env, argv) {
     '@/contexts': path.resolve(__dirname, 'src/contexts'),
   };
 
+  // Ensure environment variables are available in the browser
+  const webpack = require('webpack');
+  config.plugins = config.plugins || [];
+  config.plugins.push(
+    new webpack.DefinePlugin({
+      'process.env.EXPO_PUBLIC_FIREBASE_API_KEY': JSON.stringify(process.env.EXPO_PUBLIC_FIREBASE_API_KEY),
+      'process.env.EXPO_PUBLIC_FIREBASE_AUTH_DOMAIN': JSON.stringify(process.env.EXPO_PUBLIC_FIREBASE_AUTH_DOMAIN),
+      'process.env.EXPO_PUBLIC_FIREBASE_PROJECT_ID': JSON.stringify(process.env.EXPO_PUBLIC_FIREBASE_PROJECT_ID),
+      'process.env.EXPO_PUBLIC_FIREBASE_STORAGE_BUCKET': JSON.stringify(process.env.EXPO_PUBLIC_FIREBASE_STORAGE_BUCKET),
+      'process.env.EXPO_PUBLIC_FIREBASE_MESSAGING_SENDER_ID': JSON.stringify(process.env.EXPO_PUBLIC_FIREBASE_MESSAGING_SENDER_ID),
+      'process.env.EXPO_PUBLIC_FIREBASE_APP_ID': JSON.stringify(process.env.EXPO_PUBLIC_FIREBASE_APP_ID),
+      'process.env.EXPO_PUBLIC_FIREBASE_MEASUREMENT_ID': JSON.stringify(process.env.EXPO_PUBLIC_FIREBASE_MEASUREMENT_ID),
+    })
+  );
+
   // Add Node polyfills for browser
   // Try to use polyfills if installed, otherwise disable
   let cryptoPolyfill = false;
@@ -52,6 +67,7 @@ module.exports = async function (env, argv) {
     crypto: cryptoPolyfill,
     stream: streamPolyfill,
     buffer: bufferPolyfill,
+    vm: false, // Disable vm module for browser (used by asn1.js but not needed)
   };
 
   return config;
