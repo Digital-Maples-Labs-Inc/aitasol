@@ -15,7 +15,7 @@ interface LayoutProps {
 }
 
 export const Layout: React.FC<LayoutProps> = ({ children, showHeader = true }) => {
-  const { user, signOut } = useAuth();
+  const { user, signOut, loading } = useAuth();
   const router = useRouter();
 
   const handleSignOut = async () => {
@@ -26,6 +26,11 @@ export const Layout: React.FC<LayoutProps> = ({ children, showHeader = true }) =
       console.error('Error signing out:', error);
     }
   };
+
+  // Debug: Log user state
+  if (__DEV__) {
+    console.log('Layout - User state:', { user: !!user, loading, userId: user?.id });
+  }
 
   return (
     <View style={styles.container}>
@@ -41,7 +46,7 @@ export const Layout: React.FC<LayoutProps> = ({ children, showHeader = true }) =
             <TouchableOpacity onPress={() => router.push('/blog')}>
               <Text style={styles.navLink}>Blog</Text>
             </TouchableOpacity>
-            {user ? (
+            {!loading && user ? (
               <>
                 <TouchableOpacity onPress={() => router.push('/admin/dashboard')}>
                   <Text style={styles.navLink}>Dashboard</Text>
@@ -51,9 +56,11 @@ export const Layout: React.FC<LayoutProps> = ({ children, showHeader = true }) =
                 </TouchableOpacity>
               </>
             ) : (
-              <TouchableOpacity onPress={() => router.push('/dmlabs')}>
-                <Text style={styles.navLink}>Login</Text>
-              </TouchableOpacity>
+              !loading && (
+                <TouchableOpacity onPress={() => router.push('/dmlabs')}>
+                  <Text style={styles.navLink}>Login</Text>
+                </TouchableOpacity>
+              )
             )}
           </View>
         </View>
