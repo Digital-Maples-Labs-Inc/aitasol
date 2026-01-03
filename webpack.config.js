@@ -1,6 +1,6 @@
 /**
  * Webpack configuration for Expo web builds
- * Extends @expo/webpack-config to add path aliases
+ * Extends @expo/webpack-config to add path aliases and Node polyfills
  */
 
 const createWebpackConfigAsync = require('@expo/webpack-config');
@@ -21,6 +21,14 @@ module.exports = async function (env, argv) {
     '@/utils': path.resolve(__dirname, 'src/utils'),
     '@/hooks': path.resolve(__dirname, 'src/hooks'),
     '@/contexts': path.resolve(__dirname, 'src/contexts'),
+  };
+
+  // Add Node polyfills for browser
+  config.resolve.fallback = {
+    ...config.resolve.fallback,
+    crypto: require.resolve('crypto-browserify'),
+    stream: require.resolve('stream-browserify'),
+    buffer: require.resolve('buffer'),
   };
 
   return config;
