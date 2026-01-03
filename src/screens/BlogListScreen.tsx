@@ -17,7 +17,6 @@ import { Blog } from '@/types';
 import { format } from 'date-fns';
 import { Layout } from '@/components/Layout';
 import { blogListScreenStyles } from '@/styles/screens/BlogListScreen.styles';
-import { blogListScreenStyles } from '@/styles/screens/BlogListScreen.styles';
 
 export const BlogListScreen: React.FC = () => {
   const [blogs, setBlogs] = useState<Blog[]>([]);
