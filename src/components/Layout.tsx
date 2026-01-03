@@ -7,13 +7,19 @@
 import React, { ReactNode } from 'react';
 import { View, StyleSheet, Platform } from 'react-native';
 import { HeaderNavigation } from './HeaderNavigation';
+import { Footer } from './Footer';
 
 interface LayoutProps {
   children: ReactNode;
   showHeader?: boolean;
+  showFooter?: boolean;
 }
 
-export const Layout: React.FC<LayoutProps> = ({ children, showHeader = true }) => {
+export const Layout: React.FC<LayoutProps> = ({ 
+  children, 
+  showHeader = true,
+  showFooter = true,
+}) => {
   // Get current path for active link highlighting
   const currentPath =
     Platform.OS === 'web' && typeof window !== 'undefined'
@@ -24,6 +30,7 @@ export const Layout: React.FC<LayoutProps> = ({ children, showHeader = true }) =
     <View style={styles.container}>
       {showHeader && <HeaderNavigation currentPath={currentPath} />}
       <View style={styles.content}>{children}</View>
+      {showFooter && <Footer />}
     </View>
   );
 };
