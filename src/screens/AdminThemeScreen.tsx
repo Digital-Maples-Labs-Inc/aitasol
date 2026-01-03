@@ -727,6 +727,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     marginBottom: 24,
     backgroundColor: '#fff',
+    color: '#666',
   },
   colorsSection: {
     maxHeight: 600,
@@ -767,6 +768,7 @@ const styles = StyleSheet.create({
     padding: 10,
     fontSize: 14,
     backgroundColor: '#fff',
+    color: '#666',
   },
   tabs: {
     flexDirection: 'row',
@@ -825,6 +827,7 @@ const styles = StyleSheet.create({
     padding: 10,
     fontSize: 14,
     backgroundColor: '#fff',
+    color: '#666',
   },
   buttonRow: {
     flexDirection: 'row',

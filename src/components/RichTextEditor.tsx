@@ -88,6 +88,7 @@ const styles = StyleSheet.create({
     padding: 12,
     fontSize: 16,
     lineHeight: 24,
+    color: '#666',
   },
   htmlHint: {
     backgroundColor: '#fff3cd',

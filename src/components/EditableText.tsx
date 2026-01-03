@@ -194,6 +194,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     minHeight: 100,
     textAlignVertical: 'top',
+    color: '#666',
   },
   headingInput: {
     fontSize: 24,
