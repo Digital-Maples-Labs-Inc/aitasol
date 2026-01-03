@@ -28,7 +28,6 @@ const linking = {
       Blog: '/blog',
       BlogDetail: '/blog/:slug',
       DMLabs: '/dmlabs',
-      Login: '/dmlabs', // Also map /dmlabs to Login route
       AdminDashboard: '/admin/dashboard',
       AdminPages: '/admin/pages',
       AdminBlogs: '/admin/blogs',
