@@ -23,6 +23,7 @@ import {
   deleteTheme,
 } from '@/services/themeService';
 import { useRequireAuth } from '@/hooks/useRequireAuth';
+import { useAuth } from '@/contexts/AuthContext';
 
 interface ColorInputProps {
   label: string;
@@ -106,6 +107,7 @@ const TypographyInput: React.FC<TypographyInputProps> = ({
 
 export const AdminThemeScreen: React.FC = () => {
   const { colors: currentColors, typography: currentTypography, refreshTheme } = useTheme();
+  const { user } = useAuth();
   const [themes, setThemes] = useState<Theme[]>([]);
   const [loading, setLoading] = useState(true);
   const [editingTheme, setEditingTheme] = useState<Theme | null>(null);
@@ -115,7 +117,7 @@ export const AdminThemeScreen: React.FC = () => {
   const [saving, setSaving] = useState(false);
   const [activeTab, setActiveTab] = useState<'colors' | 'typography'>('colors');
 
-  useRequireAuth();
+  useRequireAuth('admin');
 
   useEffect(() => {
     loadThemes();
@@ -175,15 +177,37 @@ export const AdminThemeScreen: React.FC = () => {
         isActive: editingTheme?.isActive || false,
       };
 
+      // Debug: Log user info before saving
+      console.log('Saving theme - User info:', {
+        uid: user?.uid,
+        email: user?.email,
+        role: user?.role,
+        isAdmin: user?.role === 'admin',
+      });
+
       await saveTheme(themeData);
       await loadThemes();
       await refreshTheme();
       
       Alert.alert('Success', 'Theme saved successfully!');
       setEditingTheme(null);
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error saving theme:', error);
-      Alert.alert('Error', 'Failed to save theme');
+      console.error('Error details:', {
+        code: error?.code,
+        message: error?.message,
+        userRole: user?.role,
+        userUid: user?.uid,
+      });
+      
+      const errorMessage = error?.message || 'Failed to save theme';
+      let detailedMessage = errorMessage;
+      
+      if (error?.code === 'permission-denied') {
+        detailedMessage = `Permission denied.\n\nPlease ensure:\n1. You are logged in as admin (current role: ${user?.role || 'unknown'})\n2. Your user document exists in Firestore with role: "admin"\n3. Try signing out and signing back in to refresh your token\n4. Check browser console for more details`;
+      }
+      
+      Alert.alert('Error', detailedMessage);
     } finally {
       setSaving(false);
     }
