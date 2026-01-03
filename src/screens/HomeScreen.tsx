@@ -175,6 +175,7 @@ const styles = StyleSheet.create({
   },
   content: {
     padding: 20,
+    paddingBottom: Platform.OS === 'web' ? 60 : 20, // Extra padding for footer
   },
   heading: {
     fontSize: 32,
