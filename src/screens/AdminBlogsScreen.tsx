@@ -73,14 +73,17 @@ export const AdminBlogsScreen: React.FC = () => {
 
   if (loading) {
     return (
-      <View style={adminBlogsScreenStyles.loadingContainer}>
-        <ActivityIndicator size="large" color="#007AFF" />
-      </View>
+      <Layout>
+        <View style={adminBlogsScreenStyles.loadingContainer}>
+          <ActivityIndicator size="large" color="#007AFF" />
+        </View>
+      </Layout>
     );
   }
 
   return (
-    <ScrollView style={adminBlogsScreenStyles.container}>
+    <Layout>
+      <ScrollView style={adminBlogsScreenStyles.container}>
       <View style={adminBlogsScreenStyles.header}>
         <Text style={adminBlogsScreenStyles.title}>Manage Blogs</Text>
         <TouchableOpacity

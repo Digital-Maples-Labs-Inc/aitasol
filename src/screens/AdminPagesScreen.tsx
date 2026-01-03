@@ -59,14 +59,17 @@ export const AdminPagesScreen: React.FC = () => {
 
   if (loading) {
     return (
-      <View style={adminPagesScreenStyles.loadingContainer}>
-        <ActivityIndicator size="large" color="#007AFF" />
-      </View>
+      <Layout>
+        <View style={adminPagesScreenStyles.loadingContainer}>
+          <ActivityIndicator size="large" color="#007AFF" />
+        </View>
+      </Layout>
     );
   }
 
   return (
-    <ScrollView style={adminPagesScreenStyles.container}>
+    <Layout>
+      <ScrollView style={adminPagesScreenStyles.container}>
       <View style={adminPagesScreenStyles.header}>
         <Text style={adminPagesScreenStyles.title}>Manage Pages</Text>
         <TouchableOpacity
@@ -116,6 +119,7 @@ export const AdminPagesScreen: React.FC = () => {
         )}
       </View>
     </ScrollView>
+    </Layout>
   );
 };
 
