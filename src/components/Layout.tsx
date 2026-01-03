@@ -4,10 +4,9 @@
  */
 
 import React, { ReactNode } from 'react';
-import { View, StyleSheet } from 'react-native';
+import { View, StyleSheet, Platform } from 'react-native';
 import { useAuth } from '@/contexts/AuthContext';
 import { TouchableOpacity, Text } from 'react-native';
-import { Link, useRouter } from 'expo-router';
 
 interface LayoutProps {
   children: ReactNode;
@@ -16,14 +15,21 @@ interface LayoutProps {
 
 export const Layout: React.FC<LayoutProps> = ({ children, showHeader = true }) => {
   const { user, signOut, loading } = useAuth();
-  const router = useRouter();
 
   const handleSignOut = async () => {
     try {
       await signOut();
-      router.replace('/');
+      if (Platform.OS === 'web' && typeof window !== 'undefined') {
+        window.location.href = '/';
+      }
     } catch (error) {
       console.error('Error signing out:', error);
+    }
+  };
+
+  const navigateTo = (path: string) => {
+    if (Platform.OS === 'web' && typeof window !== 'undefined') {
+      window.location.href = path;
     }
   };
 
@@ -40,33 +46,25 @@ export const Layout: React.FC<LayoutProps> = ({ children, showHeader = true }) =
             <Text style={styles.logo}>Aitasol</Text>
           </TouchableOpacity>
           <View style={styles.nav}>
-            <Link href="/" asChild>
-              <TouchableOpacity>
-                <Text style={styles.navLink}>Home</Text>
-              </TouchableOpacity>
-            </Link>
-            <Link href="/blog" asChild>
-              <TouchableOpacity>
-                <Text style={styles.navLink}>Blog</Text>
-              </TouchableOpacity>
-            </Link>
+            <TouchableOpacity onPress={() => navigateTo('/')}>
+              <Text style={styles.navLink}>Home</Text>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={() => navigateTo('/blog')}>
+              <Text style={styles.navLink}>Blog</Text>
+            </TouchableOpacity>
             {!loading && user ? (
               <>
-                <Link href="/admin/dashboard" asChild>
-                  <TouchableOpacity>
-                    <Text style={styles.navLink}>Dashboard</Text>
-                  </TouchableOpacity>
-                </Link>
+                <TouchableOpacity onPress={() => navigateTo('/admin/dashboard')}>
+                  <Text style={styles.navLink}>Dashboard</Text>
+                </TouchableOpacity>
                 <TouchableOpacity onPress={handleSignOut}>
                   <Text style={styles.navLink}>Sign Out</Text>
                 </TouchableOpacity>
               </>
             ) : !loading ? (
-              <Link href="/dmlabs" asChild>
-                <TouchableOpacity>
-                  <Text style={styles.navLink}>Login</Text>
-                </TouchableOpacity>
-              </Link>
+              <TouchableOpacity onPress={() => navigateTo('/dmlabs')}>
+                <Text style={styles.navLink}>Login</Text>
+              </TouchableOpacity>
             ) : null}
           </View>
         </View>

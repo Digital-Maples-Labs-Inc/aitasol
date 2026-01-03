@@ -4,8 +4,7 @@
  */
 
 import React, { useEffect, useState } from 'react';
-import { View, Text, ScrollView, StyleSheet, ActivityIndicator, TouchableOpacity } from 'react-native';
-import { Link } from 'expo-router';
+import { View, Text, ScrollView, StyleSheet, ActivityIndicator, TouchableOpacity, Platform } from 'react-native';
 import { getPageBySlug, updatePageSection } from '@/services/pageService';
 import { EditableText } from '@/components/EditableText';
 import { EditableImage } from '@/components/EditableImage';
@@ -99,11 +98,17 @@ export const HomeScreen: React.FC = () => {
         if (!authLoading && !user) {
           return (
             <View key={section.id} style={styles.ctaContainer}>
-              <Link href="/dmlabs" asChild>
-                <TouchableOpacity style={styles.loginButton}>
-                  <Text style={styles.loginButtonText}>Login</Text>
-                </TouchableOpacity>
-              </Link>
+              <TouchableOpacity
+                style={styles.loginButton}
+                onPress={() => {
+                  // Use window.location for web, works reliably
+                  if (Platform.OS === 'web' && typeof window !== 'undefined') {
+                    window.location.href = '/dmlabs';
+                  }
+                }}
+              >
+                <Text style={styles.loginButtonText}>Login</Text>
+              </TouchableOpacity>
             </View>
           );
         }
