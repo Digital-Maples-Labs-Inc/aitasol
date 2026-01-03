@@ -24,11 +24,34 @@ module.exports = async function (env, argv) {
   };
 
   // Add Node polyfills for browser
+  // Try to use polyfills if installed, otherwise disable
+  let cryptoPolyfill = false;
+  let streamPolyfill = false;
+  let bufferPolyfill = false;
+  
+  try {
+    cryptoPolyfill = require.resolve('crypto-browserify');
+  } catch (e) {
+    console.log('crypto-browserify not installed, using fallback');
+  }
+  
+  try {
+    streamPolyfill = require.resolve('stream-browserify');
+  } catch (e) {
+    console.log('stream-browserify not installed, using fallback');
+  }
+  
+  try {
+    bufferPolyfill = require.resolve('buffer');
+  } catch (e) {
+    console.log('buffer not installed, using fallback');
+  }
+  
   config.resolve.fallback = {
     ...config.resolve.fallback,
-    crypto: require.resolve('crypto-browserify'),
-    stream: require.resolve('stream-browserify'),
-    buffer: require.resolve('buffer'),
+    crypto: cryptoPolyfill,
+    stream: streamPolyfill,
+    buffer: bufferPolyfill,
   };
 
   return config;
