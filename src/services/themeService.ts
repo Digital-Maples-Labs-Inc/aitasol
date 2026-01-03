@@ -15,7 +15,7 @@ import {
   serverTimestamp,
 } from 'firebase/firestore';
 import { db } from './firebase';
-import { Theme, ThemeColors } from '@/types/theme';
+import { Theme, ThemeColors, Typography } from '@/types/theme';
 
 /**
  * Get active theme
@@ -35,6 +35,7 @@ export const getActiveTheme = async (): Promise<Theme | null> => {
       id: querySnapshot.docs[0].id,
       name: docData.name || 'Default Theme',
       colors: docData.colors as ThemeColors,
+      typography: docData.typography as Typography,
       isActive: docData.isActive || false,
       updatedAt: docData.updatedAt?.toDate() || new Date(),
       createdAt: docData.createdAt?.toDate() || new Date(),
@@ -62,6 +63,7 @@ export const getThemeById = async (themeId: string): Promise<Theme | null> => {
       id: themeDoc.id,
       name: docData.name || 'Default Theme',
       colors: docData.colors as ThemeColors,
+      typography: docData.typography as Typography,
       isActive: docData.isActive || false,
       updatedAt: docData.updatedAt?.toDate() || new Date(),
       createdAt: docData.createdAt?.toDate() || new Date(),
@@ -86,6 +88,7 @@ export const getAllThemes = async (): Promise<Theme[]> => {
         id: doc.id,
         name: data.name || 'Default Theme',
         colors: data.colors as ThemeColors,
+        typography: data.typography as Typography,
         isActive: data.isActive || false,
         updatedAt: data.updatedAt?.toDate() || new Date(),
         createdAt: data.createdAt?.toDate() || new Date(),
@@ -101,12 +104,13 @@ export const getAllThemes = async (): Promise<Theme[]> => {
  * Create or update theme
  */
 export const saveTheme = async (
-  theme: Partial<Theme> & { colors: ThemeColors; name: string }
+  theme: Partial<Theme> & { colors: ThemeColors; typography: Typography; name: string }
 ): Promise<string> => {
   try {
     const themeData = {
       name: theme.name,
       colors: theme.colors,
+      typography: theme.typography,
       isActive: theme.isActive ?? false,
       updatedAt: serverTimestamp(),
       ...(theme.id ? {} : { createdAt: serverTimestamp() }),

@@ -33,6 +33,19 @@ try {
 
 const db = admin.firestore();
 
+// Default typography
+const defaultTypography = {
+  fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
+  h1: { fontSize: 60, lineHeight: 1.2, fontWeight: '700' },
+  h2: { fontSize: 36, lineHeight: 1.2, fontWeight: '700' },
+  h3: { fontSize: 22, lineHeight: 1.2, fontWeight: '600' },
+  h4: { fontSize: 20, lineHeight: 1.2, fontWeight: '600' },
+  body: { fontSize: 18, lineHeight: 1.2, fontWeight: '400' },
+  quotes: { fontSize: 16, lineHeight: 1.2, fontWeight: '400', fontStyle: 'italic' },
+  subtext: { fontSize: 12, lineHeight: 1.2, fontWeight: '400' },
+  span: { fontSize: 14, lineHeight: 1.2, fontWeight: '400' },
+};
+
 // Default theme colors
 const defaultThemeColors = {
   primary: '#0099FF',
@@ -76,6 +89,7 @@ async function initTheme() {
     const themeData = {
       name: 'Default Theme',
       colors: defaultThemeColors,
+      typography: defaultTypography,
       isActive: true,
       createdAt: admin.firestore.FieldValue.serverTimestamp(),
       updatedAt: admin.firestore.FieldValue.serverTimestamp(),
@@ -87,6 +101,10 @@ async function initTheme() {
     console.log(`   Primary: ${defaultThemeColors.primary}`);
     console.log(`   Background: ${defaultThemeColors.background}`);
     console.log(`   Text Primary: ${defaultThemeColors.textPrimary}`);
+    console.log('\n📝 Typography initialized:');
+    console.log(`   Font Family: ${defaultTypography.fontFamily}`);
+    console.log(`   H1: ${defaultTypography.h1.fontSize}px / ${defaultTypography.h1.lineHeight}`);
+    console.log(`   Body: ${defaultTypography.body.fontSize}px / ${defaultTypography.body.lineHeight}`);
     console.log('\n✨ Theme is now active and ready to use!');
   } catch (error) {
     console.error('❌ Error initializing theme:', error);

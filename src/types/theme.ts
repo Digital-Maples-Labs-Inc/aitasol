@@ -36,10 +36,30 @@ export interface ThemeColors {
   info: string;         // Info state
 }
 
+export interface TypographyStyle {
+  fontSize: number;      // in pixels
+  lineHeight: number;    // multiplier (e.g., 1.2)
+  fontWeight?: string | number;
+  fontStyle?: 'normal' | 'italic';
+}
+
+export interface Typography {
+  fontFamily: string;
+  h1: TypographyStyle;
+  h2: TypographyStyle;
+  h3: TypographyStyle;
+  h4: TypographyStyle;
+  body: TypographyStyle;
+  quotes: TypographyStyle;
+  subtext: TypographyStyle;
+  span: TypographyStyle;
+}
+
 export interface Theme {
   id: string;
   name: string;
   colors: ThemeColors;
+  typography: Typography;
   isActive: boolean;
   createdAt: Date;
   updatedAt: Date;
@@ -66,5 +86,51 @@ export const defaultThemeColors: ThemeColors = {
   warning: '#F59E0B',
   error: '#EF4444',
   info: '#3B82F6',
+};
+
+// Default typography (Inter font with specified styles)
+export const defaultTypography: Typography = {
+  fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
+  h1: {
+    fontSize: 60,
+    lineHeight: 1.2,
+    fontWeight: '700',
+  },
+  h2: {
+    fontSize: 36,
+    lineHeight: 1.2,
+    fontWeight: '700',
+  },
+  h3: {
+    fontSize: 22,
+    lineHeight: 1.2,
+    fontWeight: '600',
+  },
+  h4: {
+    fontSize: 20,
+    lineHeight: 1.2,
+    fontWeight: '600',
+  },
+  body: {
+    fontSize: 18,
+    lineHeight: 1.2,
+    fontWeight: '400',
+  },
+  quotes: {
+    fontSize: 16,
+    lineHeight: 1.2,
+    fontWeight: '400',
+    fontStyle: 'italic',
+  },
+  subtext: {
+    fontSize: 12,
+    lineHeight: 1.2,
+    fontWeight: '400',
+  },
+  span: {
+    fontSize: 14,
+    lineHeight: 1.2,
+    fontWeight: '400',
+  },
 };
 

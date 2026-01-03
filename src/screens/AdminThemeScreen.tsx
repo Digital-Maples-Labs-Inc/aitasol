@@ -15,7 +15,7 @@ import {
   Alert,
 } from 'react-native';
 import { useTheme } from '@/contexts/ThemeContext';
-import { Theme, ThemeColors } from '@/types/theme';
+import { Theme, ThemeColors, Typography, defaultTypography } from '@/types/theme';
 import {
   getAllThemes,
   saveTheme,
@@ -48,14 +48,72 @@ const ColorInput: React.FC<ColorInputProps> = ({ label, value, onChange }) => {
   );
 };
 
+interface TypographyInputProps {
+  label: string;
+  fontSize: number;
+  lineHeight: number;
+  fontWeight?: string | number;
+  onFontSizeChange: (value: number) => void;
+  onLineHeightChange: (value: number) => void;
+  onFontWeightChange?: (value: string) => void;
+}
+
+const TypographyInput: React.FC<TypographyInputProps> = ({
+  label,
+  fontSize,
+  lineHeight,
+  fontWeight,
+  onFontSizeChange,
+  onLineHeightChange,
+  onFontWeightChange,
+}) => {
+  return (
+    <View style={styles.typographyInput}>
+      <Text style={styles.typographyLabel}>{label}</Text>
+      <View style={styles.typographyRow}>
+        <View style={styles.typographyField}>
+          <Text style={styles.fieldLabel}>Size (px)</Text>
+          <TextInput
+            style={styles.numberInput}
+            value={fontSize.toString()}
+            onChangeText={(val) => onFontSizeChange(parseInt(val) || 0)}
+            keyboardType="numeric"
+          />
+        </View>
+        <View style={styles.typographyField}>
+          <Text style={styles.fieldLabel}>Line Height</Text>
+          <TextInput
+            style={styles.numberInput}
+            value={lineHeight.toString()}
+            onChangeText={(val) => onLineHeightChange(parseFloat(val) || 1.2)}
+            keyboardType="numeric"
+          />
+        </View>
+        {onFontWeightChange && (
+          <View style={styles.typographyField}>
+            <Text style={styles.fieldLabel}>Weight</Text>
+            <TextInput
+              style={styles.numberInput}
+              value={fontWeight?.toString() || '400'}
+              onChangeText={onFontWeightChange}
+            />
+          </View>
+        )}
+      </View>
+    </View>
+  );
+};
+
 export const AdminThemeScreen: React.FC = () => {
-  const { colors: currentColors, refreshTheme } = useTheme();
+  const { colors: currentColors, typography: currentTypography, refreshTheme } = useTheme();
   const [themes, setThemes] = useState<Theme[]>([]);
   const [loading, setLoading] = useState(true);
   const [editingTheme, setEditingTheme] = useState<Theme | null>(null);
   const [themeColors, setThemeColors] = useState<ThemeColors>(currentColors);
+  const [themeTypography, setThemeTypography] = useState<Typography>(currentTypography);
   const [themeName, setThemeName] = useState('Default Theme');
   const [saving, setSaving] = useState(false);
+  const [activeTab, setActiveTab] = useState<'colors' | 'typography'>('colors');
 
   useRequireAuth();
 
@@ -81,9 +139,10 @@ export const AdminThemeScreen: React.FC = () => {
 
   const createDefaultTheme = async () => {
     try {
-      const defaultTheme: Partial<Theme> & { colors: ThemeColors; name: string } = {
+      const defaultTheme: Partial<Theme> & { colors: ThemeColors; typography: Typography; name: string } = {
         name: 'Default Theme',
         colors: currentColors,
+        typography: currentTypography,
         isActive: true,
       };
       await saveTheme(defaultTheme);
@@ -96,6 +155,7 @@ export const AdminThemeScreen: React.FC = () => {
   const handleEditTheme = (theme: Theme) => {
     setEditingTheme(theme);
     setThemeColors(theme.colors);
+    setThemeTypography(theme.typography || defaultTypography);
     setThemeName(theme.name);
   };
 
@@ -107,10 +167,11 @@ export const AdminThemeScreen: React.FC = () => {
 
     setSaving(true);
     try {
-      const themeData: Partial<Theme> & { colors: ThemeColors; name: string } = {
+      const themeData: Partial<Theme> & { colors: ThemeColors; typography: Typography; name: string } = {
         id: editingTheme?.id,
         name: themeName,
         colors: themeColors,
+        typography: themeTypography,
         isActive: editingTheme?.isActive || false,
       };
 
@@ -128,6 +189,13 @@ export const AdminThemeScreen: React.FC = () => {
     }
   };
 
+  const handleCreateNew = () => {
+    setEditingTheme(null);
+    setThemeColors(currentColors);
+    setThemeTypography(currentTypography);
+    setThemeName('New Theme');
+  };
+
   const handleSetActive = async (themeId: string) => {
     try {
       await setActiveTheme(themeId);
@@ -138,12 +206,6 @@ export const AdminThemeScreen: React.FC = () => {
       console.error('Error setting active theme:', error);
       Alert.alert('Error', 'Failed to activate theme');
     }
-  };
-
-  const handleCreateNew = () => {
-    setEditingTheme(null);
-    setThemeColors(currentColors);
-    setThemeName('New Theme');
   };
 
   if (loading) {
@@ -179,6 +241,27 @@ export const AdminThemeScreen: React.FC = () => {
             placeholder="Theme Name"
           />
 
+          {/* Tabs */}
+          <View style={styles.tabs}>
+            <TouchableOpacity
+              style={[styles.tab, activeTab === 'colors' && styles.tabActive]}
+              onPress={() => setActiveTab('colors')}
+            >
+              <Text style={[styles.tabText, activeTab === 'colors' && styles.tabTextActive]}>
+                Colors
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={[styles.tab, activeTab === 'typography' && styles.tabActive]}
+              onPress={() => setActiveTab('typography')}
+            >
+              <Text style={[styles.tabText, activeTab === 'typography' && styles.tabTextActive]}>
+                Typography
+              </Text>
+            </TouchableOpacity>
+          </View>
+
+          {activeTab === 'colors' ? (
           <ScrollView style={styles.colorsSection}>
             <Text style={styles.subsectionTitle}>Primary Colors</Text>
             <ColorInput
@@ -325,6 +408,218 @@ export const AdminThemeScreen: React.FC = () => {
               }
             />
           </ScrollView>
+          ) : (
+          <ScrollView style={styles.colorsSection}>
+            <Text style={styles.subsectionTitle}>Font Family</Text>
+            <View style={styles.colorInput}>
+              <Text style={styles.colorLabel}>Font Family</Text>
+              <TextInput
+                style={styles.colorTextInput}
+                value={themeTypography.fontFamily}
+                onChangeText={(val) =>
+                  setThemeTypography({ ...themeTypography, fontFamily: val })
+                }
+                placeholder="Inter, sans-serif"
+              />
+            </View>
+
+            <Text style={styles.subsectionTitle}>Heading Styles</Text>
+            <TypographyInput
+              label="H1 - Heading 1"
+              fontSize={themeTypography.h1.fontSize}
+              lineHeight={themeTypography.h1.lineHeight}
+              fontWeight={themeTypography.h1.fontWeight}
+              onFontSizeChange={(val) =>
+                setThemeTypography({
+                  ...themeTypography,
+                  h1: { ...themeTypography.h1, fontSize: val },
+                })
+              }
+              onLineHeightChange={(val) =>
+                setThemeTypography({
+                  ...themeTypography,
+                  h1: { ...themeTypography.h1, lineHeight: val },
+                })
+              }
+              onFontWeightChange={(val) =>
+                setThemeTypography({
+                  ...themeTypography,
+                  h1: { ...themeTypography.h1, fontWeight: val },
+                })
+              }
+            />
+            <TypographyInput
+              label="H2 - Heading 2"
+              fontSize={themeTypography.h2.fontSize}
+              lineHeight={themeTypography.h2.lineHeight}
+              fontWeight={themeTypography.h2.fontWeight}
+              onFontSizeChange={(val) =>
+                setThemeTypography({
+                  ...themeTypography,
+                  h2: { ...themeTypography.h2, fontSize: val },
+                })
+              }
+              onLineHeightChange={(val) =>
+                setThemeTypography({
+                  ...themeTypography,
+                  h2: { ...themeTypography.h2, lineHeight: val },
+                })
+              }
+              onFontWeightChange={(val) =>
+                setThemeTypography({
+                  ...themeTypography,
+                  h2: { ...themeTypography.h2, fontWeight: val },
+                })
+              }
+            />
+            <TypographyInput
+              label="H3 - Heading 3"
+              fontSize={themeTypography.h3.fontSize}
+              lineHeight={themeTypography.h3.lineHeight}
+              fontWeight={themeTypography.h3.fontWeight}
+              onFontSizeChange={(val) =>
+                setThemeTypography({
+                  ...themeTypography,
+                  h3: { ...themeTypography.h3, fontSize: val },
+                })
+              }
+              onLineHeightChange={(val) =>
+                setThemeTypography({
+                  ...themeTypography,
+                  h3: { ...themeTypography.h3, lineHeight: val },
+                })
+              }
+              onFontWeightChange={(val) =>
+                setThemeTypography({
+                  ...themeTypography,
+                  h3: { ...themeTypography.h3, fontWeight: val },
+                })
+              }
+            />
+            <TypographyInput
+              label="H4 - Heading 4"
+              fontSize={themeTypography.h4.fontSize}
+              lineHeight={themeTypography.h4.lineHeight}
+              fontWeight={themeTypography.h4.fontWeight}
+              onFontSizeChange={(val) =>
+                setThemeTypography({
+                  ...themeTypography,
+                  h4: { ...themeTypography.h4, fontSize: val },
+                })
+              }
+              onLineHeightChange={(val) =>
+                setThemeTypography({
+                  ...themeTypography,
+                  h4: { ...themeTypography.h4, lineHeight: val },
+                })
+              }
+              onFontWeightChange={(val) =>
+                setThemeTypography({
+                  ...themeTypography,
+                  h4: { ...themeTypography.h4, fontWeight: val },
+                })
+              }
+            />
+
+            <Text style={styles.subsectionTitle}>Text Styles</Text>
+            <TypographyInput
+              label="Body"
+              fontSize={themeTypography.body.fontSize}
+              lineHeight={themeTypography.body.lineHeight}
+              fontWeight={themeTypography.body.fontWeight}
+              onFontSizeChange={(val) =>
+                setThemeTypography({
+                  ...themeTypography,
+                  body: { ...themeTypography.body, fontSize: val },
+                })
+              }
+              onLineHeightChange={(val) =>
+                setThemeTypography({
+                  ...themeTypography,
+                  body: { ...themeTypography.body, lineHeight: val },
+                })
+              }
+              onFontWeightChange={(val) =>
+                setThemeTypography({
+                  ...themeTypography,
+                  body: { ...themeTypography.body, fontWeight: val },
+                })
+              }
+            />
+            <TypographyInput
+              label="Quotes"
+              fontSize={themeTypography.quotes.fontSize}
+              lineHeight={themeTypography.quotes.lineHeight}
+              fontWeight={themeTypography.quotes.fontWeight}
+              onFontSizeChange={(val) =>
+                setThemeTypography({
+                  ...themeTypography,
+                  quotes: { ...themeTypography.quotes, fontSize: val },
+                })
+              }
+              onLineHeightChange={(val) =>
+                setThemeTypography({
+                  ...themeTypography,
+                  quotes: { ...themeTypography.quotes, lineHeight: val },
+                })
+              }
+              onFontWeightChange={(val) =>
+                setThemeTypography({
+                  ...themeTypography,
+                  quotes: { ...themeTypography.quotes, fontWeight: val },
+                })
+              }
+            />
+            <TypographyInput
+              label="Subtext"
+              fontSize={themeTypography.subtext.fontSize}
+              lineHeight={themeTypography.subtext.lineHeight}
+              fontWeight={themeTypography.subtext.fontWeight}
+              onFontSizeChange={(val) =>
+                setThemeTypography({
+                  ...themeTypography,
+                  subtext: { ...themeTypography.subtext, fontSize: val },
+                })
+              }
+              onLineHeightChange={(val) =>
+                setThemeTypography({
+                  ...themeTypography,
+                  subtext: { ...themeTypography.subtext, lineHeight: val },
+                })
+              }
+              onFontWeightChange={(val) =>
+                setThemeTypography({
+                  ...themeTypography,
+                  subtext: { ...themeTypography.subtext, fontWeight: val },
+                })
+              }
+            />
+            <TypographyInput
+              label="Span"
+              fontSize={themeTypography.span.fontSize}
+              lineHeight={themeTypography.span.lineHeight}
+              fontWeight={themeTypography.span.fontWeight}
+              onFontSizeChange={(val) =>
+                setThemeTypography({
+                  ...themeTypography,
+                  span: { ...themeTypography.span, fontSize: val },
+                })
+              }
+              onLineHeightChange={(val) =>
+                setThemeTypography({
+                  ...themeTypography,
+                  span: { ...themeTypography.span, lineHeight: val },
+                })
+              }
+              onFontWeightChange={(val) =>
+                setThemeTypography({
+                  ...themeTypography,
+                  span: { ...themeTypography.span, fontWeight: val },
+                })
+              }
+            />
+          </ScrollView>
+          )}
 
           <View style={styles.buttonRow}>
             <TouchableOpacity
@@ -469,6 +764,64 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#ddd',
     borderRadius: 8,
+    padding: 10,
+    fontSize: 14,
+    backgroundColor: '#fff',
+  },
+  tabs: {
+    flexDirection: 'row',
+    marginBottom: 16,
+    borderBottomWidth: 1,
+    borderBottomColor: '#e0e0e0',
+  },
+  tab: {
+    paddingVertical: 12,
+    paddingHorizontal: 24,
+    borderBottomWidth: 2,
+    borderBottomColor: 'transparent',
+  },
+  tabActive: {
+    borderBottomColor: '#007AFF',
+  },
+  tabText: {
+    fontSize: 16,
+    color: '#666',
+    fontWeight: '500',
+  },
+  tabTextActive: {
+    color: '#007AFF',
+    fontWeight: '600',
+  },
+  typographyInput: {
+    marginBottom: 20,
+    padding: 16,
+    backgroundColor: '#fff',
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: '#e0e0e0',
+  },
+  typographyLabel: {
+    fontSize: 14,
+    fontWeight: '600',
+    marginBottom: 12,
+    color: '#333',
+  },
+  typographyRow: {
+    flexDirection: 'row',
+    gap: 12,
+  },
+  typographyField: {
+    flex: 1,
+  },
+  fieldLabel: {
+    fontSize: 12,
+    color: '#666',
+    marginBottom: 6,
+  },
+  numberInput: {
+    borderWidth: 1,
+    borderColor: '#ddd',
+    borderRadius: 6,
     padding: 10,
     fontSize: 14,
     backgroundColor: '#fff',
