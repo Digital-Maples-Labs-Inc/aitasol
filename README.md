@@ -189,8 +189,9 @@ This generates static files in the `web-build` directory.
 
 ## Creating Initial Content
 
-After setting up Firebase, you'll need to create initial pages in Firestore:
+After setting up Firebase, you'll need to create initial pages in Firestore. See `docs/create-initial-data.md` for detailed instructions.
 
+Quick steps:
 1. Create a `pages` collection
 2. Add a document with slug `home`:
    - title: "Home"
@@ -201,6 +202,17 @@ After setting up Firebase, you'll need to create initial pages in Firestore:
 3. Create an admin user:
    - Sign up through the app (first user should be manually set as admin in Firestore)
    - Or create user document in Firestore with role: "admin"
+
+## Documentation
+
+All documentation is located in the `/docs` folder:
+
+- **Setup Guide**: `docs/SETUP.md`
+- **Architecture**: `docs/ARCHITECTURE.md`
+- **Firebase Setup**: `docs/FIREBASE_SETUP.md`
+- **Testing**: `docs/TESTING.md`
+- **MVP Next Steps**: `docs/MVP_NEXT_STEPS.md`
+- **Firestore Initialization**: `docs/create-initial-data.md`
 
 ## Future Enhancements
 

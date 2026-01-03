@@ -16,7 +16,7 @@
 1. Go to [Firestore Console](https://console.firebase.google.com/project/aitasol/firestore)
 2. Click "Start collection" → Collection ID: `pages`
 3. Click "Add document" → Document ID: `home`
-4. Add fields (see detailed guide in `scripts/create-initial-data.md`)
+4. Add fields (see detailed guide in `docs/create-initial-data.md`)
 
 **Quick Fields:**
 - `slug`: `home`
@@ -27,7 +27,7 @@
   - Paragraph: "We help students achieve their educational goals..."
   - CTA button: "Get Started"
 
-**Detailed Instructions:** See `scripts/create-initial-data.md` for complete field structure.
+**Detailed Instructions:** See `docs/create-initial-data.md` for complete field structure.
 
 ### Step 2: Verify Your Admin User
 
@@ -77,7 +77,7 @@ Create these pages in Firestore (same structure as home):
    - Contact information
    - Form (can be added later)
 
-**How:** Use the same structure as home page. See `scripts/create-initial-data.md` for examples.
+**How:** Use the same structure as home page. See `docs/create-initial-data.md` for examples.
 
 ## 🎯 Priority 4: Blog Management
 
@@ -132,10 +132,10 @@ The blog listing page should automatically show published blogs. Test:
 
 ## 📚 Reference Documents
 
-- **Firestore Setup**: `scripts/create-initial-data.md`
-- **Firebase Setup**: `FIREBASE_SETUP.md`
-- **Architecture**: `ARCHITECTURE.md`
-- **Testing**: `TESTING.md`
+- **Firestore Setup**: `docs/create-initial-data.md`
+- **Firebase Setup**: `docs/FIREBASE_SETUP.md`
+- **Architecture**: `docs/ARCHITECTURE.md`
+- **Testing**: `docs/TESTING.md`
 
 ## 🆘 Quick Troubleshooting
 

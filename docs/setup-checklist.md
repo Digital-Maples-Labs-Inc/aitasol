@@ -12,7 +12,7 @@
 
 ### 1. Initialize Firestore Data (Required)
 
-Follow the detailed guide: `scripts/create-initial-data.md`
+Follow the detailed guide: `docs/create-initial-data.md`
 
 **Quick summary:**
 1. Go to [Firestore Console](https://console.firebase.google.com/project/aitasol/firestore)
@@ -72,6 +72,6 @@ Place images in `public/assets/images/`:
 
 - Firestore Console: https://console.firebase.google.com/project/aitasol/firestore
 - Authentication: https://console.firebase.google.com/project/aitasol/authentication
-- Setup Guide: `scripts/create-initial-data.md`
-- Firebase Setup: `FIREBASE_SETUP.md`
+- Setup Guide: `docs/create-initial-data.md`
+- Firebase Setup: `docs/FIREBASE_SETUP.md`
 

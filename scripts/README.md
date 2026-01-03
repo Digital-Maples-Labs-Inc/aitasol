@@ -62,7 +62,7 @@ npm start
 ## Alternative: Manual Setup
 
 If you prefer to set up Firestore manually through the console, see:
-- `create-initial-data.md` - Step-by-step manual guide
+- `docs/create-initial-data.md` - Step-by-step manual guide
 
 ## Security Note
 

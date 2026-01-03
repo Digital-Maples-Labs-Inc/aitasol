@@ -12,7 +12,7 @@
 2. **Create Home Page:**
    - Click "Start collection" → Collection ID: `pages`
    - Click "Add document" → Document ID: `home`
-   - Add fields as shown in `scripts/create-initial-data.md`
+   - Add fields as shown in `docs/create-initial-data.md`
    - **Important**: Use "server timestamp" for `createdAt` and `updatedAt`
 
 3. **Create Admin User:**
@@ -23,7 +23,7 @@
    - Add document with UID as document ID
    - Add fields: `email` (string), `role` (string = "admin"), timestamps
 
-**Detailed instructions:** See `scripts/create-initial-data.md`
+**Detailed instructions:** See `docs/create-initial-data.md`
 
 ### Step 2: Test Locally
 
@@ -55,8 +55,9 @@ aitasol/
 │   └── assets/
 │       └── images/          # Place images here
 ├── scripts/
-│   ├── create-initial-data.md  # Step-by-step Firestore setup
-│   └── setup-checklist.md      # This checklist
+│   └── docs/
+│       ├── create-initial-data.md  # Step-by-step Firestore setup
+│       └── setup-checklist.md      # This checklist
 └── .env                       # Your Firebase config (already set)
 ```
 
@@ -96,12 +97,12 @@ After completing setup, verify:
 
 ## 📞 Need Help?
 
-- Check `FIREBASE_SETUP.md` for Firebase details
-- Check `scripts/create-initial-data.md` for detailed Firestore setup
+- Check `docs/FIREBASE_SETUP.md` for Firebase details
+- Check `docs/create-initial-data.md` for detailed Firestore setup
 - Check browser console for errors
 - Verify `.env` file has correct values
 
 ---
 
-**Ready to start?** Follow `scripts/create-initial-data.md` to set up Firestore data!
+**Ready to start?** Follow `docs/create-initial-data.md` to set up Firestore data!
 

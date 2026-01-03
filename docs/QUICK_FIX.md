@@ -38,5 +38,5 @@
 If you still see a blank screen:
 1. Check browser console for errors
 2. Verify `.env` file has correct Firebase config
-3. Check if Firestore has initial data (see SETUP.md)
+3. Check if Firestore has initial data (see `docs/SETUP.md`)
 

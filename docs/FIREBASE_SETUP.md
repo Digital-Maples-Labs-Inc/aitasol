@@ -53,7 +53,7 @@ aitasol/
 
 ### 1. Initialize Firestore Data
 
-Follow `scripts/init-firestore-manual.md` to:
+Follow `docs/init-firestore-manual.md` to:
 - Create initial pages (home, about)
 - Create admin user
 - Set up content structure
