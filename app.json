@@ -26,7 +26,14 @@
     "web": {
       "favicon": "./assets/favicon.png",
       "bundler": "webpack",
-      "output": "static"
+      "output": "static",
+      "build": {
+        "babel": {
+          "include": [
+            "nativewind/babel"
+          ]
+        }
+      }
     },
     "plugins": [
       "expo-router"
