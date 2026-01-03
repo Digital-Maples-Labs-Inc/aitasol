@@ -9,12 +9,12 @@ import {
   Text,
   TextInput,
   TouchableOpacity,
-  StyleSheet,
   ActivityIndicator,
   Alert,
   Platform,
 } from 'react-native';
 import { useAuth } from '@/contexts/AuthContext';
+import { loginScreenStyles } from '@/styles/screens/LoginScreen.styles';
 
 export const LoginScreen: React.FC = () => {
   const [email, setEmail] = useState('');
@@ -43,13 +43,13 @@ export const LoginScreen: React.FC = () => {
   };
 
   return (
-    <View style={styles.container}>
-      <View style={styles.form}>
-        <Text style={styles.title}>Admin Login</Text>
-        <Text style={styles.subtitle}>Sign in to manage content</Text>
+    <View style={loginScreenStyles.container}>
+      <View style={loginScreenStyles.form}>
+        <Text style={loginScreenStyles.title}>Admin Login</Text>
+        <Text style={loginScreenStyles.subtitle}>Sign in to manage content</Text>
 
         <TextInput
-          style={styles.input}
+          style={loginScreenStyles.input}
           placeholder="Email"
           placeholderTextColor="#999"
           value={email}
@@ -60,7 +60,7 @@ export const LoginScreen: React.FC = () => {
         />
 
         <TextInput
-          style={styles.input}
+          style={loginScreenStyles.input}
           placeholder="Password"
           placeholderTextColor="#999"
           value={password}
@@ -70,77 +70,18 @@ export const LoginScreen: React.FC = () => {
         />
 
         <TouchableOpacity
-          style={[styles.button, loading && styles.buttonDisabled]}
+          style={[loginScreenStyles.button, loading && loginScreenStyles.buttonDisabled]}
           onPress={handleLogin}
           disabled={loading}
         >
           {loading ? (
             <ActivityIndicator color="#fff" />
           ) : (
-            <Text style={styles.buttonText}>Sign In</Text>
+            <Text style={loginScreenStyles.buttonText}>Sign In</Text>
           )}
         </TouchableOpacity>
       </View>
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#f5f5f5',
-    padding: 20,
-  },
-  form: {
-    width: '100%',
-    maxWidth: 400,
-    backgroundColor: '#fff',
-    borderRadius: 12,
-    padding: 24,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 8,
-    elevation: 4,
-  },
-  title: {
-    fontSize: 28,
-    fontWeight: 'bold',
-    marginBottom: 8,
-    textAlign: 'center',
-  },
-  subtitle: {
-    fontSize: 16,
-    color: '#666',
-    marginBottom: 24,
-    textAlign: 'center',
-  },
-  input: {
-    borderWidth: 1,
-    borderColor: '#ddd',
-    borderRadius: 8,
-    padding: 12,
-    fontSize: 16,
-    marginBottom: 16,
-    backgroundColor: '#f9f9f9',
-    color: '#666',
-  },
-  button: {
-    backgroundColor: '#007AFF',
-    paddingVertical: 14,
-    borderRadius: 8,
-    alignItems: 'center',
-    marginTop: 8,
-  },
-  buttonDisabled: {
-    opacity: 0.6,
-  },
-  buttonText: {
-    color: '#fff',
-    fontSize: 16,
-    fontWeight: '600',
-  },
-});
 

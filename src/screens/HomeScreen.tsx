@@ -65,7 +65,7 @@ export const HomeScreen: React.FC = () => {
             value={section.content}
             onSave={(newValue) => handleSectionUpdate(section.id, newValue)}
             type="heading"
-            style={styles.heading}
+            style={homeScreenStyles.heading}
             editable={section.editable}
           />
         );
@@ -77,7 +77,7 @@ export const HomeScreen: React.FC = () => {
             value={section.content}
             onSave={(newValue) => handleSectionUpdate(section.id, newValue)}
             type="paragraph"
-            style={styles.paragraph}
+            style={homeScreenStyles.paragraph}
             editable={section.editable}
           />
         );
@@ -89,7 +89,7 @@ export const HomeScreen: React.FC = () => {
             src={section.metadata?.imageUrl || ''}
             alt={section.metadata?.imageAlt || ''}
             onSave={(newUrl) => handleImageUpdate(section.id, newUrl)}
-            style={styles.image}
+            style={homeScreenStyles.image}
             editable={section.editable}
           />
         );
@@ -100,7 +100,7 @@ export const HomeScreen: React.FC = () => {
           return (
             <View key={section.id} style={styles.ctaContainer}>
               <TouchableOpacity
-                style={styles.loginButton}
+                style={homeScreenStyles.loginButton}
                 onPress={() => {
                   // Use window.location for web, works reliably
                   if (Platform.OS === 'web' && typeof window !== 'undefined') {
@@ -108,7 +108,7 @@ export const HomeScreen: React.FC = () => {
                   }
                 }}
               >
-                <Text style={styles.loginButtonText}>Login</Text>
+                <Text style={homeScreenStyles.loginButtonText}>Login</Text>
               </TouchableOpacity>
             </View>
           );
@@ -121,7 +121,7 @@ export const HomeScreen: React.FC = () => {
                 handleSectionUpdate(section.id, newValue)
               }
               type="button"
-              style={styles.ctaButton}
+              style={homeScreenStyles.ctaButton}
               editable={section.editable}
             />
           </View>
@@ -135,7 +135,7 @@ export const HomeScreen: React.FC = () => {
   if (loading) {
     return (
       <Layout>
-        <View style={styles.loadingContainer}>
+        <View style={homeScreenStyles.loadingContainer}>
           <ActivityIndicator size="large" color="#007AFF" />
         </View>
       </Layout>
@@ -145,8 +145,8 @@ export const HomeScreen: React.FC = () => {
   if (!page) {
     return (
       <Layout>
-        <View style={styles.container}>
-          <Text style={styles.errorText}>Page not found</Text>
+        <View style={homeScreenStyles.container}>
+          <Text style={homeScreenStyles.errorText}>Page not found</Text>
         </View>
       </Layout>
     );
@@ -154,8 +154,8 @@ export const HomeScreen: React.FC = () => {
 
   return (
     <Layout>
-      <ScrollView style={styles.container}>
-        <View style={styles.content}>
+      <ScrollView style={homeScreenStyles.container}>
+        <View style={homeScreenStyles.content}>
           {page.sections.map((section) => renderSection(section))}
         </View>
       </ScrollView>
@@ -163,64 +163,4 @@ export const HomeScreen: React.FC = () => {
   );
 };
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-  },
-  loadingContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  content: {
-    padding: 20,
-    paddingBottom: Platform.OS === 'web' ? 60 : 20, // Extra padding for footer
-  },
-  heading: {
-    fontSize: 32,
-    fontWeight: 'bold',
-    marginBottom: 16,
-    marginTop: 24,
-  },
-  paragraph: {
-    fontSize: 16,
-    lineHeight: 24,
-    marginBottom: 16,
-    color: '#333',
-  },
-  image: {
-    width: '100%',
-    height: 300,
-    marginVertical: 16,
-    borderRadius: 8,
-  },
-  ctaContainer: {
-    marginVertical: 32,
-    alignItems: 'center',
-  },
-  ctaButton: {
-    paddingHorizontal: 32,
-    paddingVertical: 16,
-  },
-  loginButton: {
-    backgroundColor: '#007AFF',
-    paddingHorizontal: 32,
-    paddingVertical: 16,
-    borderRadius: 8,
-    alignItems: 'center',
-    minWidth: 150,
-  },
-  loginButtonText: {
-    color: '#fff',
-    fontSize: 16,
-    fontWeight: '600',
-  },
-  errorText: {
-    fontSize: 16,
-    color: '#666',
-    textAlign: 'center',
-    marginTop: 40,
-  },
-});
 

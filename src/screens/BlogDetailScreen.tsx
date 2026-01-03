@@ -4,7 +4,9 @@
  */
 
 import React, { useEffect, useState } from 'react';
+import { blogDetailScreenStyles } from '@/styles/screens/BlogDetailScreen.styles';
 import {
+import { blogDetailScreenStyles } from '@/styles/screens/BlogDetailScreen.styles';
   View,
   Text,
   ScrollView,
@@ -13,11 +15,17 @@ import {
   Platform,
 } from 'react-native';
 import { useLocalSearchParams } from 'expo-router';
+import { blogDetailScreenStyles } from '@/styles/screens/BlogDetailScreen.styles';
 import { getBlogBySlug } from '@/services/blogService';
+import { blogDetailScreenStyles } from '@/styles/screens/BlogDetailScreen.styles';
 import { Blog } from '@/types';
+import { blogDetailScreenStyles } from '@/styles/screens/BlogDetailScreen.styles';
 import { format } from 'date-fns';
+import { blogDetailScreenStyles } from '@/styles/screens/BlogDetailScreen.styles';
 import RenderHTML from 'react-native-render-html';
+import { blogDetailScreenStyles } from '@/styles/screens/BlogDetailScreen.styles';
 import { Layout } from '@/components/Layout';
+import { blogDetailScreenStyles } from '@/styles/screens/BlogDetailScreen.styles';
 
 export const BlogDetailScreen: React.FC = () => {
   const { slug } = useLocalSearchParams<{ slug: string }>();
@@ -46,7 +54,7 @@ export const BlogDetailScreen: React.FC = () => {
   if (loading) {
     return (
       <Layout>
-        <View style={styles.loadingContainer}>
+        <View style={blogDetailScreenStyles.loadingContainer}>
           <ActivityIndicator size="large" color="#007AFF" />
         </View>
       </Layout>
@@ -56,8 +64,8 @@ export const BlogDetailScreen: React.FC = () => {
   if (!blog) {
     return (
       <Layout>
-        <View style={styles.container}>
-          <Text style={styles.errorText}>Blog post not found</Text>
+        <View style={blogDetailScreenStyles.container}>
+          <Text style={blogDetailScreenStyles.errorText}>Blog post not found</Text>
         </View>
       </Layout>
     );
@@ -65,36 +73,36 @@ export const BlogDetailScreen: React.FC = () => {
 
   return (
     <Layout>
-      <ScrollView style={styles.container}>
-        <View style={styles.content}>
+      <ScrollView style={blogDetailScreenStyles.container}>
+        <View style={blogDetailScreenStyles.content}>
           {blog.featuredImage && (
-            <View style={styles.imageContainer}>
-              <Text style={styles.imagePlaceholder}>📷 Featured Image</Text>
+            <View style={blogDetailScreenStyles.imageContainer}>
+              <Text style={blogDetailScreenStyles.imagePlaceholder}>📷 Featured Image</Text>
             </View>
           )}
 
-          <Text style={styles.title}>{blog.title}</Text>
+          <Text style={blogDetailScreenStyles.title}>{blog.title}</Text>
 
-          <View style={styles.meta}>
+          <View style={blogDetailScreenStyles.meta}>
             {blog.publishedAt && (
-              <Text style={styles.date}>
+              <Text style={blogDetailScreenStyles.date}>
                 {format(blog.publishedAt, 'MMMM d, yyyy')}
               </Text>
             )}
             {blog.authorName && (
-              <Text style={styles.author}>by {blog.authorName}</Text>
+              <Text style={blogDetailScreenStyles.author}>by {blog.authorName}</Text>
             )}
           </View>
 
           {blog.excerpt && (
-            <Text style={styles.excerpt}>{blog.excerpt}</Text>
+            <Text style={blogDetailScreenStyles.excerpt}>{blog.excerpt}</Text>
           )}
 
-          <View style={styles.contentContainer}>
+          <View style={blogDetailScreenStyles.contentContainer}>
             <RenderHTML
               contentWidth={300}
               source={{ html: blog.content }}
-              baseStyle={styles.htmlContent}
+              baseStyle={blogDetailScreenStyles.htmlContent}
             />
           </View>
         </View>
@@ -103,72 +111,4 @@ export const BlogDetailScreen: React.FC = () => {
   );
 };
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-  },
-  loadingContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  content: {
-    padding: 20,
-    paddingBottom: Platform.OS === 'web' ? 60 : 20, // Extra padding for footer
-  },
-  imageContainer: {
-    width: '100%',
-    height: 300,
-    backgroundColor: '#e0e0e0',
-    borderRadius: 12,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginBottom: 24,
-  },
-  imagePlaceholder: {
-    fontSize: 18,
-    color: '#999',
-  },
-  title: {
-    fontSize: 32,
-    fontWeight: 'bold',
-    marginBottom: 16,
-    color: '#1a1a1a',
-  },
-  meta: {
-    flexDirection: 'row',
-    marginBottom: 16,
-    gap: 16,
-  },
-  date: {
-    fontSize: 14,
-    color: '#666',
-  },
-  author: {
-    fontSize: 14,
-    color: '#666',
-  },
-  excerpt: {
-    fontSize: 18,
-    color: '#666',
-    fontStyle: 'italic',
-    marginBottom: 24,
-    lineHeight: 26,
-  },
-  contentContainer: {
-    marginTop: 8,
-  },
-  htmlContent: {
-    fontSize: 16,
-    lineHeight: 24,
-    color: '#333',
-  },
-  errorText: {
-    fontSize: 16,
-    color: '#666',
-    textAlign: 'center',
-    marginTop: 40,
-  },
-});
 

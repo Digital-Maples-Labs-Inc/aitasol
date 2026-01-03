@@ -9,13 +9,14 @@ import {
   Text,
   ScrollView,
   TouchableOpacity,
-  StyleSheet,
   ActivityIndicator,
   Platform,
 } from 'react-native';
 import { getAllPages, deletePage } from '@/services/pageService';
 import { Page } from '@/types';
 import { useRequireAuth } from '@/hooks/useRequireAuth';
+import { Layout } from '@/components/Layout';
+import { adminPagesScreenStyles } from '@/styles/screens/AdminPagesScreen.styles';
 
 export const AdminPagesScreen: React.FC = () => {
   const [pages, setPages] = useState<Page[]>([]);
@@ -58,56 +59,56 @@ export const AdminPagesScreen: React.FC = () => {
 
   if (loading) {
     return (
-      <View style={styles.loadingContainer}>
+      <View style={adminPagesScreenStyles.loadingContainer}>
         <ActivityIndicator size="large" color="#007AFF" />
       </View>
     );
   }
 
   return (
-    <ScrollView style={styles.container}>
-      <View style={styles.header}>
-        <Text style={styles.title}>Manage Pages</Text>
+    <ScrollView style={adminPagesScreenStyles.container}>
+      <View style={adminPagesScreenStyles.header}>
+        <Text style={adminPagesScreenStyles.title}>Manage Pages</Text>
         <TouchableOpacity
-          style={styles.addButton}
+          style={adminPagesScreenStyles.addButton}
           onPress={() => navigateTo('/admin/pages/new')}
         >
-          <Text style={styles.addButtonText}>+ New Page</Text>
+          <Text style={adminPagesScreenStyles.addButtonText}>+ New Page</Text>
         </TouchableOpacity>
       </View>
 
-      <View style={styles.content}>
+      <View style={adminPagesScreenStyles.content}>
         {pages.length === 0 ? (
-          <Text style={styles.emptyText}>No pages found</Text>
+          <Text style={adminPagesScreenStyles.emptyText}>No pages found</Text>
         ) : (
           pages.map((page) => (
-            <View key={page.id} style={styles.pageCard}>
-              <View style={styles.pageInfo}>
-                <Text style={styles.pageTitle}>{page.title}</Text>
-                <Text style={styles.pageSlug}>/{page.slug}</Text>
-                <View style={styles.pageMeta}>
+            <View key={page.id} style={adminPagesScreenStyles.pageCard}>
+              <View style={adminPagesScreenStyles.pageInfo}>
+                <Text style={adminPagesScreenStyles.pageTitle}>{page.title}</Text>
+                <Text style={adminPagesScreenStyles.pageSlug}>/{page.slug}</Text>
+                <View style={adminPagesScreenStyles.pageMeta}>
                   <Text
                     style={[
-                      styles.statusBadge,
-                      page.published ? styles.published : styles.draft,
+                      adminPagesScreenStyles.statusBadge,
+                      page.published ? adminPagesScreenStyles.published : adminPagesScreenStyles.draft,
                     ]}
                   >
                     {page.published ? 'Published' : 'Draft'}
                   </Text>
                 </View>
               </View>
-              <View style={styles.pageActions}>
+              <View style={adminPagesScreenStyles.pageActions}>
                 <TouchableOpacity
-                  style={styles.editButton}
+                  style={adminPagesScreenStyles.editButton}
                   onPress={() => handleEditPage(page.id)}
                 >
-                  <Text style={styles.editButtonText}>Edit</Text>
+                  <Text style={adminPagesScreenStyles.editButtonText}>Edit</Text>
                 </TouchableOpacity>
                 <TouchableOpacity
-                  style={styles.deleteButton}
+                  style={adminPagesScreenStyles.deleteButton}
                   onPress={() => handleDeletePage(page.id)}
                 >
-                  <Text style={styles.deleteButtonText}>Delete</Text>
+                  <Text style={adminPagesScreenStyles.deleteButtonText}>Delete</Text>
                 </TouchableOpacity>
               </View>
             </View>
@@ -118,119 +119,4 @@ export const AdminPagesScreen: React.FC = () => {
   );
 };
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#f5f5f5',
-  },
-  loadingContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  header: {
-    backgroundColor: '#fff',
-    padding: 20,
-    borderBottomWidth: 1,
-    borderBottomColor: '#e0e0e0',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: 'bold',
-  },
-  addButton: {
-    backgroundColor: '#007AFF',
-    paddingHorizontal: 16,
-    paddingVertical: 8,
-    borderRadius: 8,
-  },
-  addButtonText: {
-    color: '#fff',
-    fontSize: 14,
-    fontWeight: '600',
-  },
-  content: {
-    padding: 20,
-  },
-  pageCard: {
-    backgroundColor: '#fff',
-    borderRadius: 12,
-    padding: 16,
-    marginBottom: 12,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.1,
-    shadowRadius: 2,
-    elevation: 1,
-  },
-  pageInfo: {
-    flex: 1,
-  },
-  pageTitle: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    marginBottom: 4,
-  },
-  pageSlug: {
-    fontSize: 14,
-    color: '#666',
-    marginBottom: 8,
-  },
-  pageMeta: {
-    flexDirection: 'row',
-  },
-  statusBadge: {
-    fontSize: 12,
-    paddingHorizontal: 8,
-    paddingVertical: 4,
-    borderRadius: 4,
-    overflow: 'hidden',
-  },
-  published: {
-    backgroundColor: '#d4edda',
-    color: '#155724',
-  },
-  draft: {
-    backgroundColor: '#fff3cd',
-    color: '#856404',
-  },
-  pageActions: {
-    flexDirection: 'row',
-    gap: 8,
-    alignItems: 'center',
-  },
-  editButton: {
-    backgroundColor: '#007AFF',
-    paddingHorizontal: 12,
-    paddingVertical: 6,
-    borderRadius: 6,
-  },
-  editButtonText: {
-    color: '#fff',
-    fontSize: 12,
-    fontWeight: '600',
-  },
-  deleteButton: {
-    backgroundColor: '#dc3545',
-    paddingHorizontal: 12,
-    paddingVertical: 6,
-    borderRadius: 6,
-  },
-  deleteButtonText: {
-    color: '#fff',
-    fontSize: 12,
-    fontWeight: '600',
-  },
-  emptyText: {
-    fontSize: 16,
-    color: '#666',
-    textAlign: 'center',
-    marginTop: 40,
-  },
-});
 

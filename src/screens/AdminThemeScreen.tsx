@@ -9,7 +9,6 @@ import {
   Text,
   ScrollView,
   TouchableOpacity,
-  StyleSheet,
   ActivityIndicator,
   TextInput,
   Alert,
@@ -24,6 +23,8 @@ import {
 } from '@/services/themeService';
 import { useRequireAuth } from '@/hooks/useRequireAuth';
 import { useAuth } from '@/contexts/AuthContext';
+import { Layout } from '@/components/Layout';
+import { adminThemeScreenStyles } from '@/styles/screens/AdminThemeScreen.styles';
 
 interface ColorInputProps {
   label: string;
@@ -33,12 +34,12 @@ interface ColorInputProps {
 
 const ColorInput: React.FC<ColorInputProps> = ({ label, value, onChange }) => {
   return (
-    <View style={styles.colorInput}>
-      <Text style={styles.colorLabel}>{label}</Text>
-      <View style={styles.colorInputRow}>
-        <View style={[styles.colorPreview, { backgroundColor: value }]} />
+    <View style={adminThemeScreenStyles.colorInput}>
+      <Text style={adminThemeScreenStyles.colorLabel}>{label}</Text>
+      <View style={adminThemeScreenStyles.colorInputRow}>
+        <View style={[adminThemeScreenStyles.colorPreview, { backgroundColor: value }]} />
         <TextInput
-          style={styles.colorTextInput}
+          style={adminThemeScreenStyles.colorTextInput}
           value={value}
           onChangeText={onChange}
           placeholder="#000000"
@@ -69,32 +70,32 @@ const TypographyInput: React.FC<TypographyInputProps> = ({
   onFontWeightChange,
 }) => {
   return (
-    <View style={styles.typographyInput}>
-      <Text style={styles.typographyLabel}>{label}</Text>
-      <View style={styles.typographyRow}>
-        <View style={styles.typographyField}>
-          <Text style={styles.fieldLabel}>Size (px)</Text>
+    <View style={adminThemeScreenStyles.typographyInput}>
+      <Text style={adminThemeScreenStyles.typographyLabel}>{label}</Text>
+      <View style={adminThemeScreenStyles.typographyRow}>
+        <View style={adminThemeScreenStyles.typographyField}>
+          <Text style={adminThemeScreenStyles.fieldLabel}>Size (px)</Text>
           <TextInput
-            style={styles.numberInput}
+            style={adminThemeScreenStyles.numberInput}
             value={fontSize.toString()}
             onChangeText={(val) => onFontSizeChange(parseInt(val) || 0)}
             keyboardType="numeric"
           />
         </View>
-        <View style={styles.typographyField}>
-          <Text style={styles.fieldLabel}>Line Height</Text>
+        <View style={adminThemeScreenStyles.typographyField}>
+          <Text style={adminThemeScreenStyles.fieldLabel}>Line Height</Text>
           <TextInput
-            style={styles.numberInput}
+            style={adminThemeScreenStyles.numberInput}
             value={lineHeight.toString()}
             onChangeText={(val) => onLineHeightChange(parseFloat(val) || 1.2)}
             keyboardType="numeric"
           />
         </View>
         {onFontWeightChange && (
-          <View style={styles.typographyField}>
-            <Text style={styles.fieldLabel}>Weight</Text>
+          <View style={adminThemeScreenStyles.typographyField}>
+            <Text style={adminThemeScreenStyles.fieldLabel}>Weight</Text>
             <TextInput
-              style={styles.numberInput}
+              style={adminThemeScreenStyles.numberInput}
               value={fontWeight?.toString() || '400'}
               onChangeText={onFontWeightChange}
             />
@@ -234,60 +235,60 @@ export const AdminThemeScreen: React.FC = () => {
 
   if (loading) {
     return (
-      <View style={styles.loadingContainer}>
+      <View style={adminThemeScreenStyles.loadingContainer}>
         <ActivityIndicator size="large" color="#007AFF" />
       </View>
     );
   }
 
   return (
-    <ScrollView style={styles.container}>
-      <View style={styles.header}>
-        <Text style={styles.title}>Theme Management</Text>
+    <ScrollView style={adminThemeScreenStyles.container}>
+      <View style={adminThemeScreenStyles.header}>
+        <Text style={adminThemeScreenStyles.title}>Theme Management</Text>
         <TouchableOpacity
-          style={styles.createButton}
+          style={adminThemeScreenStyles.createButton}
           onPress={handleCreateNew}
         >
-          <Text style={styles.createButtonText}>+ New Theme</Text>
+          <Text style={adminThemeScreenStyles.createButtonText}>+ New Theme</Text>
         </TouchableOpacity>
       </View>
 
       {editingTheme || (!editingTheme && themes.length === 0) ? (
-        <View style={styles.editSection}>
-          <Text style={styles.sectionTitle}>
+        <View style={adminThemeScreenStyles.editSection}>
+          <Text style={adminThemeScreenStyles.sectionTitle}>
             {editingTheme ? 'Edit Theme' : 'Create New Theme'}
           </Text>
 
           <TextInput
-            style={styles.nameInput}
+            style={adminThemeScreenStyles.nameInput}
             value={themeName}
             onChangeText={setThemeName}
             placeholder="Theme Name"
           />
 
           {/* Tabs */}
-          <View style={styles.tabs}>
+          <View style={adminThemeScreenStyles.tabs}>
             <TouchableOpacity
-              style={[styles.tab, activeTab === 'colors' && styles.tabActive]}
+              style={[adminThemeScreenStyles.tab, activeTab === 'colors' && adminThemeScreenStyles.tabActive]}
               onPress={() => setActiveTab('colors')}
             >
-              <Text style={[styles.tabText, activeTab === 'colors' && styles.tabTextActive]}>
+              <Text style={[adminThemeScreenStyles.tabText, activeTab === 'colors' && adminThemeScreenStyles.tabTextActive]}>
                 Colors
               </Text>
             </TouchableOpacity>
             <TouchableOpacity
-              style={[styles.tab, activeTab === 'typography' && styles.tabActive]}
+              style={[adminThemeScreenStyles.tab, activeTab === 'typography' && adminThemeScreenStyles.tabActive]}
               onPress={() => setActiveTab('typography')}
             >
-              <Text style={[styles.tabText, activeTab === 'typography' && styles.tabTextActive]}>
+              <Text style={[adminThemeScreenStyles.tabText, activeTab === 'typography' && adminThemeScreenStyles.tabTextActive]}>
                 Typography
               </Text>
             </TouchableOpacity>
           </View>
 
           {activeTab === 'colors' ? (
-          <ScrollView style={styles.colorsSection}>
-            <Text style={styles.subsectionTitle}>Primary Colors</Text>
+          <ScrollView style={adminThemeScreenStyles.colorsSection}>
+            <Text style={adminThemeScreenStyles.subsectionTitle}>Primary Colors</Text>
             <ColorInput
               label="Primary"
               value={themeColors.primary}
@@ -310,7 +311,7 @@ export const AdminThemeScreen: React.FC = () => {
               }
             />
 
-            <Text style={styles.subsectionTitle}>Background Colors</Text>
+            <Text style={adminThemeScreenStyles.subsectionTitle}>Background Colors</Text>
             <ColorInput
               label="Background"
               value={themeColors.background}
@@ -333,7 +334,7 @@ export const AdminThemeScreen: React.FC = () => {
               }
             />
 
-            <Text style={styles.subsectionTitle}>Text Colors</Text>
+            <Text style={adminThemeScreenStyles.subsectionTitle}>Text Colors</Text>
             <ColorInput
               label="Text Primary"
               value={themeColors.textPrimary}
@@ -356,7 +357,7 @@ export const AdminThemeScreen: React.FC = () => {
               }
             />
 
-            <Text style={styles.subsectionTitle}>Accent Colors</Text>
+            <Text style={adminThemeScreenStyles.subsectionTitle}>Accent Colors</Text>
             <ColorInput
               label="Accent 1"
               value={themeColors.accent1}
@@ -379,7 +380,7 @@ export const AdminThemeScreen: React.FC = () => {
               }
             />
 
-            <Text style={styles.subsectionTitle}>UI Elements</Text>
+            <Text style={adminThemeScreenStyles.subsectionTitle}>UI Elements</Text>
             <ColorInput
               label="Border"
               value={themeColors.border}
@@ -402,7 +403,7 @@ export const AdminThemeScreen: React.FC = () => {
               }
             />
 
-            <Text style={styles.subsectionTitle}>Status Colors</Text>
+            <Text style={adminThemeScreenStyles.subsectionTitle}>Status Colors</Text>
             <ColorInput
               label="Success"
               value={themeColors.success}
@@ -433,12 +434,12 @@ export const AdminThemeScreen: React.FC = () => {
             />
           </ScrollView>
           ) : (
-          <ScrollView style={styles.colorsSection}>
-            <Text style={styles.subsectionTitle}>Font Family</Text>
-            <View style={styles.colorInput}>
-              <Text style={styles.colorLabel}>Font Family</Text>
+          <ScrollView style={adminThemeScreenStyles.colorsSection}>
+            <Text style={adminThemeScreenStyles.subsectionTitle}>Font Family</Text>
+            <View style={adminThemeScreenStyles.colorInput}>
+              <Text style={adminThemeScreenStyles.colorLabel}>Font Family</Text>
               <TextInput
-                style={styles.colorTextInput}
+                style={adminThemeScreenStyles.colorTextInput}
                 value={themeTypography.fontFamily}
                 onChangeText={(val) =>
                   setThemeTypography({ ...themeTypography, fontFamily: val })
@@ -447,7 +448,7 @@ export const AdminThemeScreen: React.FC = () => {
               />
             </View>
 
-            <Text style={styles.subsectionTitle}>Heading Styles</Text>
+            <Text style={adminThemeScreenStyles.subsectionTitle}>Heading Styles</Text>
             <TypographyInput
               label="H1 - Heading 1"
               fontSize={themeTypography.h1.fontSize}
@@ -545,7 +546,7 @@ export const AdminThemeScreen: React.FC = () => {
               }
             />
 
-            <Text style={styles.subsectionTitle}>Text Styles</Text>
+            <Text style={adminThemeScreenStyles.subsectionTitle}>Text Styles</Text>
             <TypographyInput
               label="Body"
               fontSize={themeTypography.body.fontSize}
@@ -645,51 +646,51 @@ export const AdminThemeScreen: React.FC = () => {
           </ScrollView>
           )}
 
-          <View style={styles.buttonRow}>
+          <View style={adminThemeScreenStyles.buttonRow}>
             <TouchableOpacity
-              style={[styles.button, styles.cancelButton]}
+              style={[adminThemeScreenStyles.button, adminThemeScreenStyles.cancelButton]}
               onPress={() => setEditingTheme(null)}
             >
-              <Text style={styles.cancelButtonText}>Cancel</Text>
+              <Text style={adminThemeScreenStyles.cancelButtonText}>Cancel</Text>
             </TouchableOpacity>
             <TouchableOpacity
-              style={[styles.button, styles.saveButton, saving && styles.buttonDisabled]}
+              style={[adminThemeScreenStyles.button, adminThemeScreenStyles.saveButton, saving && adminThemeScreenStyles.buttonDisabled]}
               onPress={handleSaveTheme}
               disabled={saving}
             >
               {saving ? (
                 <ActivityIndicator color="#fff" />
               ) : (
-                <Text style={styles.saveButtonText}>Save Theme</Text>
+                <Text style={adminThemeScreenStyles.saveButtonText}>Save Theme</Text>
               )}
             </TouchableOpacity>
           </View>
         </View>
       ) : (
-        <View style={styles.themesList}>
+        <View style={adminThemeScreenStyles.themesList}>
           {themes.map((theme) => (
-            <View key={theme.id} style={styles.themeCard}>
-              <View style={styles.themeInfo}>
-                <Text style={styles.themeName}>{theme.name}</Text>
+            <View key={theme.id} style={adminThemeScreenStyles.themeCard}>
+              <View style={adminThemeScreenStyles.themeInfo}>
+                <Text style={adminThemeScreenStyles.themeName}>{theme.name}</Text>
                 {theme.isActive && (
-                  <View style={styles.activeBadge}>
-                    <Text style={styles.activeBadgeText}>Active</Text>
+                  <View style={adminThemeScreenStyles.activeBadge}>
+                    <Text style={adminThemeScreenStyles.activeBadgeText}>Active</Text>
                   </View>
                 )}
               </View>
-              <View style={styles.themeActions}>
+              <View style={adminThemeScreenStyles.themeActions}>
                 <TouchableOpacity
-                  style={styles.actionButton}
+                  style={adminThemeScreenStyles.actionButton}
                   onPress={() => handleEditTheme(theme)}
                 >
-                  <Text style={styles.actionButtonText}>Edit</Text>
+                  <Text style={adminThemeScreenStyles.actionButtonText}>Edit</Text>
                 </TouchableOpacity>
                 {!theme.isActive && (
                   <TouchableOpacity
-                    style={[styles.actionButton, styles.activateButton]}
+                    style={[adminThemeScreenStyles.actionButton, adminThemeScreenStyles.activateButton]}
                     onPress={() => handleSetActive(theme.id)}
                   >
-                    <Text style={styles.activateButtonText}>Activate</Text>
+                    <Text style={adminThemeScreenStyles.activateButtonText}>Activate</Text>
                   </TouchableOpacity>
                 )}
               </View>
@@ -701,250 +702,4 @@ export const AdminThemeScreen: React.FC = () => {
   );
 };
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#f5f5f5',
-  },
-  loadingContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  header: {
-    backgroundColor: '#fff',
-    padding: 20,
-    borderBottomWidth: 1,
-    borderBottomColor: '#e0e0e0',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: 'bold',
-  },
-  createButton: {
-    backgroundColor: '#007AFF',
-    paddingHorizontal: 16,
-    paddingVertical: 8,
-    borderRadius: 8,
-  },
-  createButtonText: {
-    color: '#fff',
-    fontSize: 14,
-    fontWeight: '600',
-  },
-  editSection: {
-    padding: 20,
-  },
-  sectionTitle: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    marginBottom: 16,
-  },
-  nameInput: {
-    borderWidth: 1,
-    borderColor: '#ddd',
-    borderRadius: 8,
-    padding: 12,
-    fontSize: 16,
-    marginBottom: 24,
-    backgroundColor: '#fff',
-    color: '#666',
-  },
-  colorsSection: {
-    maxHeight: 600,
-  },
-  subsectionTitle: {
-    fontSize: 16,
-    fontWeight: '600',
-    marginTop: 16,
-    marginBottom: 12,
-    color: '#333',
-  },
-  colorInput: {
-    marginBottom: 16,
-  },
-  colorLabel: {
-    fontSize: 14,
-    fontWeight: '500',
-    marginBottom: 8,
-    color: '#666',
-  },
-  colorInputRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 12,
-  },
-  colorPreview: {
-    width: 40,
-    height: 40,
-    borderRadius: 8,
-    borderWidth: 1,
-    borderColor: '#ddd',
-  },
-  colorTextInput: {
-    flex: 1,
-    borderWidth: 1,
-    borderColor: '#ddd',
-    borderRadius: 8,
-    padding: 10,
-    fontSize: 14,
-    backgroundColor: '#fff',
-    color: '#666',
-  },
-  tabs: {
-    flexDirection: 'row',
-    marginBottom: 16,
-    borderBottomWidth: 1,
-    borderBottomColor: '#e0e0e0',
-  },
-  tab: {
-    paddingVertical: 12,
-    paddingHorizontal: 24,
-    borderBottomWidth: 2,
-    borderBottomColor: 'transparent',
-  },
-  tabActive: {
-    borderBottomColor: '#007AFF',
-  },
-  tabText: {
-    fontSize: 16,
-    color: '#666',
-    fontWeight: '500',
-  },
-  tabTextActive: {
-    color: '#007AFF',
-    fontWeight: '600',
-  },
-  typographyInput: {
-    marginBottom: 20,
-    padding: 16,
-    backgroundColor: '#fff',
-    borderRadius: 8,
-    borderWidth: 1,
-    borderColor: '#e0e0e0',
-  },
-  typographyLabel: {
-    fontSize: 14,
-    fontWeight: '600',
-    marginBottom: 12,
-    color: '#333',
-  },
-  typographyRow: {
-    flexDirection: 'row',
-    gap: 12,
-  },
-  typographyField: {
-    flex: 1,
-  },
-  fieldLabel: {
-    fontSize: 12,
-    color: '#666',
-    marginBottom: 6,
-  },
-  numberInput: {
-    borderWidth: 1,
-    borderColor: '#ddd',
-    borderRadius: 6,
-    padding: 10,
-    fontSize: 14,
-    backgroundColor: '#fff',
-    color: '#666',
-  },
-  buttonRow: {
-    flexDirection: 'row',
-    gap: 12,
-    marginTop: 24,
-  },
-  button: {
-    flex: 1,
-    paddingVertical: 14,
-    borderRadius: 8,
-    alignItems: 'center',
-  },
-  cancelButton: {
-    backgroundColor: '#f3f4f6',
-    borderWidth: 1,
-    borderColor: '#e5e7eb',
-  },
-  cancelButtonText: {
-    color: '#374151',
-    fontSize: 16,
-    fontWeight: '600',
-  },
-  saveButton: {
-    backgroundColor: '#007AFF',
-  },
-  saveButtonText: {
-    color: '#fff',
-    fontSize: 16,
-    fontWeight: '600',
-  },
-  buttonDisabled: {
-    opacity: 0.6,
-  },
-  themesList: {
-    padding: 20,
-  },
-  themeCard: {
-    backgroundColor: '#fff',
-    borderRadius: 12,
-    padding: 16,
-    marginBottom: 12,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.1,
-    shadowRadius: 2,
-    elevation: 1,
-  },
-  themeInfo: {
-    flex: 1,
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 12,
-  },
-  themeName: {
-    fontSize: 18,
-    fontWeight: 'bold',
-  },
-  activeBadge: {
-    backgroundColor: '#d4edda',
-    paddingHorizontal: 8,
-    paddingVertical: 4,
-    borderRadius: 4,
-  },
-  activeBadgeText: {
-    color: '#155724',
-    fontSize: 12,
-    fontWeight: '600',
-  },
-  themeActions: {
-    flexDirection: 'row',
-    gap: 8,
-  },
-  actionButton: {
-    paddingHorizontal: 12,
-    paddingVertical: 6,
-    borderRadius: 6,
-    backgroundColor: '#007AFF',
-  },
-  actionButtonText: {
-    color: '#fff',
-    fontSize: 12,
-    fontWeight: '600',
-  },
-  activateButton: {
-    backgroundColor: '#28a745',
-  },
-  activateButtonText: {
-    color: '#fff',
-    fontSize: 12,
-    fontWeight: '600',
-  },
-});
 

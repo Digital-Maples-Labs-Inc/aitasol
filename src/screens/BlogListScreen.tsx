@@ -4,7 +4,9 @@
  */
 
 import React, { useEffect, useState } from 'react';
+import { blogListScreenStyles } from '@/styles/screens/BlogListScreen.styles';
 import {
+import { blogListScreenStyles } from '@/styles/screens/BlogListScreen.styles';
   View,
   Text,
   ScrollView,
@@ -13,10 +15,15 @@ import {
   ActivityIndicator,
 } from 'react-native';
 import { Platform } from 'react-native';
+import { blogListScreenStyles } from '@/styles/screens/BlogListScreen.styles';
 import { getPublishedBlogs } from '@/services/blogService';
+import { blogListScreenStyles } from '@/styles/screens/BlogListScreen.styles';
 import { Blog } from '@/types';
+import { blogListScreenStyles } from '@/styles/screens/BlogListScreen.styles';
 import { format } from 'date-fns';
+import { blogListScreenStyles } from '@/styles/screens/BlogListScreen.styles';
 import { Layout } from '@/components/Layout';
+import { blogListScreenStyles } from '@/styles/screens/BlogListScreen.styles';
 
 export const BlogListScreen: React.FC = () => {
   const [blogs, setBlogs] = useState<Blog[]>([]);
@@ -50,7 +57,7 @@ export const BlogListScreen: React.FC = () => {
   if (loading) {
     return (
       <Layout>
-        <View style={styles.loadingContainer}>
+        <View style={blogListScreenStyles.loadingContainer}>
           <ActivityIndicator size="large" color="#007AFF" />
         </View>
       </Layout>
@@ -59,40 +66,40 @@ export const BlogListScreen: React.FC = () => {
 
   return (
     <Layout>
-      <ScrollView style={styles.container}>
-        <View style={styles.content}>
-          <Text style={styles.title}>Blog</Text>
-          <Text style={styles.subtitle}>Latest articles and updates</Text>
+      <ScrollView style={blogListScreenStyles.container}>
+        <View style={blogListScreenStyles.content}>
+          <Text style={blogListScreenStyles.title}>Blog</Text>
+          <Text style={blogListScreenStyles.subtitle}>Latest articles and updates</Text>
 
           {blogs.length === 0 ? (
-            <Text style={styles.emptyText}>No blog posts available</Text>
+            <Text style={blogListScreenStyles.emptyText}>No blog posts available</Text>
           ) : (
             blogs.map((blog) => (
               <TouchableOpacity
                 key={blog.id}
-                style={styles.blogCard}
+                style={blogListScreenStyles.blogCard}
                 onPress={() => handleBlogPress(blog.slug)}
               >
                 {blog.featuredImage && (
-                  <View style={styles.imagePlaceholder}>
-                    <Text style={styles.imageText}>📷</Text>
+                  <View style={blogListScreenStyles.imagePlaceholder}>
+                    <Text style={blogListScreenStyles.imageText}>📷</Text>
                   </View>
                 )}
-                <View style={styles.blogContent}>
-                  <Text style={styles.blogTitle}>{blog.title}</Text>
+                <View style={blogListScreenStyles.blogContent}>
+                  <Text style={blogListScreenStyles.blogTitle}>{blog.title}</Text>
                   {blog.excerpt && (
-                    <Text style={styles.blogExcerpt} numberOfLines={2}>
+                    <Text style={blogListScreenStyles.blogExcerpt} numberOfLines={2}>
                       {blog.excerpt}
                     </Text>
                   )}
-                  <View style={styles.blogMeta}>
-                    <Text style={styles.blogDate}>
+                  <View style={blogListScreenStyles.blogMeta}>
+                    <Text style={blogListScreenStyles.blogDate}>
                       {blog.publishedAt
                         ? format(blog.publishedAt, 'MMMM d, yyyy')
                         : ''}
                     </Text>
                     {blog.authorName && (
-                      <Text style={styles.blogAuthor}>by {blog.authorName}</Text>
+                      <Text style={blogListScreenStyles.blogAuthor}>by {blog.authorName}</Text>
                     )}
                   </View>
                 </View>
@@ -105,84 +112,4 @@ export const BlogListScreen: React.FC = () => {
   );
 };
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-  },
-  loadingContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  content: {
-    padding: 20,
-    paddingBottom: Platform.OS === 'web' ? 60 : 20, // Extra padding for footer
-  },
-  title: {
-    fontSize: 32,
-    fontWeight: 'bold',
-    marginBottom: 8,
-  },
-  subtitle: {
-    fontSize: 16,
-    color: '#666',
-    marginBottom: 24,
-  },
-  blogCard: {
-    backgroundColor: '#f9f9f9',
-    borderRadius: 12,
-    marginBottom: 16,
-    overflow: 'hidden',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 2,
-  },
-  imagePlaceholder: {
-    width: '100%',
-    height: 200,
-    backgroundColor: '#e0e0e0',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  imageText: {
-    fontSize: 48,
-  },
-  blogContent: {
-    padding: 16,
-  },
-  blogTitle: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    marginBottom: 8,
-    color: '#1a1a1a',
-  },
-  blogExcerpt: {
-    fontSize: 14,
-    color: '#666',
-    marginBottom: 12,
-    lineHeight: 20,
-  },
-  blogMeta: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
-  blogDate: {
-    fontSize: 12,
-    color: '#999',
-  },
-  blogAuthor: {
-    fontSize: 12,
-    color: '#999',
-  },
-  emptyText: {
-    fontSize: 16,
-    color: '#666',
-    textAlign: 'center',
-    marginTop: 40,
-  },
-});
 

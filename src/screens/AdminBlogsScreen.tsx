@@ -9,7 +9,6 @@ import {
   Text,
   ScrollView,
   TouchableOpacity,
-  StyleSheet,
   ActivityIndicator,
   Platform,
 } from 'react-native';
@@ -17,6 +16,8 @@ import { getAllBlogs, deleteBlog, publishBlog, unpublishBlog } from '@/services/
 import { Blog } from '@/types';
 import { format } from 'date-fns';
 import { useRequireAuth } from '@/hooks/useRequireAuth';
+import { Layout } from '@/components/Layout';
+import { adminBlogsScreenStyles } from '@/styles/screens/AdminBlogsScreen.styles';
 
 export const AdminBlogsScreen: React.FC = () => {
   const [blogs, setBlogs] = useState<Blog[]>([]);
@@ -72,71 +73,71 @@ export const AdminBlogsScreen: React.FC = () => {
 
   if (loading) {
     return (
-      <View style={styles.loadingContainer}>
+      <View style={adminBlogsScreenStyles.loadingContainer}>
         <ActivityIndicator size="large" color="#007AFF" />
       </View>
     );
   }
 
   return (
-    <ScrollView style={styles.container}>
-      <View style={styles.header}>
-        <Text style={styles.title}>Manage Blogs</Text>
+    <ScrollView style={adminBlogsScreenStyles.container}>
+      <View style={adminBlogsScreenStyles.header}>
+        <Text style={adminBlogsScreenStyles.title}>Manage Blogs</Text>
         <TouchableOpacity
-          style={styles.addButton}
+          style={adminBlogsScreenStyles.addButton}
           onPress={() => navigateTo('/admin/blogs/new')}
         >
-          <Text style={styles.addButtonText}>+ New Blog</Text>
+          <Text style={adminBlogsScreenStyles.addButtonText}>+ New Blog</Text>
         </TouchableOpacity>
       </View>
 
-      <View style={styles.content}>
+      <View style={adminBlogsScreenStyles.content}>
         {blogs.length === 0 ? (
-          <Text style={styles.emptyText}>No blogs found</Text>
+          <Text style={adminBlogsScreenStyles.emptyText}>No blogs found</Text>
         ) : (
           blogs.map((blog) => (
-            <View key={blog.id} style={styles.blogCard}>
-              <View style={styles.blogInfo}>
-                <Text style={styles.blogTitle}>{blog.title}</Text>
-                <Text style={styles.blogSlug}>/{blog.slug}</Text>
-                <View style={styles.blogMeta}>
+            <View key={blog.id} style={adminBlogsScreenStyles.blogCard}>
+              <View style={adminBlogsScreenStyles.blogInfo}>
+                <Text style={adminBlogsScreenStyles.blogTitle}>{blog.title}</Text>
+                <Text style={adminBlogsScreenStyles.blogSlug}>/{blog.slug}</Text>
+                <View style={adminBlogsScreenStyles.blogMeta}>
                   <Text
                     style={[
-                      styles.statusBadge,
+                      adminBlogsScreenStyles.statusBadge,
                       blog.status === 'published'
-                        ? styles.published
-                        : styles.draft,
+                        ? adminBlogsScreenStyles.published
+                        : adminBlogsScreenStyles.draft,
                     ]}
                   >
                     {blog.status === 'published' ? 'Published' : 'Draft'}
                   </Text>
                   {blog.publishedAt && (
-                    <Text style={styles.blogDate}>
+                    <Text style={adminBlogsScreenStyles.blogDate}>
                       {format(blog.publishedAt, 'MMM d, yyyy')}
                     </Text>
                   )}
                 </View>
               </View>
-              <View style={styles.blogActions}>
+              <View style={adminBlogsScreenStyles.blogActions}>
                 <TouchableOpacity
-                  style={styles.publishButton}
+                  style={adminBlogsScreenStyles.publishButton}
                   onPress={() => handleTogglePublish(blog)}
                 >
-                  <Text style={styles.publishButtonText}>
+                  <Text style={adminBlogsScreenStyles.publishButtonText}>
                     {blog.status === 'published' ? 'Unpublish' : 'Publish'}
                   </Text>
                 </TouchableOpacity>
                 <TouchableOpacity
-                  style={styles.editButton}
+                  style={adminBlogsScreenStyles.editButton}
                   onPress={() => handleEditBlog(blog.id)}
                 >
-                  <Text style={styles.editButtonText}>Edit</Text>
+                  <Text style={adminBlogsScreenStyles.editButtonText}>Edit</Text>
                 </TouchableOpacity>
                 <TouchableOpacity
-                  style={styles.deleteButton}
+                  style={adminBlogsScreenStyles.deleteButton}
                   onPress={() => handleDeleteBlog(blog.id)}
                 >
-                  <Text style={styles.deleteButtonText}>Delete</Text>
+                  <Text style={adminBlogsScreenStyles.deleteButtonText}>Delete</Text>
                 </TouchableOpacity>
               </View>
             </View>
@@ -147,134 +148,4 @@ export const AdminBlogsScreen: React.FC = () => {
   );
 };
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#f5f5f5',
-  },
-  loadingContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  header: {
-    backgroundColor: '#fff',
-    padding: 20,
-    borderBottomWidth: 1,
-    borderBottomColor: '#e0e0e0',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: 'bold',
-  },
-  addButton: {
-    backgroundColor: '#007AFF',
-    paddingHorizontal: 16,
-    paddingVertical: 8,
-    borderRadius: 8,
-  },
-  addButtonText: {
-    color: '#fff',
-    fontSize: 14,
-    fontWeight: '600',
-  },
-  content: {
-    padding: 20,
-  },
-  blogCard: {
-    backgroundColor: '#fff',
-    borderRadius: 12,
-    padding: 16,
-    marginBottom: 12,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.1,
-    shadowRadius: 2,
-    elevation: 1,
-  },
-  blogInfo: {
-    marginBottom: 12,
-  },
-  blogTitle: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    marginBottom: 4,
-  },
-  blogSlug: {
-    fontSize: 14,
-    color: '#666',
-    marginBottom: 8,
-  },
-  blogMeta: {
-    flexDirection: 'row',
-    gap: 12,
-    alignItems: 'center',
-  },
-  statusBadge: {
-    fontSize: 12,
-    paddingHorizontal: 8,
-    paddingVertical: 4,
-    borderRadius: 4,
-    overflow: 'hidden',
-  },
-  published: {
-    backgroundColor: '#d4edda',
-    color: '#155724',
-  },
-  draft: {
-    backgroundColor: '#fff3cd',
-    color: '#856404',
-  },
-  blogDate: {
-    fontSize: 12,
-    color: '#999',
-  },
-  blogActions: {
-    flexDirection: 'row',
-    gap: 8,
-    flexWrap: 'wrap',
-  },
-  publishButton: {
-    backgroundColor: '#28a745',
-    paddingHorizontal: 12,
-    paddingVertical: 6,
-    borderRadius: 6,
-  },
-  publishButtonText: {
-    color: '#fff',
-    fontSize: 12,
-    fontWeight: '600',
-  },
-  editButton: {
-    backgroundColor: '#007AFF',
-    paddingHorizontal: 12,
-    paddingVertical: 6,
-    borderRadius: 6,
-  },
-  editButtonText: {
-    color: '#fff',
-    fontSize: 12,
-    fontWeight: '600',
-  },
-  deleteButton: {
-    backgroundColor: '#dc3545',
-    paddingHorizontal: 12,
-    paddingVertical: 6,
-    borderRadius: 6,
-  },
-  deleteButtonText: {
-    color: '#fff',
-    fontSize: 12,
-    fontWeight: '600',
-  },
-  emptyText: {
-    fontSize: 16,
-    color: '#666',
-    textAlign: 'center',
-    marginTop: 40,
-  },
-});
 
