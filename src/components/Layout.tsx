@@ -7,7 +7,7 @@ import React, { ReactNode } from 'react';
 import { View, StyleSheet } from 'react-native';
 import { useAuth } from '@/contexts/AuthContext';
 import { TouchableOpacity, Text } from 'react-native';
-import { useRouter } from 'expo-router';
+import { Link, useRouter } from 'expo-router';
 
 interface LayoutProps {
   children: ReactNode;
@@ -40,77 +40,33 @@ export const Layout: React.FC<LayoutProps> = ({ children, showHeader = true }) =
             <Text style={styles.logo}>Aitasol</Text>
           </TouchableOpacity>
           <View style={styles.nav}>
-            <TouchableOpacity onPress={() => {
-              try {
-                if (router && typeof router.push === 'function') {
-                  router.push('/');
-                } else if (typeof window !== 'undefined') {
-                  window.location.href = '/';
-                }
-              } catch (error) {
-                console.error('Navigation error:', error);
-                if (typeof window !== 'undefined') {
-                  window.location.href = '/';
-                }
-              }
-            }}>
-              <Text style={styles.navLink}>Home</Text>
-            </TouchableOpacity>
-            <TouchableOpacity onPress={() => {
-              try {
-                if (router && typeof router.push === 'function') {
-                  router.push('/blog');
-                } else if (typeof window !== 'undefined') {
-                  window.location.href = '/blog';
-                }
-              } catch (error) {
-                console.error('Navigation error:', error);
-                if (typeof window !== 'undefined') {
-                  window.location.href = '/blog';
-                }
-              }
-            }}>
-              <Text style={styles.navLink}>Blog</Text>
-            </TouchableOpacity>
+            <Link href="/" asChild>
+              <TouchableOpacity>
+                <Text style={styles.navLink}>Home</Text>
+              </TouchableOpacity>
+            </Link>
+            <Link href="/blog" asChild>
+              <TouchableOpacity>
+                <Text style={styles.navLink}>Blog</Text>
+              </TouchableOpacity>
+            </Link>
             {!loading && user ? (
               <>
-                <TouchableOpacity onPress={() => {
-                  try {
-                    if (router && typeof router.push === 'function') {
-                      router.push('/admin/dashboard');
-                    } else if (typeof window !== 'undefined') {
-                      window.location.href = '/admin/dashboard';
-                    }
-                  } catch (error) {
-                    console.error('Navigation error:', error);
-                    if (typeof window !== 'undefined') {
-                      window.location.href = '/admin/dashboard';
-                    }
-                  }
-                }}>
-                  <Text style={styles.navLink}>Dashboard</Text>
-                </TouchableOpacity>
+                <Link href="/admin/dashboard" asChild>
+                  <TouchableOpacity>
+                    <Text style={styles.navLink}>Dashboard</Text>
+                  </TouchableOpacity>
+                </Link>
                 <TouchableOpacity onPress={handleSignOut}>
                   <Text style={styles.navLink}>Sign Out</Text>
                 </TouchableOpacity>
               </>
             ) : !loading ? (
-              <TouchableOpacity onPress={() => {
-                try {
-                  if (router && typeof router.push === 'function') {
-                    router.push('/dmlabs');
-                  } else if (typeof window !== 'undefined') {
-                    window.location.href = '/dmlabs';
-                  }
-                } catch (error) {
-                  console.error('Navigation error:', error);
-                  if (typeof window !== 'undefined') {
-                    window.location.href = '/dmlabs';
-                  }
-                }
-              }}>
-                <Text style={styles.navLink}>Login</Text>
-              </TouchableOpacity>
+              <Link href="/dmlabs" asChild>
+                <TouchableOpacity>
+                  <Text style={styles.navLink}>Login</Text>
+                </TouchableOpacity>
+              </Link>
             ) : null}
           </View>
         </View>

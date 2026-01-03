@@ -5,7 +5,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { View, Text, ScrollView, StyleSheet, ActivityIndicator, TouchableOpacity } from 'react-native';
-import { useRouter } from 'expo-router';
+import { Link } from 'expo-router';
 import { getPageBySlug, updatePageSection } from '@/services/pageService';
 import { EditableText } from '@/components/EditableText';
 import { EditableImage } from '@/components/EditableImage';
@@ -15,7 +15,6 @@ import { useAuth } from '@/contexts/AuthContext';
 export const HomeScreen: React.FC = () => {
   const [page, setPage] = useState<Page | null>(null);
   const [loading, setLoading] = useState(true);
-  const router = useRouter();
   const { user, loading: authLoading } = useAuth();
 
   useEffect(() => {
@@ -100,29 +99,11 @@ export const HomeScreen: React.FC = () => {
         if (!authLoading && !user) {
           return (
             <View key={section.id} style={styles.ctaContainer}>
-              <TouchableOpacity
-                style={styles.loginButton}
-                onPress={() => {
-                  try {
-                    if (router && typeof router.push === 'function') {
-                      router.push('/dmlabs');
-                    } else {
-                      // Fallback for web
-                      if (typeof window !== 'undefined') {
-                        window.location.href = '/dmlabs';
-                      }
-                    }
-                  } catch (error) {
-                    console.error('Navigation error:', error);
-                    // Fallback for web
-                    if (typeof window !== 'undefined') {
-                      window.location.href = '/dmlabs';
-                    }
-                  }
-                }}
-              >
-                <Text style={styles.loginButtonText}>Login</Text>
-              </TouchableOpacity>
+              <Link href="/dmlabs" asChild>
+                <TouchableOpacity style={styles.loginButton}>
+                  <Text style={styles.loginButtonText}>Login</Text>
+                </TouchableOpacity>
+              </Link>
             </View>
           );
         }
