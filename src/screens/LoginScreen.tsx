@@ -12,8 +12,8 @@ import {
   StyleSheet,
   ActivityIndicator,
   Alert,
+  Platform,
 } from 'react-native';
-import { useRouter } from 'expo-router';
 import { useAuth } from '@/contexts/AuthContext';
 
 export const LoginScreen: React.FC = () => {
@@ -21,7 +21,6 @@ export const LoginScreen: React.FC = () => {
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const { signIn } = useAuth();
-  const router = useRouter();
 
   const handleLogin = async () => {
     if (!email || !password) {
@@ -32,7 +31,10 @@ export const LoginScreen: React.FC = () => {
     setLoading(true);
     try {
       await signIn(email, password);
-      router.replace('/admin/dashboard');
+      // Use window.location for web navigation
+      if (Platform.OS === 'web' && typeof window !== 'undefined') {
+        window.location.href = '/admin/dashboard';
+      }
     } catch (error: any) {
       Alert.alert('Login Failed', error.message || 'Invalid email or password');
     } finally {
