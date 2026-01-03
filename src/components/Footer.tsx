@@ -252,5 +252,6 @@ const createFooterStyles = (colors: any) => {
     fontSize: 14,
     color: colors.textTertiary || '#a9adc9',
   },
-});
+  });
+};
 
