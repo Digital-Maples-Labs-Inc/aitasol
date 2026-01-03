@@ -1,10 +1,10 @@
 /**
- * Login Page (Expo Router)
+ * DMLabs Login Page (Expo Router)
  */
 
 import { LoginScreen } from '@/screens/LoginScreen';
 
-export default function Login() {
+export default function DMLabs() {
   return <LoginScreen />;
 }
 

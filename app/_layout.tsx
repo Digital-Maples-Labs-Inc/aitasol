@@ -24,7 +24,7 @@ export default function RootLayout() {
         <Stack.Screen name="index" options={{ title: 'Home' }} />
         <Stack.Screen name="blog" options={{ title: 'Blog' }} />
         <Stack.Screen name="blog/[slug]" options={{ title: 'Blog Post' }} />
-        <Stack.Screen name="login" options={{ title: 'Login', headerShown: false }} />
+        <Stack.Screen name="dmlabs" options={{ title: 'DMLabs', headerShown: false }} />
         <Stack.Screen name="admin/dashboard" options={{ title: 'Admin Dashboard' }} />
         <Stack.Screen name="admin/pages" options={{ title: 'Manage Pages' }} />
         <Stack.Screen name="admin/blogs" options={{ title: 'Manage Blogs' }} />

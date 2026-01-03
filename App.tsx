@@ -51,9 +51,9 @@ export default function App() {
             options={{ title: 'Blog Post' }}
           />
           <Stack.Screen
-            name="Login"
+            name="DMLabs"
             component={LoginScreen}
-            options={{ title: 'Login', headerShown: false }}
+            options={{ title: 'DMLabs', headerShown: false }}
           />
           <Stack.Screen
             name="AdminDashboard"

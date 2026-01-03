@@ -15,7 +15,7 @@ export const useRequireAuth = (requiredRole?: UserRole) => {
   useEffect(() => {
     if (!loading) {
       if (!user) {
-        router.replace('/login');
+        router.replace('/dmlabs');
         return;
       }
 

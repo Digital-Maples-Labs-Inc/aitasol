@@ -51,7 +51,7 @@ export const Layout: React.FC<LayoutProps> = ({ children, showHeader = true }) =
                 </TouchableOpacity>
               </>
             ) : (
-              <TouchableOpacity onPress={() => router.push('/login')}>
+              <TouchableOpacity onPress={() => router.push('/dmlabs')}>
                 <Text style={styles.navLink}>Login</Text>
               </TouchableOpacity>
             )}
