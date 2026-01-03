@@ -24,26 +24,58 @@ Go to [Firebase Console](https://console.firebase.google.com/project/aitasol/fir
   "published": true,
   "sections": [
     {
-      "id": "hero-heading",
+      "id": "company-name",
       "type": "heading",
-      "content": "Welcome to Aitasol Education Consultancy",
+      "content": "AitahSolutions Educational Consultancy",
       "editable": true
     },
     {
-      "id": "hero-text",
+      "id": "year-founded",
       "type": "paragraph",
-      "content": "We help students achieve their educational goals with expert guidance and support.",
+      "content": "Year Founded: 2019",
       "editable": true
     },
     {
-      "id": "hero-image",
-      "type": "image",
-      "content": "",
-      "editable": true,
-      "metadata": {
-        "imageUrl": "/assets/placeholder-hero.jpg",
-        "imageAlt": "Education consultancy"
-      }
+      "id": "main-heading",
+      "type": "heading",
+      "content": "Clear Guidance for Global Education Decisions",
+      "editable": true
+    },
+    {
+      "id": "main-description",
+      "type": "paragraph",
+      "content": "AitahSolutions Educational Consultancy supports students in making informed, ethical, and realistic decisions about studying abroad. Since 2019, we have guided students through program selection, applications, documentation, funding awareness, and pre-departure preparation with clarity and integrity.",
+      "editable": true
+    },
+    {
+      "id": "philosophy-text",
+      "type": "paragraph",
+      "content": "We understand that international education is a major financial and life decision. Our role is not to sell opportunities, but to help students evaluate them critically — based on academic readiness, financial sustainability, and long-term career alignment.",
+      "editable": true
+    },
+    {
+      "id": "partnership-text",
+      "type": "paragraph",
+      "content": "We work with established education platforms and professional partners while remaining independent in our advice. Admissions decisions, visas, and funding outcomes are never guaranteed; informed decision-making is.",
+      "editable": true
+    },
+    {
+      "id": "what-we-do-heading",
+      "type": "heading",
+      "content": "What We Do",
+      "editable": true
+    },
+    {
+      "id": "services-list",
+      "type": "paragraph",
+      "content": "• Match students with suitable programs and institutions\n• Support accurate and compliant application processes\n• Guide admissions documentation preparation\n• Provide scholarship and funding information\n• Offer career counselling and pathway planning\n• Coordinate pre-arrival and settlement support",
+      "editable": true
+    },
+    {
+      "id": "tagline",
+      "type": "paragraph",
+      "content": "📌 Ethical guidance. Transparent processes. Student-centered outcomes.",
+      "editable": true
     },
     {
       "id": "cta-section",
@@ -51,13 +83,13 @@ Go to [Firebase Console](https://console.firebase.google.com/project/aitasol/fir
       "content": "",
       "editable": true,
       "metadata": {
-        "ctaText": "Get Started",
+        "ctaText": "👉 Book a Consultation",
         "ctaLink": "/contact"
       }
     }
   ],
-  "seoTitle": "Aitasol Education Consultancy - Expert Educational Guidance",
-  "seoDescription": "Professional education consultancy services",
+  "seoTitle": "AitahSolutions Educational Consultancy - Clear Guidance for Global Education Decisions",
+  "seoDescription": "AitahSolutions Educational Consultancy supports students in making informed, ethical, and realistic decisions about studying abroad. Since 2019, we have guided students through program selection, applications, documentation, funding awareness, and pre-departure preparation.",
   "createdAt": [Firestore Timestamp - use server timestamp],
   "updatedAt": [Firestore Timestamp - use server timestamp]
 }

@@ -20,8 +20,8 @@ Click "Add document" with ID `home`, then add these fields:
 | `title` | string | `Home` |
 | `published` | boolean | `true` |
 | `sections` | array | See below |
-| `seoTitle` | string | `Aitasol Education Consultancy - Expert Educational Guidance` |
-| `seoDescription` | string | `Professional education consultancy services to help students achieve their academic goals.` |
+| `seoTitle` | string | `AitahSolutions Educational Consultancy - Clear Guidance for Global Education Decisions` |
+| `seoDescription` | string | `AitahSolutions Educational Consultancy supports students in making informed, ethical, and realistic decisions about studying abroad. Since 2019, we have guided students through program selection, applications, documentation, funding awareness, and pre-departure preparation.` |
 | `createdAt` | timestamp | Click "timestamp" → "server timestamp" |
 | `updatedAt` | timestamp | Click "timestamp" → "server timestamp" |
 
@@ -30,31 +30,76 @@ Click "Add document" with ID `home`, then add these fields:
 **Item 1:**
 - Type: `map`
 - Fields:
-  - `id`: string → `hero-heading`
+  - `id`: string → `company-name`
   - `type`: string → `heading`
-  - `content`: string → `Welcome to Aitasol Education Consultancy`
+  - `content`: string → `AitahSolutions Educational Consultancy`
   - `editable`: boolean → `true`
 
 **Item 2:**
 - Type: `map`
 - Fields:
-  - `id`: string → `hero-text`
+  - `id`: string → `year-founded`
   - `type`: string → `paragraph`
-  - `content`: string → `We help students achieve their educational goals with expert guidance and support.`
+  - `content`: string → `Year Founded: 2019`
   - `editable`: boolean → `true`
 
 **Item 3:**
 - Type: `map`
 - Fields:
-  - `id`: string → `hero-image`
-  - `type`: string → `image`
-  - `content`: string → (leave empty)
+  - `id`: string → `main-heading`
+  - `type`: string → `heading`
+  - `content`: string → `Clear Guidance for Global Education Decisions`
   - `editable`: boolean → `true`
-  - `metadata`: map → 
-    - `imageUrl`: string → `/assets/images/hero-placeholder.jpg`
-    - `imageAlt`: string → `Education consultancy`
 
 **Item 4:**
+- Type: `map`
+- Fields:
+  - `id`: string → `main-description`
+  - `type`: string → `paragraph`
+  - `content`: string → `AitahSolutions Educational Consultancy supports students in making informed, ethical, and realistic decisions about studying abroad. Since 2019, we have guided students through program selection, applications, documentation, funding awareness, and pre-departure preparation with clarity and integrity.`
+  - `editable`: boolean → `true`
+
+**Item 5:**
+- Type: `map`
+- Fields:
+  - `id`: string → `philosophy-text`
+  - `type`: string → `paragraph`
+  - `content`: string → `We understand that international education is a major financial and life decision. Our role is not to sell opportunities, but to help students evaluate them critically — based on academic readiness, financial sustainability, and long-term career alignment.`
+  - `editable`: boolean → `true`
+
+**Item 6:**
+- Type: `map`
+- Fields:
+  - `id`: string → `partnership-text`
+  - `type`: string → `paragraph`
+  - `content`: string → `We work with established education platforms and professional partners while remaining independent in our advice. Admissions decisions, visas, and funding outcomes are never guaranteed; informed decision-making is.`
+  - `editable`: boolean → `true`
+
+**Item 7:**
+- Type: `map`
+- Fields:
+  - `id`: string → `what-we-do-heading`
+  - `type`: string → `heading`
+  - `content`: string → `What We Do`
+  - `editable`: boolean → `true`
+
+**Item 8:**
+- Type: `map`
+- Fields:
+  - `id`: string → `services-list`
+  - `type`: string → `paragraph`
+  - `content`: string → `• Match students with suitable programs and institutions\n• Support accurate and compliant application processes\n• Guide admissions documentation preparation\n• Provide scholarship and funding information\n• Offer career counselling and pathway planning\n• Coordinate pre-arrival and settlement support`
+  - `editable`: boolean → `true`
+
+**Item 9:**
+- Type: `map`
+- Fields:
+  - `id`: string → `tagline`
+  - `type`: string → `paragraph`
+  - `content`: string → `📌 Ethical guidance. Transparent processes. Student-centered outcomes.`
+  - `editable`: boolean → `true`
+
+**Item 10:**
 - Type: `map`
 - Fields:
   - `id`: string → `cta-section`
@@ -62,7 +107,7 @@ Click "Add document" with ID `home`, then add these fields:
   - `content`: string → (leave empty)
   - `editable`: boolean → `true`
   - `metadata`: map →
-    - `ctaText`: string → `Get Started`
+    - `ctaText`: string → `👉 Book a Consultation`
     - `ctaLink`: string → `/contact`
 
 #### Document 2: `about`

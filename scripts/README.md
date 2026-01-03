@@ -51,8 +51,19 @@ npm start
 
 ### `init-firestore-with-service-account.js`
 - **Requires**: `serviceAccountKey.json`
-- **Creates**: Initial pages (home, about, services, contact)
+- **Creates**: Initial pages (home, about, services, contact) with AitahSolutions content
 - **Usage**: `node scripts/init-firestore-with-service-account.js`
+
+### `update-home-page.js`
+- **Requires**: `serviceAccountKey.json`
+- **Updates**: Home page with latest AitahSolutions content
+- **Usage**: `node scripts/update-home-page.js`
+- **Note**: Preserves original `createdAt` timestamp
+
+### `check-firestore-structure.js`
+- **Requires**: `serviceAccountKey.json`
+- **Shows**: Current Firestore structure (pages, users, blogs)
+- **Usage**: `node scripts/check-firestore-structure.js`
 
 ### `create-admin-user.js`
 - **Requires**: `serviceAccountKey.json` and User UID from Authentication
