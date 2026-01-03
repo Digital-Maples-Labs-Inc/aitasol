@@ -9,7 +9,6 @@ import {
   View,
   Text,
   TouchableOpacity,
-  StyleSheet,
   Platform,
 } from 'react-native';
 import Animated, {
@@ -21,6 +20,7 @@ import Animated, {
 } from 'react-native-reanimated';
 import { useAuth } from '@/contexts/AuthContext';
 import { useTheme } from '@/contexts/ThemeContext';
+import { createHeaderNavigationStyles } from '@/styles/components/HeaderNavigation.styles';
 
 interface NavLinkProps {
   label: string;
