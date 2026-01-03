@@ -16,6 +16,7 @@ import { useRouter } from 'expo-router';
 import { getPublishedBlogs } from '@/services/blogService';
 import { Blog } from '@/types';
 import { format } from 'date-fns';
+import { Layout } from '@/components/Layout';
 
 export const BlogListScreen: React.FC = () => {
   const [blogs, setBlogs] = useState<Blog[]>([]);
@@ -43,55 +44,59 @@ export const BlogListScreen: React.FC = () => {
 
   if (loading) {
     return (
-      <View style={styles.loadingContainer}>
-        <ActivityIndicator size="large" color="#007AFF" />
-      </View>
+      <Layout>
+        <View style={styles.loadingContainer}>
+          <ActivityIndicator size="large" color="#007AFF" />
+        </View>
+      </Layout>
     );
   }
 
   return (
-    <ScrollView style={styles.container}>
-      <View style={styles.content}>
-        <Text style={styles.title}>Blog</Text>
-        <Text style={styles.subtitle}>Latest articles and updates</Text>
+    <Layout>
+      <ScrollView style={styles.container}>
+        <View style={styles.content}>
+          <Text style={styles.title}>Blog</Text>
+          <Text style={styles.subtitle}>Latest articles and updates</Text>
 
-        {blogs.length === 0 ? (
-          <Text style={styles.emptyText}>No blog posts available</Text>
-        ) : (
-          blogs.map((blog) => (
-            <TouchableOpacity
-              key={blog.id}
-              style={styles.blogCard}
-              onPress={() => handleBlogPress(blog.slug)}
-            >
-              {blog.featuredImage && (
-                <View style={styles.imagePlaceholder}>
-                  <Text style={styles.imageText}>📷</Text>
-                </View>
-              )}
-              <View style={styles.blogContent}>
-                <Text style={styles.blogTitle}>{blog.title}</Text>
-                {blog.excerpt && (
-                  <Text style={styles.blogExcerpt} numberOfLines={2}>
-                    {blog.excerpt}
-                  </Text>
+          {blogs.length === 0 ? (
+            <Text style={styles.emptyText}>No blog posts available</Text>
+          ) : (
+            blogs.map((blog) => (
+              <TouchableOpacity
+                key={blog.id}
+                style={styles.blogCard}
+                onPress={() => handleBlogPress(blog.slug)}
+              >
+                {blog.featuredImage && (
+                  <View style={styles.imagePlaceholder}>
+                    <Text style={styles.imageText}>📷</Text>
+                  </View>
                 )}
-                <View style={styles.blogMeta}>
-                  <Text style={styles.blogDate}>
-                    {blog.publishedAt
-                      ? format(blog.publishedAt, 'MMMM d, yyyy')
-                      : ''}
-                  </Text>
-                  {blog.authorName && (
-                    <Text style={styles.blogAuthor}>by {blog.authorName}</Text>
+                <View style={styles.blogContent}>
+                  <Text style={styles.blogTitle}>{blog.title}</Text>
+                  {blog.excerpt && (
+                    <Text style={styles.blogExcerpt} numberOfLines={2}>
+                      {blog.excerpt}
+                    </Text>
                   )}
+                  <View style={styles.blogMeta}>
+                    <Text style={styles.blogDate}>
+                      {blog.publishedAt
+                        ? format(blog.publishedAt, 'MMMM d, yyyy')
+                        : ''}
+                    </Text>
+                    {blog.authorName && (
+                      <Text style={styles.blogAuthor}>by {blog.authorName}</Text>
+                    )}
+                  </View>
                 </View>
-              </View>
-            </TouchableOpacity>
-          ))
-        )}
-      </View>
-    </ScrollView>
+              </TouchableOpacity>
+            ))
+          )}
+        </View>
+      </ScrollView>
+    </Layout>
   );
 };
 

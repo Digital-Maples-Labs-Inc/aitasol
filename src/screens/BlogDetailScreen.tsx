@@ -16,6 +16,7 @@ import { getBlogBySlug } from '@/services/blogService';
 import { Blog } from '@/types';
 import { format } from 'date-fns';
 import RenderHTML from 'react-native-render-html';
+import { Layout } from '@/components/Layout';
 
 export const BlogDetailScreen: React.FC = () => {
   const { slug } = useLocalSearchParams<{ slug: string }>();
@@ -43,55 +44,61 @@ export const BlogDetailScreen: React.FC = () => {
 
   if (loading) {
     return (
-      <View style={styles.loadingContainer}>
-        <ActivityIndicator size="large" color="#007AFF" />
-      </View>
+      <Layout>
+        <View style={styles.loadingContainer}>
+          <ActivityIndicator size="large" color="#007AFF" />
+        </View>
+      </Layout>
     );
   }
 
   if (!blog) {
     return (
-      <View style={styles.container}>
-        <Text style={styles.errorText}>Blog post not found</Text>
-      </View>
+      <Layout>
+        <View style={styles.container}>
+          <Text style={styles.errorText}>Blog post not found</Text>
+        </View>
+      </Layout>
     );
   }
 
   return (
-    <ScrollView style={styles.container}>
-      <View style={styles.content}>
-        {blog.featuredImage && (
-          <View style={styles.imageContainer}>
-            <Text style={styles.imagePlaceholder}>📷 Featured Image</Text>
+    <Layout>
+      <ScrollView style={styles.container}>
+        <View style={styles.content}>
+          {blog.featuredImage && (
+            <View style={styles.imageContainer}>
+              <Text style={styles.imagePlaceholder}>📷 Featured Image</Text>
+            </View>
+          )}
+
+          <Text style={styles.title}>{blog.title}</Text>
+
+          <View style={styles.meta}>
+            {blog.publishedAt && (
+              <Text style={styles.date}>
+                {format(blog.publishedAt, 'MMMM d, yyyy')}
+              </Text>
+            )}
+            {blog.authorName && (
+              <Text style={styles.author}>by {blog.authorName}</Text>
+            )}
           </View>
-        )}
 
-        <Text style={styles.title}>{blog.title}</Text>
-
-        <View style={styles.meta}>
-          {blog.publishedAt && (
-            <Text style={styles.date}>
-              {format(blog.publishedAt, 'MMMM d, yyyy')}
-            </Text>
+          {blog.excerpt && (
+            <Text style={styles.excerpt}>{blog.excerpt}</Text>
           )}
-          {blog.authorName && (
-            <Text style={styles.author}>by {blog.authorName}</Text>
-          )}
-        </View>
 
-        {blog.excerpt && (
-          <Text style={styles.excerpt}>{blog.excerpt}</Text>
-        )}
-
-        <View style={styles.contentContainer}>
-          <RenderHTML
-            contentWidth={300}
-            source={{ html: blog.content }}
-            baseStyle={styles.htmlContent}
-          />
+          <View style={styles.contentContainer}>
+            <RenderHTML
+              contentWidth={300}
+              source={{ html: blog.content }}
+              baseStyle={styles.htmlContent}
+            />
+          </View>
         </View>
-      </View>
-    </ScrollView>
+      </ScrollView>
+    </Layout>
   );
 };
 

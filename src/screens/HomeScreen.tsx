@@ -10,6 +10,7 @@ import { EditableText } from '@/components/EditableText';
 import { EditableImage } from '@/components/EditableImage';
 import { Page, PageSection } from '@/types';
 import { useAuth } from '@/contexts/AuthContext';
+import { Layout } from '@/components/Layout';
 
 export const HomeScreen: React.FC = () => {
   const [page, setPage] = useState<Page | null>(null);
@@ -133,26 +134,32 @@ export const HomeScreen: React.FC = () => {
 
   if (loading) {
     return (
-      <View style={styles.loadingContainer}>
-        <ActivityIndicator size="large" color="#007AFF" />
-      </View>
+      <Layout>
+        <View style={styles.loadingContainer}>
+          <ActivityIndicator size="large" color="#007AFF" />
+        </View>
+      </Layout>
     );
   }
 
   if (!page) {
     return (
-      <View style={styles.container}>
-        <Text style={styles.errorText}>Page not found</Text>
-      </View>
+      <Layout>
+        <View style={styles.container}>
+          <Text style={styles.errorText}>Page not found</Text>
+        </View>
+      </Layout>
     );
   }
 
   return (
-    <ScrollView style={styles.container}>
-      <View style={styles.content}>
-        {page.sections.map((section) => renderSection(section))}
-      </View>
-    </ScrollView>
+    <Layout>
+      <ScrollView style={styles.container}>
+        <View style={styles.content}>
+          {page.sections.map((section) => renderSection(section))}
+        </View>
+      </ScrollView>
+    </Layout>
   );
 };
 
