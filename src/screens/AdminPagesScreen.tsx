@@ -11,8 +11,8 @@ import {
   TouchableOpacity,
   StyleSheet,
   ActivityIndicator,
+  Platform,
 } from 'react-native';
-import { useRouter } from 'expo-router';
 import { getAllPages, deletePage } from '@/services/pageService';
 import { Page } from '@/types';
 import { useRequireAuth } from '@/hooks/useRequireAuth';
@@ -20,8 +20,13 @@ import { useRequireAuth } from '@/hooks/useRequireAuth';
 export const AdminPagesScreen: React.FC = () => {
   const [pages, setPages] = useState<Page[]>([]);
   const [loading, setLoading] = useState(true);
-  const router = useRouter();
   useRequireAuth();
+
+  const navigateTo = (path: string) => {
+    if (Platform.OS === 'web' && typeof window !== 'undefined') {
+      window.location.href = path;
+    }
+  };
 
   useEffect(() => {
     loadPages();
@@ -39,7 +44,7 @@ export const AdminPagesScreen: React.FC = () => {
   };
 
   const handleEditPage = (pageId: string) => {
-    router.push(`/admin/pages/${pageId}`);
+    navigateTo(`/admin/pages/${pageId}`);
   };
 
   const handleDeletePage = async (pageId: string) => {
@@ -65,7 +70,7 @@ export const AdminPagesScreen: React.FC = () => {
         <Text style={styles.title}>Manage Pages</Text>
         <TouchableOpacity
           style={styles.addButton}
-          onPress={() => router.push('/admin/pages/new')}
+          onPress={() => navigateTo('/admin/pages/new')}
         >
           <Text style={styles.addButtonText}>+ New Page</Text>
         </TouchableOpacity>

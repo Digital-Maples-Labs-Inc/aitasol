@@ -11,8 +11,8 @@ import {
   TouchableOpacity,
   StyleSheet,
   ActivityIndicator,
+  Platform,
 } from 'react-native';
-import { useRouter } from 'expo-router';
 import { getAllBlogs, deleteBlog, publishBlog, unpublishBlog } from '@/services/blogService';
 import { Blog } from '@/types';
 import { format } from 'date-fns';
@@ -21,8 +21,13 @@ import { useRequireAuth } from '@/hooks/useRequireAuth';
 export const AdminBlogsScreen: React.FC = () => {
   const [blogs, setBlogs] = useState<Blog[]>([]);
   const [loading, setLoading] = useState(true);
-  const router = useRouter();
   useRequireAuth();
+
+  const navigateTo = (path: string) => {
+    if (Platform.OS === 'web' && typeof window !== 'undefined') {
+      window.location.href = path;
+    }
+  };
 
   useEffect(() => {
     loadBlogs();
@@ -40,7 +45,7 @@ export const AdminBlogsScreen: React.FC = () => {
   };
 
   const handleEditBlog = (blogId: string) => {
-    router.push(`/admin/blogs/${blogId}`);
+    navigateTo(`/admin/blogs/${blogId}`);
   };
 
   const handleDeleteBlog = async (blogId: string) => {
@@ -79,7 +84,7 @@ export const AdminBlogsScreen: React.FC = () => {
         <Text style={styles.title}>Manage Blogs</Text>
         <TouchableOpacity
           style={styles.addButton}
-          onPress={() => router.push('/admin/blogs/new')}
+          onPress={() => navigateTo('/admin/blogs/new')}
         >
           <Text style={styles.addButtonText}>+ New Blog</Text>
         </TouchableOpacity>

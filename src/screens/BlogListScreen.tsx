@@ -12,7 +12,7 @@ import {
   StyleSheet,
   ActivityIndicator,
 } from 'react-native';
-import { useRouter } from 'expo-router';
+import { Platform } from 'react-native';
 import { getPublishedBlogs } from '@/services/blogService';
 import { Blog } from '@/types';
 import { format } from 'date-fns';
@@ -21,7 +21,12 @@ import { Layout } from '@/components/Layout';
 export const BlogListScreen: React.FC = () => {
   const [blogs, setBlogs] = useState<Blog[]>([]);
   const [loading, setLoading] = useState(true);
-  const router = useRouter();
+
+  const navigateTo = (path: string) => {
+    if (Platform.OS === 'web' && typeof window !== 'undefined') {
+      window.location.href = path;
+    }
+  };
 
   useEffect(() => {
     loadBlogs();
@@ -39,7 +44,7 @@ export const BlogListScreen: React.FC = () => {
   };
 
   const handleBlogPress = (slug: string) => {
-    router.push(`/blog/${slug}`);
+    navigateTo(`/blog/${slug}`);
   };
 
   if (loading) {

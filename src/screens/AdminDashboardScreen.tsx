@@ -4,20 +4,26 @@
  */
 
 import React from 'react';
-import { View, Text, ScrollView, TouchableOpacity, StyleSheet } from 'react-native';
-import { useRouter } from 'expo-router';
+import { View, Text, ScrollView, TouchableOpacity, StyleSheet, Platform } from 'react-native';
 import { useAuth } from '@/contexts/AuthContext';
 import { useRequireAuth } from '@/hooks/useRequireAuth';
 
 export const AdminDashboardScreen: React.FC = () => {
   const { user, signOut } = useAuth();
-  const router = useRouter();
   useRequireAuth();
+
+  const navigateTo = (path: string) => {
+    if (Platform.OS === 'web' && typeof window !== 'undefined') {
+      window.location.href = path;
+    }
+  };
 
   const handleSignOut = async () => {
     try {
       await signOut();
-      router.replace('/');
+      if (Platform.OS === 'web' && typeof window !== 'undefined') {
+        window.location.href = '/';
+      }
     } catch (error) {
       console.error('Error signing out:', error);
     }
@@ -36,7 +42,7 @@ export const AdminDashboardScreen: React.FC = () => {
       <View style={styles.content}>
         <TouchableOpacity
           style={styles.card}
-          onPress={() => router.push('/admin/pages')}
+          onPress={() => navigateTo('/admin/pages')}
         >
           <Text style={styles.cardIcon}>📄</Text>
           <Text style={styles.cardTitle}>Manage Pages</Text>
@@ -47,7 +53,7 @@ export const AdminDashboardScreen: React.FC = () => {
 
         <TouchableOpacity
           style={styles.card}
-          onPress={() => router.push('/admin/blogs')}
+          onPress={() => navigateTo('/admin/blogs')}
         >
           <Text style={styles.cardIcon}>✍️</Text>
           <Text style={styles.cardTitle}>Manage Blogs</Text>
@@ -60,7 +66,7 @@ export const AdminDashboardScreen: React.FC = () => {
           <>
             <TouchableOpacity
               style={styles.card}
-              onPress={() => router.push('/admin/theme')}
+              onPress={() => navigateTo('/admin/theme')}
             >
               <Text style={styles.cardIcon}>🎨</Text>
               <Text style={styles.cardTitle}>Theme & Colors</Text>
@@ -70,7 +76,7 @@ export const AdminDashboardScreen: React.FC = () => {
             </TouchableOpacity>
             <TouchableOpacity
               style={styles.card}
-              onPress={() => router.push('/admin/users')}
+              onPress={() => navigateTo('/admin/users')}
             >
               <Text style={styles.cardIcon}>👥</Text>
               <Text style={styles.cardTitle}>Manage Users</Text>
