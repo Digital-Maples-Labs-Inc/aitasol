@@ -1,25 +1,12 @@
 module.exports = function(api) {
   api.cache(true);
   
-  // Detect if we're building for web
-  // Check environment variables first, then use caller as fallback
-  let isWeb = false;
-  
-  if (process.env.EXPO_PUBLIC_PLATFORM === 'web' || process.env.BABEL_ENV === 'web') {
-    isWeb = true;
-  } else if (api.caller) {
-    // Only call api.caller once
-    const caller = api.caller((caller) => caller);
-    isWeb = caller && (caller.name === 'babel-loader' || caller.platform === 'web');
-  }
-  
   const plugins = ['nativewind/babel'];
   
   // react-native-reanimated plugin causes issues with webpack
-  // Only include it for native builds
-  if (!isWeb) {
-    plugins.push('react-native-reanimated/plugin');
-  }
+  // Since we're primarily targeting web, exclude it for now
+  // If you need it for native builds, you can conditionally add it
+  // For web builds, this plugin is not needed and causes errors
   
   return {
     presets: ['babel-preset-expo'],
