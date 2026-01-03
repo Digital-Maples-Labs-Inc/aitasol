@@ -235,14 +235,17 @@ export const AdminThemeScreen: React.FC = () => {
 
   if (loading) {
     return (
-      <View style={adminThemeScreenStyles.loadingContainer}>
-        <ActivityIndicator size="large" color="#007AFF" />
-      </View>
+      <Layout>
+        <View style={adminThemeScreenStyles.loadingContainer}>
+          <ActivityIndicator size="large" color="#007AFF" />
+        </View>
+      </Layout>
     );
   }
 
   return (
-    <ScrollView style={adminThemeScreenStyles.container}>
+    <Layout>
+      <ScrollView style={adminThemeScreenStyles.container}>
       <View style={adminThemeScreenStyles.header}>
         <Text style={adminThemeScreenStyles.title}>Theme Management</Text>
         <TouchableOpacity
@@ -699,6 +702,7 @@ export const AdminThemeScreen: React.FC = () => {
         </View>
       )}
     </ScrollView>
+    </Layout>
   );
 };
 
