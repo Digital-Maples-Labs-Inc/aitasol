@@ -4,13 +4,14 @@
  */
 
 import React, { useEffect, useState } from 'react';
-import { View, Text, ScrollView, StyleSheet, ActivityIndicator, TouchableOpacity, Platform } from 'react-native';
+import { View, Text, ScrollView, ActivityIndicator, TouchableOpacity, Platform } from 'react-native';
 import { getPageBySlug, updatePageSection } from '@/services/pageService';
 import { EditableText } from '@/components/EditableText';
 import { EditableImage } from '@/components/EditableImage';
 import { Page, PageSection } from '@/types';
 import { useAuth } from '@/contexts/AuthContext';
 import { Layout } from '@/components/Layout';
+import { homeScreenStyles } from '@/styles/screens/HomeScreen.styles';
 
 export const HomeScreen: React.FC = () => {
   const [page, setPage] = useState<Page | null>(null);

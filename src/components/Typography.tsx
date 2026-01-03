@@ -4,7 +4,7 @@
  */
 
 import React, { ReactNode } from 'react';
-import { Text, TextProps, StyleSheet } from 'react-native';
+import { Text, TextProps } from 'react-native';
 import { useTheme } from '@/contexts/ThemeContext';
 import { getTypographyStyle } from '@/utils/typography';
 
