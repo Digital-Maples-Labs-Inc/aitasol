@@ -5,9 +5,10 @@
  */
 
 import React, { ReactNode } from 'react';
-import { View, StyleSheet, Platform } from 'react-native';
+import { View, Platform } from 'react-native';
 import { HeaderNavigation } from './HeaderNavigation';
 import { Footer } from './Footer';
+import { layoutStyles } from '@/styles/components/Layout.styles';
 
 interface LayoutProps {
   children: ReactNode;
@@ -27,38 +28,13 @@ export const Layout: React.FC<LayoutProps> = ({
       : undefined;
 
   return (
-    <View style={styles.container}>
+    <View style={layoutStyles.container}>
       {showHeader && <HeaderNavigation currentPath={currentPath} />}
-      <View style={styles.contentWrapper}>
-        <View style={styles.content}>{children}</View>
+      <View style={layoutStyles.contentWrapper}>
+        <View style={layoutStyles.content}>{children}</View>
       </View>
       {showFooter && <Footer />}
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    ...(Platform.OS === 'web' && {
-      minHeight: '100vh',
-      display: 'flex',
-      flexDirection: 'column',
-    }),
-  },
-  contentWrapper: {
-    flex: 1,
-    ...(Platform.OS === 'web' && {
-      minHeight: 0,
-      overflow: 'auto',
-    }),
-  },
-  content: {
-    flex: 1,
-    ...(Platform.OS === 'web' && {
-      paddingBottom: 40, // Add padding to prevent footer overlap
-    }),
-  },
-});
 

@@ -191,8 +191,10 @@ export const HeaderNavigation: React.FC<HeaderNavigationProps> = ({
   );
 };
 
+import { createHeaderNavigationStyles } from '@/styles/components/HeaderNavigation.styles';
+
 // Styles will be created dynamically with theme colors
-const createStyles = (colors: any) => StyleSheet.create({
+const createStyles = (colors: any) => createHeaderNavigationStyles(colors);
   header: {
     flexDirection: 'row',
     justifyContent: 'space-between',

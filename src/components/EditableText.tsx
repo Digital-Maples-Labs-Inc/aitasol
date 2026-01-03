@@ -4,8 +4,9 @@
  */
 
 import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, TextInput, Modal } from 'react-native';
+import { View, Text, TouchableOpacity, TextInput, Modal } from 'react-native';
 import { useAuth } from '@/contexts/AuthContext';
+import { editableTextStyles } from '@/styles/components/EditableText.styles';
 
 interface EditableTextProps {
   value: string;
@@ -54,17 +55,17 @@ export const EditableText: React.FC<EditableTextProps> = ({
   };
 
   const textStyle = type === 'heading' 
-    ? styles.heading 
+    ? editableTextStyles.heading 
     : type === 'button' 
-    ? styles.button 
-    : styles.paragraph;
+    ? editableTextStyles.button 
+    : editableTextStyles.paragraph;
 
   return (
     <>
       <TouchableOpacity
         onPress={handlePress}
         disabled={!isEditable}
-        style={[styles.container, isEditable && styles.editableContainer]}
+        style={[editableTextStyles.container, isEditable && editableTextStyles.editableContainer]}
       >
         {type === 'heading' && (
           <Text style={[textStyle, style]}>{value}</Text>
@@ -73,43 +74,43 @@ export const EditableText: React.FC<EditableTextProps> = ({
           <Text style={[textStyle, style]}>{value}</Text>
         )}
         {type === 'button' && (
-          <View style={[styles.buttonContainer, style]}>
+          <View style={[editableTextStyles.buttonContainer, style]}>
             <Text style={textStyle}>{value}</Text>
           </View>
         )}
         {isEditable && (
-          <View style={styles.editIndicator}>
-            <Text style={styles.editIndicatorText}>✏️</Text>
+          <View style={editableTextStyles.editIndicator}>
+            <Text style={editableTextStyles.editIndicatorText}>✏️</Text>
           </View>
         )}
       </TouchableOpacity>
 
       <Modal visible={isEditing} transparent animationType="fade">
-        <View style={styles.modalOverlay}>
-          <View style={styles.modalContent}>
-            <Text style={styles.modalTitle}>Edit {type}</Text>
+        <View style={editableTextStyles.modalOverlay}>
+          <View style={editableTextStyles.modalContent}>
+            <Text style={editableTextStyles.modalTitle}>Edit {type}</Text>
             <TextInput
-              style={[styles.textInput, type === 'heading' && styles.headingInput]}
+              style={[editableTextStyles.textInput, type === 'heading' && editableTextStyles.headingInput]}
               value={editValue}
               onChangeText={setEditValue}
               multiline={type === 'paragraph'}
               numberOfLines={type === 'paragraph' ? 4 : 1}
               autoFocus
             />
-            <View style={styles.modalActions}>
+            <View style={editableTextStyles.modalActions}>
               <TouchableOpacity
-                style={[styles.modalButton, styles.cancelButton]}
+                style={[editableTextStyles.modalButton, editableTextStyles.cancelButton]}
                 onPress={handleCancel}
                 disabled={saving}
               >
-                <Text style={styles.modalButtonText}>Cancel</Text>
+                <Text style={editableTextStyles.modalButtonText}>Cancel</Text>
               </TouchableOpacity>
               <TouchableOpacity
-                style={[styles.modalButton, styles.saveButton]}
+                style={[editableTextStyles.modalButton, editableTextStyles.saveButton]}
                 onPress={handleSave}
                 disabled={saving}
               >
-                <Text style={styles.modalButtonText}>
+                <Text style={editableTextStyles.modalButtonText}>
                   {saving ? 'Saving...' : 'Save'}
                 </Text>
               </TouchableOpacity>
@@ -120,108 +121,4 @@ export const EditableText: React.FC<EditableTextProps> = ({
     </>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    position: 'relative',
-  },
-  editableContainer: {
-    borderWidth: 1,
-    borderColor: 'transparent',
-    borderRadius: 4,
-    padding: 4,
-  },
-  heading: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: '#1a1a1a',
-  },
-  paragraph: {
-    fontSize: 16,
-    color: '#333',
-    lineHeight: 24,
-  },
-  button: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: '#fff',
-  },
-  buttonContainer: {
-    backgroundColor: '#007AFF',
-    paddingHorizontal: 24,
-    paddingVertical: 12,
-    borderRadius: 8,
-    alignItems: 'center',
-  },
-  editIndicator: {
-    position: 'absolute',
-    top: -8,
-    right: -8,
-    backgroundColor: '#007AFF',
-    borderRadius: 12,
-    width: 24,
-    height: 24,
-    justifyContent: 'center',
-    alignItems: 'center',
-    opacity: 0.8,
-  },
-  editIndicatorText: {
-    fontSize: 12,
-  },
-  modalOverlay: {
-    flex: 1,
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  modalContent: {
-    backgroundColor: '#fff',
-    borderRadius: 12,
-    padding: 24,
-    width: '90%',
-    maxWidth: 500,
-  },
-  modalTitle: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    marginBottom: 16,
-  },
-  textInput: {
-    borderWidth: 1,
-    borderColor: '#ddd',
-    borderRadius: 8,
-    padding: 12,
-    fontSize: 16,
-    minHeight: 100,
-    textAlignVertical: 'top',
-    color: '#666',
-  },
-  headingInput: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    minHeight: 60,
-  },
-  modalActions: {
-    flexDirection: 'row',
-    justifyContent: 'flex-end',
-    marginTop: 16,
-    gap: 12,
-  },
-  modalButton: {
-    paddingHorizontal: 20,
-    paddingVertical: 10,
-    borderRadius: 8,
-  },
-  cancelButton: {
-    backgroundColor: '#f0f0f0',
-  },
-  saveButton: {
-    backgroundColor: '#007AFF',
-  },
-  modalButtonText: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: '#fff',
-  },
-});
 

@@ -4,9 +4,10 @@
  */
 
 import React, { useState } from 'react';
-import { View, Image, TouchableOpacity, StyleSheet, Modal, Text, ActivityIndicator, Platform } from 'react-native';
+import { View, Image, TouchableOpacity, Modal, Text, ActivityIndicator, Platform } from 'react-native';
 import { useAuth } from '@/contexts/AuthContext';
 import { uploadImage, compressImage } from '@/services/storageService';
+import { editableImageStyles } from '@/styles/components/EditableImage.styles';
 
 interface EditableImageProps {
   src: string;
@@ -87,38 +88,38 @@ export const EditableImage: React.FC<EditableImageProps> = ({
       <TouchableOpacity
         onPress={handlePress}
         disabled={!isEditable}
-        style={[styles.container, isEditable && styles.editableContainer]}
+        style={[editableImageStyles.container, isEditable && editableImageStyles.editableContainer]}
       >
-        <Image source={{ uri: src }} style={[styles.image, style]} />
+        <Image source={{ uri: src }} style={[editableImageStyles.image, style]} />
         {isEditable && (
-          <View style={styles.editIndicator}>
-            <Text style={styles.editIndicatorText}>📷</Text>
+          <View style={editableImageStyles.editIndicator}>
+            <Text style={editableImageStyles.editIndicatorText}>📷</Text>
           </View>
         )}
       </TouchableOpacity>
 
       <Modal visible={isEditing} transparent animationType="fade">
-        <View style={styles.modalOverlay}>
-          <View style={styles.modalContent}>
-            <Text style={styles.modalTitle}>Replace Image</Text>
+        <View style={editableImageStyles.modalOverlay}>
+          <View style={editableImageStyles.modalContent}>
+            <Text style={editableImageStyles.modalTitle}>Replace Image</Text>
             {uploading ? (
-              <View style={styles.uploadingContainer}>
+              <View style={editableImageStyles.uploadingContainer}>
                 <ActivityIndicator size="large" color="#007AFF" />
-                <Text style={styles.uploadingText}>Uploading image...</Text>
+                <Text style={editableImageStyles.uploadingText}>Uploading image...</Text>
               </View>
             ) : (
               <>
                 <TouchableOpacity
-                  style={styles.uploadButton}
+                  style={editableImageStyles.uploadButton}
                   onPress={handleImagePicker}
                 >
-                  <Text style={styles.uploadButtonText}>Choose Image</Text>
+                  <Text style={editableImageStyles.uploadButtonText}>Choose Image</Text>
                 </TouchableOpacity>
                 <TouchableOpacity
-                  style={styles.cancelButton}
+                  style={editableImageStyles.cancelButton}
                   onPress={handleCancel}
                 >
-                  <Text style={styles.cancelButtonText}>Cancel</Text>
+                  <Text style={editableImageStyles.cancelButtonText}>Cancel</Text>
                 </TouchableOpacity>
               </>
             )}
@@ -128,90 +129,4 @@ export const EditableImage: React.FC<EditableImageProps> = ({
     </>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    position: 'relative',
-  },
-  editableContainer: {
-    borderWidth: 2,
-    borderColor: '#007AFF',
-    borderStyle: 'dashed',
-    borderRadius: 8,
-    padding: 4,
-  },
-  image: {
-    width: '100%',
-    height: 200,
-    borderRadius: 8,
-    resizeMode: 'cover',
-  },
-  editIndicator: {
-    position: 'absolute',
-    top: 8,
-    right: 8,
-    backgroundColor: '#007AFF',
-    borderRadius: 12,
-    width: 32,
-    height: 32,
-    justifyContent: 'center',
-    alignItems: 'center',
-    opacity: 0.9,
-  },
-  editIndicatorText: {
-    fontSize: 16,
-  },
-  modalOverlay: {
-    flex: 1,
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  modalContent: {
-    backgroundColor: '#fff',
-    borderRadius: 12,
-    padding: 24,
-    width: '90%',
-    maxWidth: 400,
-  },
-  modalTitle: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    marginBottom: 16,
-  },
-  uploadButton: {
-    backgroundColor: '#007AFF',
-    paddingVertical: 12,
-    paddingHorizontal: 24,
-    borderRadius: 8,
-    alignItems: 'center',
-    marginBottom: 12,
-  },
-  uploadButtonText: {
-    color: '#fff',
-    fontSize: 16,
-    fontWeight: '600',
-  },
-  cancelButton: {
-    paddingVertical: 12,
-    paddingHorizontal: 24,
-    borderRadius: 8,
-    alignItems: 'center',
-    backgroundColor: '#f0f0f0',
-  },
-  cancelButtonText: {
-    color: '#333',
-    fontSize: 16,
-    fontWeight: '600',
-  },
-  uploadingContainer: {
-    alignItems: 'center',
-    paddingVertical: 24,
-  },
-  uploadingText: {
-    marginTop: 12,
-    fontSize: 16,
-    color: '#666',
-  },
-});
 

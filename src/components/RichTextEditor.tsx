@@ -5,7 +5,8 @@
  */
 
 import React, { useState } from 'react';
-import { View, TextInput, StyleSheet, TouchableOpacity, Text } from 'react-native';
+import { View, TextInput, TouchableOpacity, Text } from 'react-native';
+import { richTextEditorStyles } from '@/styles/components/RichTextEditor.styles';
 
 interface RichTextEditorProps {
   value: string;
@@ -21,23 +22,23 @@ export const RichTextEditor: React.FC<RichTextEditorProps> = ({
   const [htmlMode, setHtmlMode] = useState(false);
 
   return (
-    <View style={styles.container}>
-      <View style={styles.toolbar}>
+    <View style={richTextEditorStyles.container}>
+      <View style={richTextEditorStyles.toolbar}>
         <TouchableOpacity
-          style={[styles.toolbarButton, !htmlMode && styles.toolbarButtonActive]}
+          style={[richTextEditorStyles.toolbarButton, !htmlMode && richTextEditorStyles.toolbarButtonActive]}
           onPress={() => setHtmlMode(false)}
         >
-          <Text style={styles.toolbarButtonText}>Visual</Text>
+          <Text style={richTextEditorStyles.toolbarButtonText}>Visual</Text>
         </TouchableOpacity>
         <TouchableOpacity
-          style={[styles.toolbarButton, htmlMode && styles.toolbarButtonActive]}
+          style={[richTextEditorStyles.toolbarButton, htmlMode && richTextEditorStyles.toolbarButtonActive]}
           onPress={() => setHtmlMode(true)}
         >
-          <Text style={styles.toolbarButtonText}>HTML</Text>
+          <Text style={richTextEditorStyles.toolbarButtonText}>HTML</Text>
         </TouchableOpacity>
       </View>
       <TextInput
-        style={styles.input}
+        style={richTextEditorStyles.input}
         value={value}
         onChangeText={onChange}
         placeholder={placeholder}
@@ -46,8 +47,8 @@ export const RichTextEditor: React.FC<RichTextEditorProps> = ({
         placeholderTextColor="#999"
       />
       {htmlMode && (
-        <View style={styles.htmlHint}>
-          <Text style={styles.htmlHintText}>
+        <View style={richTextEditorStyles.htmlHint}>
+          <Text style={richTextEditorStyles.htmlHintText}>
             HTML mode: You can use HTML tags like {'<p>'}, {'<h1>'}, {'<strong>'}, etc.
           </Text>
         </View>
@@ -55,50 +56,4 @@ export const RichTextEditor: React.FC<RichTextEditorProps> = ({
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    borderWidth: 1,
-    borderColor: '#ddd',
-    borderRadius: 8,
-    overflow: 'hidden',
-  },
-  toolbar: {
-    flexDirection: 'row',
-    backgroundColor: '#f5f5f5',
-    borderBottomWidth: 1,
-    borderBottomColor: '#ddd',
-  },
-  toolbarButton: {
-    paddingHorizontal: 16,
-    paddingVertical: 8,
-    borderRightWidth: 1,
-    borderRightColor: '#ddd',
-  },
-  toolbarButtonActive: {
-    backgroundColor: '#007AFF',
-  },
-  toolbarButtonText: {
-    fontSize: 14,
-    color: '#333',
-    fontWeight: '600',
-  },
-  input: {
-    minHeight: 300,
-    padding: 12,
-    fontSize: 16,
-    lineHeight: 24,
-    color: '#666',
-  },
-  htmlHint: {
-    backgroundColor: '#fff3cd',
-    padding: 8,
-    borderTopWidth: 1,
-    borderTopColor: '#ddd',
-  },
-  htmlHintText: {
-    fontSize: 12,
-    color: '#856404',
-  },
-});
 
