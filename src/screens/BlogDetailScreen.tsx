@@ -10,6 +10,7 @@ import {
   ScrollView,
   StyleSheet,
   ActivityIndicator,
+  Platform,
 } from 'react-native';
 import { useLocalSearchParams } from 'expo-router';
 import { getBlogBySlug } from '@/services/blogService';
