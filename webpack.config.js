@@ -3,7 +3,7 @@
  * Extends @expo/webpack-config to add path aliases
  */
 
-const createWebpackConfigAsync = require('@expo/webpack-config').default;
+const createWebpackConfigAsync = require('@expo/webpack-config');
 const path = require('path');
 
 module.exports = async function (env, argv) {
