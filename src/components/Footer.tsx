@@ -30,7 +30,10 @@ export const Footer: React.FC = () => {
   const footerStyles = createFooterStyles(colors);
 
   return (
-    <View style={footerStyles.footer}>
+    <View 
+      style={footerStyles.footer}
+      {...(Platform.OS === 'web' ? { className: 'footer-grid-pattern' } : {})}
+    >
       <View style={footerStyles.footerGrid}>
         {/* Brand column */}
         <View style={footerStyles.footerBrand}>
@@ -120,32 +123,33 @@ export const Footer: React.FC = () => {
   );
 };
 
-const createFooterStyles = (colors: any) => StyleSheet.create({
-  footer: {
-    backgroundColor: colors.backgroundTertiary || '#1f2233',
-    paddingHorizontal: Platform.OS === 'web' ? 100 : 20,
-    paddingTop: Platform.OS === 'web' ? 80 : 40,
-    paddingBottom: 40,
-    ...(Platform.OS === 'web' && {
-      backgroundImage: `
-        linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px)
-      `,
-      backgroundSize: '60px 60px',
-    }),
-  },
-  footerGrid: {
-    ...(Platform.OS === 'web' ? {
-      display: 'grid',
-      gridTemplateColumns: '2fr 1fr 1.5fr 1.5fr',
-      gap: '80px',
-    } : {
-      flexDirection: 'column',
-      gap: 40,
-    }),
-  },
+const createFooterStyles = (colors: any) => {
+  const isWeb = Platform.OS === 'web';
+  
+  return StyleSheet.create({
+    footer: {
+      backgroundColor: colors.backgroundTertiary || '#1f2233',
+      paddingHorizontal: isWeb ? 100 : 20,
+      paddingTop: isWeb ? 80 : 40,
+      paddingBottom: 40,
+    },
+    footerGrid: {
+      ...(isWeb ? {
+        flexDirection: 'row',
+        flexWrap: 'wrap',
+        justifyContent: 'space-between',
+      } : {
+        flexDirection: 'column',
+      }),
+      gap: isWeb ? 80 : 40,
+    },
   footerBrand: {
-    maxWidth: Platform.OS === 'web' ? 380 : '100%',
+    ...(isWeb ? {
+      flex: 2,
+      maxWidth: 380,
+    } : {
+      width: '100%',
+    }),
   },
   logo: {
     flexDirection: 'row',
@@ -189,7 +193,11 @@ const createFooterStyles = (colors: any) => StyleSheet.create({
     color: colors.primary || '#0099FF',
   },
   footerCol: {
-    ...(Platform.OS === 'web' ? {} : {
+    ...(isWeb ? {
+      flex: 1,
+      minWidth: 150,
+    } : {
+      width: '100%',
       marginBottom: 32,
     }),
   },
@@ -206,19 +214,13 @@ const createFooterStyles = (colors: any) => StyleSheet.create({
     fontSize: 15,
     color: colors.textSecondary || '#cfd2e6',
     marginBottom: 14,
-    ...(Platform.OS === 'web' && {
-      cursor: 'pointer',
-      ':hover': {
-        color: colors.primary,
-      },
-    }),
   },
   footerBottom: {
     marginTop: 70,
-    flexDirection: Platform.OS === 'web' ? 'row' : 'column',
+    flexDirection: isWeb ? 'row' : 'column',
     justifyContent: 'space-between',
-    alignItems: Platform.OS === 'web' ? 'center' : 'flex-start',
-    gap: Platform.OS === 'web' ? 0 : 12,
+    alignItems: isWeb ? 'center' : 'flex-start',
+    gap: isWeb ? 0 : 12,
     paddingTop: 20,
     borderTopWidth: 1,
     borderTopColor: colors.border || 'rgba(255,255,255,0.1)',
