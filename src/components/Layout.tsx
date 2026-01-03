@@ -31,9 +31,11 @@ export const Layout: React.FC<LayoutProps> = ({
     <View style={layoutStyles.container}>
       {showHeader && <HeaderNavigation currentPath={currentPath} />}
       <View style={layoutStyles.contentWrapper}>
-        <View style={layoutStyles.content}>{children}</View>
+        <View style={layoutStyles.content}>
+          {children}
+          {showFooter && <Footer />}
+        </View>
       </View>
-      {showFooter && <Footer />}
     </View>
   );
 };

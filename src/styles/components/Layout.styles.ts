@@ -17,14 +17,14 @@ export const layoutStyles = StyleSheet.create({
   contentWrapper: {
     flex: 1,
     ...(Platform.OS === 'web' && {
-      minHeight: 0,
       overflow: 'auto',
+      flex: 1,
     }),
   },
   content: {
-    flex: 1,
+    flexGrow: 1,
     ...(Platform.OS === 'web' && {
-      paddingBottom: 40, // Add padding to prevent footer overlap
+      minHeight: '100%',
     }),
   },
 });

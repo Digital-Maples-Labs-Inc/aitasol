@@ -4,25 +4,19 @@
  */
 
 import React, { useEffect, useState } from 'react';
-import { blogListScreenStyles } from '@/styles/screens/BlogListScreen.styles';
 import {
-import { blogListScreenStyles } from '@/styles/screens/BlogListScreen.styles';
   View,
   Text,
   ScrollView,
   TouchableOpacity,
-  StyleSheet,
   ActivityIndicator,
+  Platform,
 } from 'react-native';
-import { Platform } from 'react-native';
-import { blogListScreenStyles } from '@/styles/screens/BlogListScreen.styles';
 import { getPublishedBlogs } from '@/services/blogService';
-import { blogListScreenStyles } from '@/styles/screens/BlogListScreen.styles';
 import { Blog } from '@/types';
-import { blogListScreenStyles } from '@/styles/screens/BlogListScreen.styles';
 import { format } from 'date-fns';
-import { blogListScreenStyles } from '@/styles/screens/BlogListScreen.styles';
 import { Layout } from '@/components/Layout';
+import { blogListScreenStyles } from '@/styles/screens/BlogListScreen.styles';
 import { blogListScreenStyles } from '@/styles/screens/BlogListScreen.styles';
 
 export const BlogListScreen: React.FC = () => {
