@@ -42,7 +42,7 @@ export const Layout: React.FC<LayoutProps> = ({ children, showHeader = true }) =
     <View style={styles.container}>
       {showHeader && (
         <View style={styles.header}>
-          <TouchableOpacity onPress={() => router.push('/')}>
+          <TouchableOpacity onPress={() => navigateTo('/')}>
             <Text style={styles.logo}>Aitasol</Text>
           </TouchableOpacity>
           <View style={styles.nav}>
