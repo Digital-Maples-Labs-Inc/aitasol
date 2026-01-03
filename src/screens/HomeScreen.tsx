@@ -102,7 +102,24 @@ export const HomeScreen: React.FC = () => {
             <View key={section.id} style={styles.ctaContainer}>
               <TouchableOpacity
                 style={styles.loginButton}
-                onPress={() => router.push('/dmlabs')}
+                onPress={() => {
+                  try {
+                    if (router && typeof router.push === 'function') {
+                      router.push('/dmlabs');
+                    } else {
+                      // Fallback for web
+                      if (typeof window !== 'undefined') {
+                        window.location.href = '/dmlabs';
+                      }
+                    }
+                  } catch (error) {
+                    console.error('Navigation error:', error);
+                    // Fallback for web
+                    if (typeof window !== 'undefined') {
+                      window.location.href = '/dmlabs';
+                    }
+                  }
+                }}
               >
                 <Text style={styles.loginButtonText}>Login</Text>
               </TouchableOpacity>

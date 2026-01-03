@@ -40,15 +40,54 @@ export const Layout: React.FC<LayoutProps> = ({ children, showHeader = true }) =
             <Text style={styles.logo}>Aitasol</Text>
           </TouchableOpacity>
           <View style={styles.nav}>
-            <TouchableOpacity onPress={() => router.push('/')}>
+            <TouchableOpacity onPress={() => {
+              try {
+                if (router && typeof router.push === 'function') {
+                  router.push('/');
+                } else if (typeof window !== 'undefined') {
+                  window.location.href = '/';
+                }
+              } catch (error) {
+                console.error('Navigation error:', error);
+                if (typeof window !== 'undefined') {
+                  window.location.href = '/';
+                }
+              }
+            }}>
               <Text style={styles.navLink}>Home</Text>
             </TouchableOpacity>
-            <TouchableOpacity onPress={() => router.push('/blog')}>
+            <TouchableOpacity onPress={() => {
+              try {
+                if (router && typeof router.push === 'function') {
+                  router.push('/blog');
+                } else if (typeof window !== 'undefined') {
+                  window.location.href = '/blog';
+                }
+              } catch (error) {
+                console.error('Navigation error:', error);
+                if (typeof window !== 'undefined') {
+                  window.location.href = '/blog';
+                }
+              }
+            }}>
               <Text style={styles.navLink}>Blog</Text>
             </TouchableOpacity>
             {!loading && user ? (
               <>
-                <TouchableOpacity onPress={() => router.push('/admin/dashboard')}>
+                <TouchableOpacity onPress={() => {
+                  try {
+                    if (router && typeof router.push === 'function') {
+                      router.push('/admin/dashboard');
+                    } else if (typeof window !== 'undefined') {
+                      window.location.href = '/admin/dashboard';
+                    }
+                  } catch (error) {
+                    console.error('Navigation error:', error);
+                    if (typeof window !== 'undefined') {
+                      window.location.href = '/admin/dashboard';
+                    }
+                  }
+                }}>
                   <Text style={styles.navLink}>Dashboard</Text>
                 </TouchableOpacity>
                 <TouchableOpacity onPress={handleSignOut}>
@@ -56,7 +95,20 @@ export const Layout: React.FC<LayoutProps> = ({ children, showHeader = true }) =
                 </TouchableOpacity>
               </>
             ) : !loading ? (
-              <TouchableOpacity onPress={() => router.push('/dmlabs')}>
+              <TouchableOpacity onPress={() => {
+                try {
+                  if (router && typeof router.push === 'function') {
+                    router.push('/dmlabs');
+                  } else if (typeof window !== 'undefined') {
+                    window.location.href = '/dmlabs';
+                  }
+                } catch (error) {
+                  console.error('Navigation error:', error);
+                  if (typeof window !== 'undefined') {
+                    window.location.href = '/dmlabs';
+                  }
+                }
+              }}>
                 <Text style={styles.navLink}>Login</Text>
               </TouchableOpacity>
             ) : null}
