@@ -2,14 +2,9 @@
  * Blog List Page (Expo Router)
  */
 
-import { BlogListScreen } from '@/screens/BlogListScreen';
-import { Layout } from '@/components/Layout';
+import BlogListScreen from '@/screens/BlogListScreen';
 
 export default function BlogList() {
-  return (
-    <Layout>
-      <BlogListScreen />
-    </Layout>
-  );
+  return <BlogListScreen />;
 }
 

@@ -1,6 +1,6 @@
 /**
  * Blog service
- * Handles CRUD operations for blog posts
+ * Handles CRUD operations for blog posts with real-time sync
  */
 
 import {
@@ -16,6 +16,8 @@ import {
   orderBy,
   limit,
   serverTimestamp,
+  onSnapshot,
+  Unsubscribe,
 } from 'firebase/firestore';
 import { db } from './firebase';
 import { Blog } from '@/types';
@@ -206,5 +208,91 @@ export const unpublishBlog = async (blogId: string): Promise<void> => {
     console.error('Error unpublishing blog:', error);
     throw error;
   }
+};
+
+/**
+ * Subscribe to published blogs with real-time updates
+ * Returns an unsubscribe function
+ */
+export const subscribeToPublishedBlogs = (
+  callback: (blogs: Blog[]) => void,
+  limitCount: number = 10
+): Unsubscribe => {
+  const blogsRef = collection(db, 'blogs');
+  const q = query(
+    blogsRef,
+    where('status', '==', 'published'),
+    orderBy('publishedAt', 'desc'),
+    limit(limitCount)
+  );
+
+  return onSnapshot(
+    q,
+    (querySnapshot) => {
+      const blogs: Blog[] = querySnapshot.docs.map((doc) => {
+        const data = doc.data();
+        return {
+          id: doc.id,
+          title: data.title,
+          slug: data.slug,
+          content: data.content,
+          excerpt: data.excerpt,
+          author: data.author,
+          authorName: data.authorName,
+          status: data.status,
+          publishedAt: data.publishedAt?.toDate(),
+          createdAt: data.createdAt?.toDate() || new Date(),
+          updatedAt: data.updatedAt?.toDate() || new Date(),
+          featuredImage: data.featuredImage,
+          tags: data.tags || [],
+        };
+      });
+      callback(blogs);
+    },
+    (error) => {
+      console.error('Error subscribing to blogs:', error);
+      callback([]);
+    }
+  );
+};
+
+/**
+ * Subscribe to all blogs with real-time updates (admin only)
+ * Returns an unsubscribe function
+ */
+export const subscribeToAllBlogs = (
+  callback: (blogs: Blog[]) => void
+): Unsubscribe => {
+  const blogsRef = collection(db, 'blogs');
+  const q = query(blogsRef, orderBy('updatedAt', 'desc'));
+
+  return onSnapshot(
+    q,
+    (querySnapshot) => {
+      const blogs: Blog[] = querySnapshot.docs.map((doc) => {
+        const data = doc.data();
+        return {
+          id: doc.id,
+          title: data.title,
+          slug: data.slug,
+          content: data.content,
+          excerpt: data.excerpt,
+          author: data.author,
+          authorName: data.authorName,
+          status: data.status,
+          publishedAt: data.publishedAt?.toDate(),
+          createdAt: data.createdAt?.toDate() || new Date(),
+          updatedAt: data.updatedAt?.toDate() || new Date(),
+          featuredImage: data.featuredImage,
+          tags: data.tags || [],
+        };
+      });
+      callback(blogs);
+    },
+    (error) => {
+      console.error('Error subscribing to all blogs:', error);
+      callback([]);
+    }
+  );
 };
 

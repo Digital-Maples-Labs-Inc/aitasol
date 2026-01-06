@@ -1,196 +1,323 @@
-/**
- * Header Navigation Component
- * Enhanced navigation with animations inspired by Framer Motion patterns
- * Uses React Native Reanimated for smooth, performant animations
- */
-
-import React from 'react';
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  Platform,
-} from 'react-native';
-import Animated, {
-  useSharedValue,
-  useAnimatedStyle,
-  withSpring,
-  withTiming,
-  withSequence,
-} from 'react-native-reanimated';
+import * as React from 'react';
+import { styled, alpha } from '@mui/material/styles';
+import Box from '@mui/material/Box';
+import AppBar from '@mui/material/AppBar';
+import Toolbar from '@mui/material/Toolbar';
+import Button from '@mui/material/Button';
+import IconButton from '@mui/material/IconButton';
+import Container from '@mui/material/Container';
+import Divider from '@mui/material/Divider';
+import MenuItem from '@mui/material/MenuItem';
+import Drawer from '@mui/material/Drawer';
+import Menu from '@mui/material/Menu';
+import MenuIcon from '@mui/icons-material/Menu';
+import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
+import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
+import ColorModeIconDropdown from '@/mui-theme/ColorModeIconDropdown';
 import { useAuth } from '@/contexts/AuthContext';
-import { useTheme } from '@/contexts/ThemeContext';
-import { createHeaderNavigationStyles } from '@/styles/components/HeaderNavigation.styles';
+import SelectContent from '@/screens/admin-dashboard/components/SelectContent';
+import SitemarkIcon from './SitemarkIcon';
 
-interface NavLinkProps {
-  label: string;
-  onPress: () => void;
-  isActive?: boolean;
-}
+const StyledToolbar = styled(Toolbar)(({ theme }) => ({
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  flexShrink: 0,
+  borderRadius: `calc(${theme.shape.borderRadius}px + 8px)`,
+  backdropFilter: 'blur(24px)',
+  border: '1px solid',
+  borderColor: (theme.vars || theme).palette.divider,
+  backgroundColor: theme.vars
+    ? `rgba(${theme.vars.palette.background.defaultChannel} / 0.4)`
+    : alpha(theme.palette.background.default, 0.4),
+  boxShadow: (theme.vars || theme).shadows[1],
+  padding: '2px 12px',
+}));
 
-const NavLink: React.FC<NavLinkProps & { colors: any; styles: any }> = ({ 
-  label, 
-  onPress, 
-  isActive = false,
-  colors,
-  styles: navStyles,
-}) => {
-  const scale = useSharedValue(1);
-  const opacity = useSharedValue(1);
+export default function HeaderNavigation() {
+  const { user } = useAuth();
+  const [open, setOpen] = React.useState(false);
+  const [servicesAnchorEl, setServicesAnchorEl] = React.useState<null | HTMLElement>(null);
+  const servicesMenuOpen = Boolean(servicesAnchorEl);
+  
+  // Check if user is logged in and has editor/admin role
+  const showEditingModeSwitcher = user && (user.role === 'admin' || user.role === 'editor');
 
-  const animatedStyle = useAnimatedStyle(() => {
-    return {
-      transform: [{ scale: scale.value }],
-      opacity: opacity.value,
-    };
-  });
-
-  const handlePressIn = () => {
-    scale.value = withSpring(1.05, {
-      damping: 15,
-      stiffness: 300,
-    });
-    opacity.value = withTiming(0.8, { duration: 100 });
+  const toggleDrawer = (newOpen: boolean) => () => {
+    setOpen(newOpen);
   };
 
-  const handlePressOut = () => {
-    scale.value = withSpring(1, {
-      damping: 15,
-      stiffness: 300,
-    });
-    opacity.value = withTiming(1, { duration: 100 });
+  const handleServicesMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
+    setServicesAnchorEl(event.currentTarget);
   };
 
-  return (
-    <Animated.View style={[navStyles.navLinkContainer, animatedStyle]}>
-      <TouchableOpacity
-        onPress={onPress}
-        onPressIn={handlePressIn}
-        onPressOut={handlePressOut}
-        activeOpacity={1}
-      >
-        <Text style={[navStyles.navLink, isActive && navStyles.navLinkActive]}>
-          {label}
-        </Text>
-        {isActive && <View style={[navStyles.activeIndicator, { backgroundColor: colors.primary }]} />}
-      </TouchableOpacity>
-    </Animated.View>
-  );
-};
-
-interface HeaderNavigationProps {
-  currentPath?: string;
-}
-
-export const HeaderNavigation: React.FC<HeaderNavigationProps> = ({
-  currentPath,
-}) => {
-  const { user, signOut, loading } = useAuth();
-  const { colors } = useTheme();
-  const logoScale = useSharedValue(1);
+  const handleServicesMenuClose = () => {
+    setServicesAnchorEl(null);
+  };
 
   const navigateTo = (path: string) => {
-    if (Platform.OS === 'web' && typeof window !== 'undefined') {
+    if (typeof window !== 'undefined') {
       window.location.href = path;
+      handleServicesMenuClose();
+      setOpen(false);
     }
   };
 
-  const logoAnimatedStyle = useAnimatedStyle(() => {
-    return {
-      transform: [{ scale: logoScale.value }],
-    };
-  });
-
-  const handleLogoPress = () => {
-    // Logo animation on press - spring bounce effect
-    logoScale.value = withSequence(
-      withSpring(1.1, {
-        damping: 8,
-        stiffness: 300,
-      }),
-      withSpring(1, {
-        damping: 8,
-        stiffness: 300,
-      })
-    );
-    navigateTo('/');
-  };
-
-  const handleSignOut = async () => {
-    try {
-      await signOut();
-      if (Platform.OS === 'web' && typeof window !== 'undefined') {
-        window.location.href = '/';
+  const scrollToSection = (sectionId: string) => {
+    if (typeof window !== 'undefined') {
+      const element = document.getElementById(sectionId.toLowerCase());
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth' });
       }
-    } catch (error) {
-      console.error('Error signing out:', error);
     }
+    setOpen(false);
   };
-
-  const isActive = (path: string) => {
-    if (!currentPath) return false;
-    if (path === '/' && currentPath === '/') return true;
-    if (path !== '/' && currentPath.startsWith(path)) return true;
-    return false;
-  };
-
-  const styles = createStyles(colors);
 
   return (
-    <View style={styles.header}>
-      <TouchableOpacity onPress={handleLogoPress} activeOpacity={0.8}>
-        <Animated.View style={logoAnimatedStyle}>
-          <Text style={styles.logo}>AitahSolutions</Text>
-        </Animated.View>
-      </TouchableOpacity>
-
-      <View style={styles.nav}>
-        <NavLink
-          label="Home"
-          onPress={() => navigateTo('/')}
-          isActive={isActive('/')}
-          colors={colors}
-          styles={styles}
-        />
-        <NavLink
-          label="Blog"
-          onPress={() => navigateTo('/blog')}
-          isActive={isActive('/blog')}
-          colors={colors}
-          styles={styles}
-        />
-
-        {!loading && user ? (
-          <>
-            <NavLink
-              label="Dashboard"
-              onPress={() => navigateTo('/admin/dashboard')}
-              isActive={isActive('/admin')}
-              colors={colors}
-              styles={styles}
-            />
-            <TouchableOpacity
-              onPress={handleSignOut}
-              style={styles.signOutButton}
-              activeOpacity={0.7}
+    <AppBar
+      position="fixed"
+      enableColorOnDark
+      sx={{
+        boxShadow: 0,
+        bgcolor: 'transparent',
+        backgroundImage: 'none',
+        mt: 'calc(var(--template-frame-height, 0px) + 28px)',
+      }}
+    >
+      <Container maxWidth="lg">
+        <StyledToolbar variant="dense" disableGutters>
+          {/* Left Menu Items */}
+          <Box sx={{ display: { xs: 'none', md: 'flex' }, alignItems: 'center', gap: 1, flex: 1, justifyContent: 'flex-end', pr: 4 }}>
+            <Button 
+              variant="text" 
+              color="info" 
+              size="medium"
+              onClick={() => navigateTo('/')}
+              sx={{ 
+                fontSize: '1rem',
+                fontWeight: 600,
+                textTransform: 'none',
+              }}
             >
-              <Text style={styles.signOutText}>Sign Out</Text>
-            </TouchableOpacity>
-          </>
-        ) : !loading ? (
-          <NavLink
-            label="Login"
-            onPress={() => navigateTo('/dmlabs')}
-            isActive={isActive('/dmlabs')}
-            colors={colors}
-            styles={styles}
-          />
-        ) : null}
-      </View>
-    </View>
+              Home
+            </Button>
+            <Button 
+              variant="text" 
+              color="info" 
+              size="medium"
+              onClick={() => navigateTo('/about')}
+              sx={{ 
+                fontSize: '1rem',
+                fontWeight: 600,
+                textTransform: 'none',
+              }}
+            >
+              About
+            </Button>
+            <Button
+              variant="text"
+              color="info"
+              size="medium"
+              onClick={handleServicesMenuOpen}
+              endIcon={<ArrowDropDownIcon />}
+              sx={{ 
+                fontSize: '1rem',
+                fontWeight: 600,
+                textTransform: 'none',
+              }}
+            >
+              Services
+            </Button>
+            <Menu
+              anchorEl={servicesAnchorEl}
+              open={servicesMenuOpen}
+              onClose={handleServicesMenuClose}
+              MenuListProps={{
+                'aria-labelledby': 'services-button',
+              }}
+            >
+              <MenuItem onClick={() => navigateTo('/services')}>Services Overview</MenuItem>
+              <Divider />
+              <MenuItem onClick={() => navigateTo('/services/study-in-canada')}>
+                Study in Canada
+              </MenuItem>
+              <MenuItem onClick={() => navigateTo('/services/immigration-study-permits')}>
+                Immigration & Study Permits
+              </MenuItem>
+              <MenuItem onClick={() => navigateTo('/services/admissions-support')}>
+                Admissions Support
+              </MenuItem>
+              <MenuItem onClick={() => navigateTo('/services/career-counseling')}>
+                Career Counseling
+              </MenuItem>
+            </Menu>
+          </Box>
+
+          {/* Center Logo */}
+          <Box 
+            onClick={() => navigateTo('/')} 
+            sx={{ 
+              cursor: 'pointer', 
+              display: 'flex', 
+              alignItems: 'center',
+              justifyContent: 'center',
+              flexShrink: 0,
+            }}
+          >
+            <SitemarkIcon />
+          </Box>
+
+          {/* Right Menu Items */}
+          <Box sx={{ display: { xs: 'none', md: 'flex' }, alignItems: 'center', gap: 1, flex: 1, justifyContent: 'flex-start', pl: 4 }}>
+            <Button 
+              variant="text" 
+              color="info" 
+              size="medium"
+              onClick={() => navigateTo('/testimonials')}
+              sx={{ 
+                fontSize: '1rem',
+                fontWeight: 600,
+                textTransform: 'none',
+              }}
+            >
+              Testimonials
+            </Button>
+            <Button 
+              variant="text" 
+              color="info" 
+              size="medium"
+              onClick={() => navigateTo('/blog')}
+              sx={{ 
+                fontSize: '1rem',
+                fontWeight: 600,
+                textTransform: 'none',
+              }}
+            >
+              Blog
+            </Button>
+            <Button 
+              variant="text" 
+              color="info" 
+              size="medium"
+              onClick={() => navigateTo('/contact')}
+              sx={{ 
+                fontSize: '1rem',
+                fontWeight: 600,
+                textTransform: 'none',
+              }}
+            >
+              Contact
+            </Button>
+          </Box>
+
+          {/* Right Side Actions (Editing Mode & Theme Toggle) */}
+          <Box
+            sx={{
+              display: { xs: 'none', md: 'flex' },
+              gap: 1,
+              alignItems: 'center',
+              ml: 2,
+            }}
+          >
+            {showEditingModeSwitcher && (
+              <Box sx={{ mr: 1 }}>
+                <SelectContent />
+              </Box>
+            )}
+            <ColorModeIconDropdown />
+          </Box>
+          <Box sx={{ display: { xs: 'flex', md: 'none' }, gap: 1 }}>
+            <ColorModeIconDropdown size="medium" />
+            <IconButton aria-label="Menu button" onClick={toggleDrawer(true)}>
+              <MenuIcon />
+            </IconButton>
+            <Drawer
+              anchor="top"
+              open={open}
+              onClose={toggleDrawer(false)}
+              PaperProps={{
+                sx: {
+                  top: 'var(--template-frame-height, 0px)',
+                },
+              }}
+            >
+              <Box sx={{ p: 2, backgroundColor: 'background.default' }}>
+                <Box
+                  sx={{
+                    display: 'flex',
+                    justifyContent: 'flex-end',
+                  }}
+                >
+                  <IconButton onClick={toggleDrawer(false)}>
+                    <CloseRoundedIcon />
+                  </IconButton>
+                </Box>
+
+                <MenuItem 
+                  onClick={() => navigateTo('/')}
+                  sx={{ fontSize: '1rem', fontWeight: 600 }}
+                >
+                  Home
+                </MenuItem>
+                <MenuItem 
+                  onClick={() => navigateTo('/about')}
+                  sx={{ fontSize: '1rem', fontWeight: 600 }}
+                >
+                  About AitaSol
+                </MenuItem>
+                <MenuItem 
+                  onClick={() => navigateTo('/services')}
+                  sx={{ fontSize: '1rem', fontWeight: 600 }}
+                >
+                  Services Overview
+                </MenuItem>
+                <MenuItem 
+                  onClick={() => navigateTo('/services/study-in-canada')}
+                  sx={{ fontSize: '0.95rem', fontWeight: 500 }}
+                >
+                  &nbsp;&nbsp;→ Study in Canada
+                </MenuItem>
+                <MenuItem 
+                  onClick={() => navigateTo('/services/immigration-study-permits')}
+                  sx={{ fontSize: '0.95rem', fontWeight: 500 }}
+                >
+                  &nbsp;&nbsp;→ Immigration & Study Permits
+                </MenuItem>
+                <MenuItem 
+                  onClick={() => navigateTo('/services/admissions-support')}
+                  sx={{ fontSize: '0.95rem', fontWeight: 500 }}
+                >
+                  &nbsp;&nbsp;→ Admissions Support
+                </MenuItem>
+                <MenuItem 
+                  onClick={() => navigateTo('/services/career-counseling')}
+                  sx={{ fontSize: '0.95rem', fontWeight: 500 }}
+                >
+                  &nbsp;&nbsp;→ Career Counseling
+                </MenuItem>
+                <MenuItem 
+                  onClick={() => navigateTo('/testimonials')}
+                  sx={{ fontSize: '1rem', fontWeight: 600 }}
+                >
+                  Success Stories / Testimonials
+                </MenuItem>
+                <MenuItem 
+                  onClick={() => navigateTo('/blog')}
+                  sx={{ fontSize: '1rem', fontWeight: 600 }}
+                >
+                  Blog
+                </MenuItem>
+                <MenuItem 
+                  onClick={() => navigateTo('/contact')}
+                  sx={{ fontSize: '1rem', fontWeight: 600 }}
+                >
+                  Contact Us
+                </MenuItem>
+              </Box>
+            </Drawer>
+          </Box>
+        </StyledToolbar>
+      </Container>
+    </AppBar>
   );
-};
-
-// Styles will be created dynamically with theme colors
-const createStyles = (colors: any) => createHeaderNavigationStyles(colors);
-
+}

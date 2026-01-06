@@ -1,87 +1,66 @@
-/**
- * Login Screen
- * Handles user authentication
- */
+import CssBaseline from '@mui/material/CssBaseline';
+import Stack from '@mui/material/Stack';
+import AppTheme from '@/mui-theme/AppTheme';
+import ColorModeSelect from '@/mui-theme/ColorModeSelect';
+import SignInCard from './login/components/SignInCard';
+import Content from './login/components/Content';
 
-import React, { useState } from 'react';
-import {
-  View,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  ActivityIndicator,
-  Alert,
-  Platform,
-} from 'react-native';
-import { useAuth } from '@/contexts/AuthContext';
-import { loginScreenStyles } from '@/styles/screens/LoginScreen.styles';
-
-export const LoginScreen: React.FC = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [loading, setLoading] = useState(false);
-  const { signIn } = useAuth();
-
-  const handleLogin = async () => {
-    if (!email || !password) {
-      Alert.alert('Error', 'Please fill in all fields');
-      return;
-    }
-
-    setLoading(true);
-    try {
-      await signIn(email, password);
-      // Use window.location for web navigation
-      if (Platform.OS === 'web' && typeof window !== 'undefined') {
-        window.location.href = '/admin/dashboard';
-      }
-    } catch (error: any) {
-      Alert.alert('Login Failed', error.message || 'Invalid email or password');
-    } finally {
-      setLoading(false);
-    }
-  };
-
+export default function SignInSide(props: { disableCustomTheme?: boolean }) {
   return (
-    <View style={loginScreenStyles.container}>
-      <View style={loginScreenStyles.form}>
-        <Text style={loginScreenStyles.title}>Admin Login</Text>
-        <Text style={loginScreenStyles.subtitle}>Sign in to manage content</Text>
-
-        <TextInput
-          style={loginScreenStyles.input}
-          placeholder="Email"
-          placeholderTextColor="#999"
-          value={email}
-          onChangeText={setEmail}
-          keyboardType="email-address"
-          autoCapitalize="none"
-          autoComplete="email"
-        />
-
-        <TextInput
-          style={loginScreenStyles.input}
-          placeholder="Password"
-          placeholderTextColor="#999"
-          value={password}
-          onChangeText={setPassword}
-          secureTextEntry
-          autoCapitalize="none"
-        />
-
-        <TouchableOpacity
-          style={[loginScreenStyles.button, loading && loginScreenStyles.buttonDisabled]}
-          onPress={handleLogin}
-          disabled={loading}
+    <AppTheme {...props}>
+      <CssBaseline enableColorScheme />
+      <ColorModeSelect sx={{ position: 'fixed', top: '1rem', right: '1rem' }} />
+      <Stack
+        direction="column"
+        component="main"
+        sx={[
+          {
+            justifyContent: 'center',
+            height: 'calc((1 - var(--template-frame-height, 0)) * 100%)',
+            marginTop: 'max(40px - var(--template-frame-height, 0px), 0px)',
+            minHeight: '100%',
+          },
+          (theme) => ({
+            '&::before': {
+              content: '""',
+              display: 'block',
+              position: 'absolute',
+              zIndex: -1,
+              inset: 0,
+              backgroundImage:
+                'radial-gradient(ellipse at 50% 50%, hsl(210, 100%, 97%), hsl(0, 0%, 100%))',
+              backgroundRepeat: 'no-repeat',
+              ...theme.applyStyles('dark', {
+                backgroundImage:
+                  'radial-gradient(at 50% 50%, hsla(210, 100%, 16%, 0.5), hsl(220, 30%, 5%))',
+              }),
+            },
+          }),
+        ]}
+      >
+        <Stack
+          direction={{ xs: 'column-reverse', md: 'row' }}
+          sx={{
+            justifyContent: 'center',
+            gap: { xs: 6, sm: 12 },
+            p: 2,
+            mx: 'auto',
+          }}
         >
-          {loading ? (
-            <ActivityIndicator color="#fff" />
-          ) : (
-            <Text style={loginScreenStyles.buttonText}>Sign In</Text>
-          )}
-        </TouchableOpacity>
-      </View>
-    </View>
+          <Stack
+            direction={{ xs: 'column-reverse', md: 'row' }}
+            sx={{
+              justifyContent: 'center',
+              gap: { xs: 6, sm: 12 },
+              p: { xs: 2, sm: 4 },
+              m: 'auto',
+            }}
+          >
+            <Content />
+            <SignInCard />
+          </Stack>
+        </Stack>
+      </Stack>
+    </AppTheme>
   );
-};
-
+}

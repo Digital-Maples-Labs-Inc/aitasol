@@ -4,9 +4,7 @@
  */
 
 import React, { useEffect, useState } from 'react';
-import { blogDetailScreenStyles } from '@/styles/screens/BlogDetailScreen.styles';
 import {
-import { blogDetailScreenStyles } from '@/styles/screens/BlogDetailScreen.styles';
   View,
   Text,
   ScrollView,
@@ -15,17 +13,12 @@ import { blogDetailScreenStyles } from '@/styles/screens/BlogDetailScreen.styles
   Platform,
 } from 'react-native';
 import { useLocalSearchParams } from 'expo-router';
-import { blogDetailScreenStyles } from '@/styles/screens/BlogDetailScreen.styles';
-import { getBlogBySlug } from '@/services/blogService';
-import { blogDetailScreenStyles } from '@/styles/screens/BlogDetailScreen.styles';
-import { Blog } from '@/types';
-import { blogDetailScreenStyles } from '@/styles/screens/BlogDetailScreen.styles';
 import { format } from 'date-fns';
-import { blogDetailScreenStyles } from '@/styles/screens/BlogDetailScreen.styles';
 import RenderHTML from 'react-native-render-html';
 import { blogDetailScreenStyles } from '@/styles/screens/BlogDetailScreen.styles';
+import { getBlogBySlug } from '@/services/blogService';
+import { Blog } from '@/types';
 import { Layout } from '@/components/Layout';
-import { blogDetailScreenStyles } from '@/styles/screens/BlogDetailScreen.styles';
 
 export const BlogDetailScreen: React.FC = () => {
   const { slug } = useLocalSearchParams<{ slug: string }>();

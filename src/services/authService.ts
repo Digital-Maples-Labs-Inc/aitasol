@@ -46,13 +46,33 @@ export const signIn = async (email: string, password: string): Promise<User> => 
     const userData = await getUserData(userCredential.user.uid);
     
     if (!userData) {
-      throw new Error('User data not found');
+      // User authenticated but no Firestore document exists
+      throw new Error('User account exists but user data is missing. Please contact an administrator.');
     }
     
     return userData;
-  } catch (error) {
+  } catch (error: any) {
     console.error('Error signing in:', error);
-    throw error;
+    
+    // Provide user-friendly error messages
+    if (error.code === 'auth/invalid-credential') {
+      throw new Error('Invalid email or password. Please check your credentials and try again.');
+    } else if (error.code === 'auth/user-not-found') {
+      throw new Error('No account found with this email address.');
+    } else if (error.code === 'auth/wrong-password') {
+      throw new Error('Incorrect password. Please try again.');
+    } else if (error.code === 'auth/invalid-email') {
+      throw new Error('Invalid email address format.');
+    } else if (error.code === 'auth/user-disabled') {
+      throw new Error('This account has been disabled. Please contact an administrator.');
+    } else if (error.code === 'auth/too-many-requests') {
+      throw new Error('Too many failed login attempts. Please try again later.');
+    } else if (error.message) {
+      // Use the custom error message if available
+      throw error;
+    } else {
+      throw new Error('An error occurred during sign in. Please try again.');
+    }
   }
 };
 

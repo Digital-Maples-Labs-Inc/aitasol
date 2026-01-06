@@ -12,7 +12,7 @@ export const createFooterStyles = (colors: any) => {
     footer: {
       backgroundColor: colors.backgroundTertiary || '#1f2233',
       paddingHorizontal: isWeb ? 100 : 20,
-      paddingTop: isWeb ? 80 : 40,
+      paddingTop: isWeb ? 40 : 30,
       paddingBottom: 40,
     },
     footerGrid: {
@@ -101,7 +101,7 @@ export const createFooterStyles = (colors: any) => {
       marginBottom: 14,
     },
     footerBottom: {
-      marginTop: 70,
+      marginTop: 40,
       flexDirection: isWeb ? 'row' : 'column',
       justifyContent: 'space-between',
       alignItems: isWeb ? 'center' : 'flex-start',

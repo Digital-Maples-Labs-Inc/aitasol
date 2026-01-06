@@ -12,6 +12,7 @@ import {
   ActivityIndicator,
   TextInput,
   Alert,
+  Image,
 } from 'react-native';
 import { useTheme } from '@/contexts/ThemeContext';
 import { Theme, ThemeColors, Typography, defaultTypography } from '@/types/theme';
@@ -23,8 +24,8 @@ import {
 } from '@/services/themeService';
 import { useRequireAuth } from '@/hooks/useRequireAuth';
 import { useAuth } from '@/contexts/AuthContext';
-import { Layout } from '@/components/Layout';
 import { adminThemeScreenStyles } from '@/styles/screens/AdminThemeScreen.styles';
+import { usePageData } from '@/hooks/usePageData';
 
 interface ColorInputProps {
   label: string;
@@ -109,6 +110,7 @@ const TypographyInput: React.FC<TypographyInputProps> = ({
 export const AdminThemeScreen: React.FC = () => {
   const { colors: currentColors, typography: currentTypography, refreshTheme } = useTheme();
   const { user } = useAuth();
+  const { page: homePage, loading: pageLoading, getSection, updateSectionImage } = usePageData('home');
   const [themes, setThemes] = useState<Theme[]>([]);
   const [loading, setLoading] = useState(true);
   const [editingTheme, setEditingTheme] = useState<Theme | null>(null);
@@ -117,12 +119,22 @@ export const AdminThemeScreen: React.FC = () => {
   const [themeName, setThemeName] = useState('Default Theme');
   const [saving, setSaving] = useState(false);
   const [activeTab, setActiveTab] = useState<'colors' | 'typography'>('colors');
+  const [logoUrl, setLogoUrl] = useState('');
+  const [logoUploading, setLogoUploading] = useState(false);
 
   useRequireAuth('admin');
 
   useEffect(() => {
     loadThemes();
   }, []);
+
+  useEffect(() => {
+    if (homePage) {
+      const logoSection = getSection('site-logo');
+      const currentLogoUrl = logoSection?.metadata?.imageUrl || logoSection?.content || '';
+      setLogoUrl(currentLogoUrl);
+    }
+  }, [homePage, getSection]);
 
   const loadThemes = async () => {
     try {
@@ -233,19 +245,75 @@ export const AdminThemeScreen: React.FC = () => {
     }
   };
 
+  const handleLogoFileUpload = () => {
+    if (typeof document === 'undefined') {
+      Alert.alert('Error', 'File upload is only available on web');
+      return;
+    }
+
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = 'image/*';
+    
+    input.onchange = async (e: any) => {
+      const file = e.target.files?.[0];
+      if (!file) return;
+
+      setLogoUploading(true);
+      try {
+        // Convert file to data URL
+        const reader = new FileReader();
+        reader.onload = async (event) => {
+          const dataUrl = event.target?.result as string;
+          await handleSaveLogo(dataUrl);
+        };
+        reader.readAsDataURL(file);
+      } catch (error) {
+        console.error('Error uploading logo:', error);
+        Alert.alert('Error', 'Failed to upload logo. Please try again.');
+        setLogoUploading(false);
+      }
+    };
+    
+    input.click();
+  };
+
+  const handleSaveLogo = async (url: string) => {
+    if (!url) {
+      Alert.alert('Error', 'Please provide a logo URL or upload an image');
+      return;
+    }
+
+    setLogoUploading(true);
+    try {
+      const logoSection = getSection('site-logo') || {
+        id: 'site-logo',
+        content: '',
+        type: 'image' as const,
+        metadata: { imageUrl: '', imageAlt: 'AITAHSOLUTIONS Educational Consultancy Logo' },
+      };
+      
+      await updateSectionImage(logoSection.id, url, logoSection.metadata?.imageAlt);
+      setLogoUrl(url);
+      Alert.alert('Success', 'Logo updated successfully!');
+    } catch (error) {
+      console.error('Error saving logo:', error);
+      Alert.alert('Error', 'Failed to save logo. Please try again.');
+    } finally {
+      setLogoUploading(false);
+    }
+  };
+
   if (loading) {
     return (
-      <Layout>
-        <View style={adminThemeScreenStyles.loadingContainer}>
-          <ActivityIndicator size="large" color="#007AFF" />
-        </View>
-      </Layout>
+      <View style={adminThemeScreenStyles.loadingContainer}>
+        <ActivityIndicator size="large" color="#007AFF" />
+      </View>
     );
   }
 
   return (
-    <Layout>
-      <ScrollView style={adminThemeScreenStyles.container}>
+    <ScrollView style={adminThemeScreenStyles.container}>
       <View style={adminThemeScreenStyles.header}>
         <Text style={adminThemeScreenStyles.title}>Theme Management</Text>
         <TouchableOpacity
@@ -254,6 +322,67 @@ export const AdminThemeScreen: React.FC = () => {
         >
           <Text style={adminThemeScreenStyles.createButtonText}>+ New Theme</Text>
         </TouchableOpacity>
+      </View>
+
+      {/* Site Logo Upload Section */}
+      <View style={adminThemeScreenStyles.editSection}>
+        <Text style={adminThemeScreenStyles.sectionTitle}>Site Logo</Text>
+        <Text style={[adminThemeScreenStyles.colorLabel, { marginBottom: 16 }]}>
+          Upload or enter the URL for your website logo. This logo will appear in the header and footer.
+        </Text>
+        
+        {logoUrl ? (
+          <View style={{ marginBottom: 16, alignItems: 'center' }}>
+            <Image
+              source={{ uri: logoUrl }}
+              style={{
+                width: 200,
+                height: 100,
+                resizeMode: 'contain',
+                borderWidth: 1,
+                borderColor: '#ddd',
+                borderRadius: 8,
+                padding: 8,
+              }}
+            />
+          </View>
+        ) : null}
+
+        <View style={adminThemeScreenStyles.colorInput}>
+          <Text style={adminThemeScreenStyles.colorLabel}>Logo URL</Text>
+          <TextInput
+            style={adminThemeScreenStyles.colorTextInput}
+            value={logoUrl}
+            onChangeText={setLogoUrl}
+            placeholder="https://example.com/logo.png or upload an image"
+            autoCapitalize="none"
+          />
+        </View>
+
+        <View style={{ flexDirection: 'row', gap: 12, marginTop: 12 }}>
+          <TouchableOpacity
+            style={[adminThemeScreenStyles.button, adminThemeScreenStyles.saveButton, logoUploading && adminThemeScreenStyles.buttonDisabled]}
+            onPress={handleLogoFileUpload}
+            disabled={logoUploading}
+          >
+            {logoUploading ? (
+              <ActivityIndicator color="#fff" />
+            ) : (
+              <Text style={adminThemeScreenStyles.saveButtonText}>Upload Image</Text>
+            )}
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={[adminThemeScreenStyles.button, adminThemeScreenStyles.saveButton, logoUploading && adminThemeScreenStyles.buttonDisabled]}
+            onPress={() => handleSaveLogo(logoUrl)}
+            disabled={logoUploading || !logoUrl}
+          >
+            {logoUploading ? (
+              <ActivityIndicator color="#fff" />
+            ) : (
+              <Text style={adminThemeScreenStyles.saveButtonText}>Save Logo</Text>
+            )}
+          </TouchableOpacity>
+        </View>
       </View>
 
       {editingTheme || (!editingTheme && themes.length === 0) ? (
@@ -702,7 +831,6 @@ export const AdminThemeScreen: React.FC = () => {
         </View>
       )}
     </ScrollView>
-    </Layout>
   );
 };
 

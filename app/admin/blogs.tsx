@@ -3,13 +3,18 @@
  */
 
 import { AdminBlogsScreen } from '@/screens/AdminBlogsScreen';
-import { Layout } from '@/components/Layout';
+import AdminLayout from '@/screens/admin-dashboard/components/AdminLayout';
+import Header from '@/screens/admin-dashboard/components/Header';
+import Box from '@mui/material/Box';
 
 export default function AdminBlogs() {
   return (
-    <Layout>
-      <AdminBlogsScreen />
-    </Layout>
+    <AdminLayout>
+      <Box sx={{ width: '100%', maxWidth: '1200px' }}>
+        <Header />
+        <AdminBlogsScreen />
+      </Box>
+    </AdminLayout>
   );
 }
 

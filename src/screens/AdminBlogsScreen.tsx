@@ -16,11 +16,11 @@ import { getAllBlogs, deleteBlog, publishBlog, unpublishBlog } from '@/services/
 import { Blog } from '@/types';
 import { format } from 'date-fns';
 import { useRequireAuth } from '@/hooks/useRequireAuth';
-import { Layout } from '@/components/Layout';
 import { adminBlogsScreenStyles } from '@/styles/screens/AdminBlogsScreen.styles';
 
 export const AdminBlogsScreen: React.FC = () => {
   const [blogs, setBlogs] = useState<Blog[]>([]);
+  const [filteredBlogs, setFilteredBlogs] = useState<Blog[]>([]);
   const [loading, setLoading] = useState(true);
   useRequireAuth();
 
@@ -33,6 +33,24 @@ export const AdminBlogsScreen: React.FC = () => {
   useEffect(() => {
     loadBlogs();
   }, []);
+
+  useEffect(() => {
+    // Get status filter from URL query parameters
+    if (typeof window !== 'undefined') {
+      const urlParams = new URLSearchParams(window.location.search);
+      const statusFilter = urlParams.get('status');
+      
+      if (statusFilter === 'published') {
+        setFilteredBlogs(blogs.filter(blog => blog.status === 'published'));
+      } else if (statusFilter === 'draft') {
+        setFilteredBlogs(blogs.filter(blog => blog.status !== 'published'));
+      } else {
+        setFilteredBlogs(blogs);
+      }
+    } else {
+      setFilteredBlogs(blogs);
+    }
+  }, [blogs]);
 
   const loadBlogs = async () => {
     try {
@@ -73,17 +91,14 @@ export const AdminBlogsScreen: React.FC = () => {
 
   if (loading) {
     return (
-      <Layout>
-        <View style={adminBlogsScreenStyles.loadingContainer}>
-          <ActivityIndicator size="large" color="#007AFF" />
-        </View>
-      </Layout>
+      <View style={adminBlogsScreenStyles.loadingContainer}>
+        <ActivityIndicator size="large" color="#007AFF" />
+      </View>
     );
   }
 
   return (
-    <Layout>
-      <ScrollView style={adminBlogsScreenStyles.container}>
+    <ScrollView style={adminBlogsScreenStyles.container}>
       <View style={adminBlogsScreenStyles.header}>
         <Text style={adminBlogsScreenStyles.title}>Manage Blogs</Text>
         <TouchableOpacity
@@ -95,10 +110,10 @@ export const AdminBlogsScreen: React.FC = () => {
       </View>
 
       <View style={adminBlogsScreenStyles.content}>
-        {blogs.length === 0 ? (
+        {filteredBlogs.length === 0 ? (
           <Text style={adminBlogsScreenStyles.emptyText}>No blogs found</Text>
         ) : (
-          blogs.map((blog) => (
+          filteredBlogs.map((blog) => (
             <View key={blog.id} style={adminBlogsScreenStyles.blogCard}>
               <View style={adminBlogsScreenStyles.blogInfo}>
                 <Text style={adminBlogsScreenStyles.blogTitle}>{blog.title}</Text>

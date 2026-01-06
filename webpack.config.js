@@ -35,6 +35,9 @@ module.exports = async function (env, argv) {
       'process.env.EXPO_PUBLIC_FIREBASE_MESSAGING_SENDER_ID': JSON.stringify(process.env.EXPO_PUBLIC_FIREBASE_MESSAGING_SENDER_ID),
       'process.env.EXPO_PUBLIC_FIREBASE_APP_ID': JSON.stringify(process.env.EXPO_PUBLIC_FIREBASE_APP_ID),
       'process.env.EXPO_PUBLIC_FIREBASE_MEASUREMENT_ID': JSON.stringify(process.env.EXPO_PUBLIC_FIREBASE_MEASUREMENT_ID),
+      'process.env.EXPO_PUBLIC_RETELL_PUBLIC_KEY': JSON.stringify(process.env.EXPO_PUBLIC_RETELL_PUBLIC_KEY),
+      'process.env.EXPO_PUBLIC_RETELL_AGENT_ID': JSON.stringify(process.env.EXPO_PUBLIC_RETELL_AGENT_ID),
+      'process.env.EXPO_PUBLIC_RETELL_RECAPTCHA_KEY': JSON.stringify(process.env.EXPO_PUBLIC_RETELL_RECAPTCHA_KEY),
     })
   );
 

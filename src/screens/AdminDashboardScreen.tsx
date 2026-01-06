@@ -3,95 +3,78 @@
  * Main dashboard for content management
  */
 
-import React from 'react';
-import { View, Text, ScrollView, TouchableOpacity, Platform } from 'react-native';
-import { useAuth } from '@/contexts/AuthContext';
+import type {} from '@mui/x-date-pickers/themeAugmentation';
+import type {} from '@mui/x-charts/themeAugmentation';
+import type {} from '@mui/x-data-grid-pro/themeAugmentation';
+import type {} from '@mui/x-tree-view/themeAugmentation';
+import { alpha } from '@mui/material/styles';
+import CssBaseline from '@mui/material/CssBaseline';
+import Box from '@mui/material/Box';
+import Stack from '@mui/material/Stack';
+import AppNavbar from './admin-dashboard/components/AppNavbar';
+import Header from './admin-dashboard/components/Header';
+import MainGrid from './admin-dashboard/components/MainGrid';
+import SideMenu from './admin-dashboard/components/SideMenu';
+import AppTheme from '@/mui-theme/AppTheme';
+import {
+  chartsCustomizations,
+  dataGridCustomizations,
+  datePickersCustomizations,
+  treeViewCustomizations,
+} from '@/mui-theme/customizations';
 import { useRequireAuth } from '@/hooks/useRequireAuth';
-import { Layout } from '@/components/Layout';
-import { adminDashboardScreenStyles } from '@/styles/screens/AdminDashboardScreen.styles';
 
-export const AdminDashboardScreen: React.FC = () => {
-  const { user, signOut } = useAuth();
+const xThemeComponents = {
+  ...chartsCustomizations,
+  ...dataGridCustomizations,
+  ...datePickersCustomizations,
+  ...treeViewCustomizations,
+};
+
+export function AdminDashboardScreen(props: { disableCustomTheme?: boolean }) {
   useRequireAuth();
 
-  const navigateTo = (path: string) => {
-    if (Platform.OS === 'web' && typeof window !== 'undefined') {
-      window.location.href = path;
-    }
-  };
-
-  const handleSignOut = async () => {
-    try {
-      await signOut();
-      if (Platform.OS === 'web' && typeof window !== 'undefined') {
-        window.location.href = '/';
-      }
-    } catch (error) {
-      console.error('Error signing out:', error);
-    }
-  };
-
   return (
-    <Layout>
-      <ScrollView style={adminDashboardScreenStyles.container}>
-        <View style={adminDashboardScreenStyles.header}>
-          <Text style={adminDashboardScreenStyles.title}>Admin Dashboard</Text>
-          <Text style={adminDashboardScreenStyles.subtitle}>Welcome, {user?.email}</Text>
-          <TouchableOpacity style={adminDashboardScreenStyles.signOutButton} onPress={handleSignOut}>
-            <Text style={adminDashboardScreenStyles.signOutText}>Sign Out</Text>
-          </TouchableOpacity>
-        </View>
-
-        <View style={adminDashboardScreenStyles.content}>
-          <TouchableOpacity
-            style={adminDashboardScreenStyles.card}
-            onPress={() => navigateTo('/admin/pages')}
+    <AppTheme {...props} themeComponents={xThemeComponents}>
+      <CssBaseline enableColorScheme />
+      <Box sx={{ display: 'flex' }}>
+        <SideMenu />
+        <Box
+          component="main"
+          sx={(theme) => ({
+            flexGrow: 1,
+            backgroundColor: theme.vars
+              ? `rgba(${theme.vars.palette.background.defaultChannel} / 1)`
+              : alpha(theme.palette.background.default, 1),
+            overflow: 'auto',
+            minHeight: '100vh',
+          })}
+        >
+          <AppNavbar />
+          <Box
+            sx={{
+              pt: { xs: '64px', sm: '64px' }, // Account for fixed AppBar height
+              minHeight: '100vh',
+            }}
           >
-            <Text style={adminDashboardScreenStyles.cardIcon}>📄</Text>
-            <Text style={adminDashboardScreenStyles.cardTitle}>Manage Pages</Text>
-            <Text style={adminDashboardScreenStyles.cardDescription}>
-              Edit home, about, services, and contact pages
-            </Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            style={adminDashboardScreenStyles.card}
-            onPress={() => navigateTo('/admin/blogs')}
-          >
-            <Text style={adminDashboardScreenStyles.cardIcon}>✍️</Text>
-            <Text style={adminDashboardScreenStyles.cardTitle}>Manage Blogs</Text>
-            <Text style={adminDashboardScreenStyles.cardDescription}>
-              Create, edit, and publish blog posts
-            </Text>
-          </TouchableOpacity>
-
-          {user?.role === 'admin' && (
-            <>
-              <TouchableOpacity
-                style={adminDashboardScreenStyles.card}
-                onPress={() => navigateTo('/admin/theme')}
-              >
-                <Text style={adminDashboardScreenStyles.cardIcon}>🎨</Text>
-                <Text style={adminDashboardScreenStyles.cardTitle}>Theme & Colors</Text>
-                <Text style={adminDashboardScreenStyles.cardDescription}>
-                  Customize global colors and styling
-                </Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={adminDashboardScreenStyles.card}
-                onPress={() => navigateTo('/admin/users')}
-              >
-                <Text style={adminDashboardScreenStyles.cardIcon}>👥</Text>
-                <Text style={adminDashboardScreenStyles.cardTitle}>Manage Users</Text>
-                <Text style={adminDashboardScreenStyles.cardDescription}>
-                  Add and manage editors and admins
-                </Text>
-              </TouchableOpacity>
-            </>
-          )}
-        </View>
-      </ScrollView>
-    </Layout>
+            <Stack
+              spacing={2}
+              sx={{
+                alignItems: 'center',
+                mx: 3,
+                pb: 5,
+                pt: 3,
+              }}
+            >
+              <Header />
+              <MainGrid />
+            </Stack>
+          </Box>
+        </Box>
+      </Box>
+    </AppTheme>
   );
-};
+}
+
+export default AdminDashboardScreen;
 

@@ -6,8 +6,8 @@
 
 import React, { ReactNode } from 'react';
 import { View, Platform } from 'react-native';
-import { HeaderNavigation } from './HeaderNavigation';
-import { Footer } from './Footer';
+import HeaderNavigation from './HeaderNavigation';
+import Footer from './Footer';
 import { layoutStyles } from '@/styles/components/Layout.styles';
 
 interface LayoutProps {

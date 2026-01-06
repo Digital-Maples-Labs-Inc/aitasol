@@ -47,14 +47,21 @@ Expo build for web or React Native Web build output
 
 ### Public Website
 
-Home page
-About page
-Services page
-Blog listing and blog detail pages
-Contact page
-Call to action sections
+**Main Pages:**
+- Homepage (`/`) - Landing page with hero, features, testimonials, highlights, pricing, and FAQ
+- About AitaSol (`/about`) - Company story, team, credentials
+- Services Overview (`/services`) - Main services page
+  - Study in Canada (`/services/study-in-canada`)
+  - Immigration & Study Permits (`/services/immigration-study-permits`)
+  - Admissions Support (`/services/admissions-support`)
+  - Career Counseling (`/services/career-counseling`)
+- Success Stories / Testimonials (`/testimonials`)
+- Why Choose Canada? (`/blog`) - Blog listing and blog detail pages
+- Contact Us (`/contact`)
 
 All text and images on public pages must be editable from the admin dashboard
+
+**See `docs/SITEMAP.md` for complete site structure and navigation details.**
 
 ### Admin Dashboard
 

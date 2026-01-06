@@ -2,14 +2,8 @@
  * Home Page (Expo Router)
  */
 
-import { HomeScreen } from '@/screens/HomeScreen';
-import { Layout } from '@/components/Layout';
+import HomeScreen from '@/screens/HomeScreen';
 
 export default function Home() {
-  return (
-    <Layout>
-      <HomeScreen />
-    </Layout>
-  );
+  return <HomeScreen />;
 }
-

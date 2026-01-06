@@ -3,8 +3,7 @@
  */
 
 import { View, ActivityIndicator, Platform, Text, StyleSheet } from 'react-native';
-import { LoginScreen } from '@/screens/LoginScreen';
-import { Layout } from '@/components/Layout';
+import LoginScreen from '@/screens/LoginScreen';
 import { useAuth } from '@/contexts/AuthContext';
 
 export default function DMLabs() {
@@ -22,12 +21,10 @@ export default function DMLabs() {
   if (loading) {
     console.log('⏳ DMLabs: Loading auth state');
     return (
-      <Layout showHeader={false}>
-        <View style={styles.centerContainer}>
-          <ActivityIndicator size="large" color="#007AFF" />
-          <Text style={styles.loadingText}>Loading...</Text>
-        </View>
-      </Layout>
+      <View style={styles.centerContainer}>
+        <ActivityIndicator size="large" color="#007AFF" />
+        <Text style={styles.loadingText}>Loading...</Text>
+      </View>
     );
   }
 
@@ -39,23 +36,17 @@ export default function DMLabs() {
         window.location.href = '/admin/dashboard';
       }, 100);
       return (
-        <Layout showHeader={false}>
-          <View style={styles.centerContainer}>
-            <ActivityIndicator size="large" color="#007AFF" />
-            <Text style={styles.loadingText}>Redirecting to dashboard...</Text>
-          </View>
-        </Layout>
+        <View style={styles.centerContainer}>
+          <ActivityIndicator size="large" color="#007AFF" />
+          <Text style={styles.loadingText}>Redirecting to dashboard...</Text>
+        </View>
       );
     }
   }
 
   // Show login page if not logged in
   console.log('🔐 DMLabs: Rendering LoginScreen');
-  return (
-    <Layout showHeader={false}>
-      <LoginScreen />
-    </Layout>
-  );
+  return <LoginScreen />;
 }
 
 const styles = StyleSheet.create({
@@ -70,4 +61,3 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
 });
-

@@ -15,7 +15,6 @@ import {
 import { getAllPages, deletePage } from '@/services/pageService';
 import { Page } from '@/types';
 import { useRequireAuth } from '@/hooks/useRequireAuth';
-import { Layout } from '@/components/Layout';
 import { adminPagesScreenStyles } from '@/styles/screens/AdminPagesScreen.styles';
 
 export const AdminPagesScreen: React.FC = () => {
@@ -44,8 +43,11 @@ export const AdminPagesScreen: React.FC = () => {
     }
   };
 
-  const handleEditPage = (pageId: string) => {
-    navigateTo(`/admin/pages/${pageId}`);
+  const handleEditPage = (page: Page) => {
+    // Navigate to the actual page for inline editing
+    // Use the slug to construct the frontend URL
+    const pagePath = page.slug === 'home' ? '/' : `/${page.slug}`;
+    navigateTo(pagePath);
   };
 
   const handleDeletePage = async (pageId: string) => {
@@ -59,17 +61,14 @@ export const AdminPagesScreen: React.FC = () => {
 
   if (loading) {
     return (
-      <Layout>
-        <View style={adminPagesScreenStyles.loadingContainer}>
-          <ActivityIndicator size="large" color="#007AFF" />
-        </View>
-      </Layout>
+      <View style={adminPagesScreenStyles.loadingContainer}>
+        <ActivityIndicator size="large" color="#007AFF" />
+      </View>
     );
   }
 
   return (
-    <Layout>
-      <ScrollView style={adminPagesScreenStyles.container}>
+    <ScrollView style={adminPagesScreenStyles.container}>
       <View style={adminPagesScreenStyles.header}>
         <Text style={adminPagesScreenStyles.title}>Manage Pages</Text>
         <TouchableOpacity
@@ -103,7 +102,7 @@ export const AdminPagesScreen: React.FC = () => {
               <View style={adminPagesScreenStyles.pageActions}>
                 <TouchableOpacity
                   style={adminPagesScreenStyles.editButton}
-                  onPress={() => handleEditPage(page.id)}
+                  onPress={() => handleEditPage(page)}
                 >
                   <Text style={adminPagesScreenStyles.editButtonText}>Edit</Text>
                 </TouchableOpacity>
@@ -119,7 +118,6 @@ export const AdminPagesScreen: React.FC = () => {
         )}
       </View>
     </ScrollView>
-    </Layout>
   );
 };
 
