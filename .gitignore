@@ -59,3 +59,4 @@ serviceAccountKey.json
 *.swo
 *~
 
+firebase-service-account.json
