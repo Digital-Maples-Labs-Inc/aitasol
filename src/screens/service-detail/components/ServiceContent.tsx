@@ -28,8 +28,16 @@ export default function ServiceContent({ serviceSlug }: ServiceContentProps) {
   const serviceImageSection = getSection('service-image') || { id: 'service-image', content: '', type: 'image' as const, metadata: { imageUrl: '', imageAlt: 'Service image' } };
 
   return (
-    <Container sx={{ py: { xs: 8, sm: 16 } }}>
-      <Grid container spacing={4}>
+    <Box
+      sx={(theme) => ({
+        backgroundColor: '#ffffff',
+        ...theme.applyStyles('dark', {
+          backgroundColor: '#09090b',
+        }),
+      })}
+    >
+      <Container sx={{ py: { xs: 8, sm: 16 } }}>
+        <Grid container spacing={4}>
         <Grid size={{ xs: 12, md: 6 }}>
           <EditableTextMUI
             value={contentTitleSection.content}
@@ -67,7 +75,8 @@ export default function ServiceContent({ serviceSlug }: ServiceContentProps) {
           />
         </Grid>
       </Grid>
-    </Container>
+      </Container>
+    </Box>
   );
 }
 

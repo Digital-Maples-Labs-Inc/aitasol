@@ -24,8 +24,16 @@ export default function CompanyStory() {
   const storyImageSection = getSection('company-story-image') || { id: 'company-story-image', content: '', type: 'image' as const, metadata: { imageUrl: '', imageAlt: 'Company story image' } };
 
   return (
-    <Container sx={{ py: { xs: 8, sm: 16 } }}>
-      <Grid container spacing={4}>
+    <Box
+      sx={(theme) => ({
+        backgroundColor: '#ffffff',
+        ...theme.applyStyles('dark', {
+          backgroundColor: '#09090b',
+        }),
+      })}
+    >
+      <Container sx={{ py: { xs: 8, sm: 16 } }}>
+        <Grid container spacing={4}>
         <Grid size={{ xs: 12, md: 6 }}>
           <EditableTextMUI
             value={storyTitleSection.content}
@@ -63,7 +71,8 @@ export default function CompanyStory() {
           />
         </Grid>
       </Grid>
-    </Container>
+      </Container>
+    </Box>
   );
 }
 

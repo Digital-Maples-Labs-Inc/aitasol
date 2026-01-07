@@ -13,7 +13,6 @@ import Menu from '@mui/material/Menu';
 import MenuIcon from '@mui/icons-material/Menu';
 import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
-import ColorModeIconDropdown from '@/mui-theme/ColorModeIconDropdown';
 import { useAuth } from '@/contexts/AuthContext';
 import SelectContent from '@/screens/admin-dashboard/components/SelectContent';
 import SitemarkIcon from './SitemarkIcon';
@@ -224,33 +223,27 @@ export default function HeaderNavigation() {
             </Button>
           </Box>
 
-          {/* Right Side Actions (Editing Mode & Theme Toggle) - Desktop */}
-          <Box
-            sx={{
-              display: { xs: 'none', md: 'flex' },
-              gap: 1,
-              alignItems: 'center',
-              ml: 2,
-            }}
-          >
-            {showEditingModeSwitcher && (
-              <Box sx={{ mr: 1 }}>
-                <SelectContent />
-              </Box>
-            )}
-            <ColorModeIconDropdown />
-          </Box>
+          {/* Right Side Actions (Editing Mode) - Desktop */}
+          {showEditingModeSwitcher && (
+            <Box
+              sx={{
+                display: { xs: 'none', md: 'flex' },
+                gap: 1,
+                alignItems: 'center',
+                ml: 2,
+              }}
+            >
+              <SelectContent />
+            </Box>
+          )}
           
-          {/* Mobile: Menu and Theme Toggle - Stacked Vertically on Right */}
+          {/* Mobile: Menu Button */}
           <Box 
             sx={{ 
               display: { xs: 'flex', md: 'none' }, 
-              flexDirection: 'column',
-              gap: 0.5,
               alignItems: 'center',
             }}
           >
-            <ColorModeIconDropdown size="medium" />
             <IconButton 
               aria-label="Menu button" 
               onClick={toggleDrawer(true)}

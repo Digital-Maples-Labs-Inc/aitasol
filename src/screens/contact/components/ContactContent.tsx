@@ -4,7 +4,6 @@ import Container from '@mui/material/Container';
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
 import CircularProgress from '@mui/material/CircularProgress';
-import { useTheme } from '@mui/material/styles';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import EmailIcon from '@mui/icons-material/Email';
 import ContactForm from './ContactForm';
@@ -12,7 +11,6 @@ import { EditableTextMUI } from '@/components/EditableTextMUI';
 import { usePageData } from '@/hooks/usePageData';
 
 export default function ContactContent() {
-  const theme = useTheme();
   const { page, loading, updateSectionContent, getSection } = usePageData('contact');
 
   if (loading) {
@@ -36,10 +34,14 @@ export default function ContactContent() {
     <Box
       component="section"
       id="contact"
-      sx={{
+      sx={(theme) => ({
         position: 'relative',
         py: { xs: 10, md: 15 },
         minHeight: '100vh',
+        backgroundColor: '#ffffff',
+        ...theme.applyStyles('dark', {
+          backgroundColor: '#09090b',
+        }),
         '&::before': {
           content: '""',
           position: 'absolute',
@@ -52,7 +54,7 @@ export default function ContactContent() {
             ? 'rgba(0, 0, 0, 0.3)' 
             : 'rgba(233, 249, 255, 1)',
         },
-      }}
+      })}
     >
       <Container>
         <Grid container spacing={4} alignItems="center">

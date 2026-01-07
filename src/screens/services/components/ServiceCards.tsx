@@ -59,8 +59,16 @@ export default function ServiceCards() {
   }
 
   return (
-    <Container sx={{ pb: { xs: 8, sm: 16 } }}>
-      <Grid container spacing={4}>
+    <Box
+      sx={(theme) => ({
+        backgroundColor: '#ffffff',
+        ...theme.applyStyles('dark', {
+          backgroundColor: '#09090b',
+        }),
+      })}
+    >
+      <Container sx={{ pb: { xs: 8, sm: 16 } }}>
+        <Grid container spacing={4}>
         {services.map((service, index) => {
           const serviceTitleSection = getSection(`service-card-${index}-title`) || { 
             id: `service-card-${index}-title`, 
@@ -103,7 +111,8 @@ export default function ServiceCards() {
           );
         })}
       </Grid>
-    </Container>
+      </Container>
+    </Box>
   );
 }
 

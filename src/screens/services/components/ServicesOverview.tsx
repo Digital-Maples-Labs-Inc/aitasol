@@ -21,8 +21,16 @@ export default function ServicesOverview() {
   const overviewText2Section = getSection('services-overview-text-2') || { id: 'services-overview-text-2', content: "Whether you're looking to pursue undergraduate studies, graduate programs, or professional certifications, we have the expertise and resources to guide you through the entire process.", type: 'paragraph' as const };
 
   return (
-    <Container sx={{ py: { xs: 8, sm: 16 } }}>
-      <Box sx={{ maxWidth: '800px', mx: 'auto', textAlign: 'center' }}>
+    <Box
+      sx={(theme) => ({
+        backgroundColor: '#ffffff',
+        ...theme.applyStyles('dark', {
+          backgroundColor: '#09090b',
+        }),
+      })}
+    >
+      <Container sx={{ py: { xs: 8, sm: 16 } }}>
+        <Box sx={{ maxWidth: '800px', mx: 'auto', textAlign: 'center' }}>
         <EditableTextMUI
           value={overviewTitleSection.content}
           onSave={(value) => updateSectionContent(overviewTitleSection.id, value)}
@@ -41,10 +49,11 @@ export default function ServicesOverview() {
           onSave={(value) => updateSectionContent(overviewText2Section.id, value)}
           variant="body1"
           multiline
-          sx={{ color: 'text.secondary', display: 'block' }}
+          sx={{ color: 'text.secondary',           display: 'block' }}
         />
-      </Box>
-    </Container>
+        </Box>
+      </Container>
+    </Box>
   );
 }
 

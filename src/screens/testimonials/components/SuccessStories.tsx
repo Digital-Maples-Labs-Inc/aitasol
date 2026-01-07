@@ -28,7 +28,15 @@ export default function SuccessStories() {
   const successTextSection = getSection('success-text') || { id: 'success-text', content: 'Join hundreds of successful students who have achieved their educational dreams with AitaSol. Let us help you start your journey today.', type: 'paragraph' as const };
 
   return (
-    <Box sx={{ bgcolor: 'background.secondary', py: { xs: 8, sm: 16 } }}>
+    <Box
+      sx={(theme) => ({
+        backgroundColor: '#ffffff',
+        py: { xs: 8, sm: 16 },
+        ...theme.applyStyles('dark', {
+          backgroundColor: '#09090b',
+        }),
+      })}
+    >
       <Container>
         <Box sx={{ textAlign: 'center', maxWidth: '600px', mx: 'auto' }}>
           <EditableTextMUI

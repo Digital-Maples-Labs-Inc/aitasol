@@ -1,4 +1,5 @@
 import CssBaseline from '@mui/material/CssBaseline';
+import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
 import AppTheme from '@/mui-theme/AppTheme';
 import HeaderNavigation from '@/components/HeaderNavigation';
@@ -12,14 +13,23 @@ export default function Blog(props: { disableCustomTheme?: boolean }) {
       <CssBaseline enableColorScheme />
 
       <HeaderNavigation />
-      <Container
-        maxWidth="lg"
+      <Box
         component="main"
-        sx={{ display: 'flex', flexDirection: 'column', pt: { xs: 14, md: 18 }, pb: 8, gap: 4 }}
+        sx={(theme) => ({
+          backgroundColor: theme.palette.mode === 'dark' 
+            ? theme.palette.background.default 
+            : '#ffffff',
+          minHeight: '100vh',
+        })}
       >
-        <MainContent />
-        <Latest />
-      </Container>
+        <Container
+          maxWidth="lg"
+          sx={{ display: 'flex', flexDirection: 'column', pt: { xs: 14, md: 18 }, pb: 8, gap: 4 }}
+        >
+          <MainContent />
+          <Latest />
+        </Container>
+      </Box>
       <Footer />
     </AppTheme>
   );

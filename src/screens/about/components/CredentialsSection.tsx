@@ -41,8 +41,16 @@ export default function CredentialsSection() {
   const credentialsTitleSection = getSection('credentials-title') || { id: 'credentials-title', content: 'Our Credentials', type: 'heading' as const };
 
   return (
-    <Container sx={{ py: { xs: 8, sm: 16 } }}>
-      <EditableTextMUI
+    <Box
+      sx={(theme) => ({
+        backgroundColor: '#ffffff',
+        ...theme.applyStyles('dark', {
+          backgroundColor: '#09090b',
+        }),
+      })}
+    >
+      <Container sx={{ py: { xs: 8, sm: 16 } }}>
+        <EditableTextMUI
         value={credentialsTitleSection.content}
         onSave={(value) => updateSectionContent(credentialsTitleSection.id, value)}
         variant="h3"
@@ -83,7 +91,8 @@ export default function CredentialsSection() {
           );
         })}
       </Grid>
-    </Container>
+      </Container>
+    </Box>
   );
 }
 

@@ -42,7 +42,15 @@ export default function ServiceFeatures({ serviceSlug }: ServiceFeaturesProps) {
   });
 
   return (
-    <Box sx={{ bgcolor: 'background.secondary', py: { xs: 8, sm: 16 } }}>
+    <Box
+      sx={(theme) => ({
+        backgroundColor: '#ffffff',
+        py: { xs: 8, sm: 16 },
+        ...theme.applyStyles('dark', {
+          backgroundColor: '#09090b',
+        }),
+      })}
+    >
       <Container>
         <EditableTextMUI
           value={featuresTitleSection.content}

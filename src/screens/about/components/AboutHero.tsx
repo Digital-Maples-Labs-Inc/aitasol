@@ -21,14 +21,16 @@ export default function AboutHero() {
 
   return (
     <Box
-      sx={{
+      sx={(theme) => ({
         pt: { xs: 14, sm: 20 },
         pb: { xs: 8, sm: 12 },
-        backgroundImage: (theme) =>
-          theme.palette.mode === 'light'
-            ? 'radial-gradient(ellipse 80% 50% at 50% -20%, hsl(210, 100%, 90%), transparent)'
-            : 'none',
-      }}
+        backgroundColor: '#ffffff',
+        backgroundImage: 'radial-gradient(ellipse 80% 50% at 50% -20%, hsl(210, 100%, 90%), transparent)',
+        ...theme.applyStyles('dark', {
+          backgroundColor: '#09090b',
+          backgroundImage: 'radial-gradient(ellipse 80% 50% at 50% -20%, hsl(210, 100%, 16%), transparent)',
+        }),
+      })}
     >
       <Container>
         <EditableTextMUI

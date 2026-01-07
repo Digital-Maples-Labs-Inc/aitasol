@@ -32,8 +32,16 @@ export default function ServiceCTA({ serviceSlug }: ServiceCTAProps) {
   const ctaTextSection = getSection('service-cta-text') || { id: 'service-cta-text', content: 'Contact us today to learn more about how we can help you achieve your educational goals.', type: 'paragraph' as const };
 
   return (
-    <Container sx={{ py: { xs: 8, sm: 16 } }}>
-      <Box
+    <Box
+      sx={(theme) => ({
+        backgroundColor: '#ffffff',
+        ...theme.applyStyles('dark', {
+          backgroundColor: '#09090b',
+        }),
+      })}
+    >
+      <Container sx={{ py: { xs: 8, sm: 16 } }}>
+        <Box
         sx={{
           textAlign: 'center',
           p: 4,
@@ -73,8 +81,9 @@ export default function ServiceCTA({ serviceSlug }: ServiceCTAProps) {
             View All Services
           </Button>
         </Stack>
-      </Box>
-    </Container>
+        </Box>
+      </Container>
+    </Box>
   );
 }
 

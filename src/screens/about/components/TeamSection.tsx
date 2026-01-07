@@ -42,7 +42,15 @@ export default function TeamSection() {
   const teamTitleSection = getSection('team-title') || { id: 'team-title', content: 'Our Team', type: 'heading' as const };
 
   return (
-    <Box sx={{ bgcolor: 'background.secondary', py: { xs: 8, sm: 16 } }}>
+    <Box
+      sx={(theme) => ({
+        backgroundColor: '#ffffff',
+        py: { xs: 8, sm: 16 },
+        ...theme.applyStyles('dark', {
+          backgroundColor: '#09090b',
+        }),
+      })}
+    >
       <Container>
         <EditableTextMUI
           value={teamTitleSection.content}

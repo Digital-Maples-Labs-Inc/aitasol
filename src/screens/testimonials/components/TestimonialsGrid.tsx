@@ -69,8 +69,16 @@ export default function TestimonialsGrid() {
   }
 
   return (
-    <Container sx={{ py: { xs: 8, sm: 16 } }}>
-      <Grid container spacing={3}>
+    <Box
+      sx={(theme) => ({
+        backgroundColor: '#ffffff',
+        ...theme.applyStyles('dark', {
+          backgroundColor: '#09090b',
+        }),
+      })}
+    >
+      <Container sx={{ py: { xs: 8, sm: 16 } }}>
+        <Grid container spacing={3}>
         {testimonials.map((testimonial, index) => {
           const testimonialTextSection = getSection(`testimonial-${index}-text`) || { 
             id: `testimonial-${index}-text`, 
@@ -149,7 +157,8 @@ export default function TestimonialsGrid() {
           );
         })}
       </Grid>
-    </Container>
+      </Container>
+    </Box>
   );
 }
 
