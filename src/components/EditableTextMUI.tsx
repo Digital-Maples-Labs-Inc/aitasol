@@ -21,7 +21,7 @@ import { useTheme } from '@mui/material/styles';
 interface EditableTextMUIProps {
   value: string;
   onSave: (newValue: string) => Promise<void>;
-  variant?: 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'body1' | 'body2' | 'caption';
+  variant?: 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'subtitle1' | 'subtitle2' | 'body1' | 'body2' | 'caption';
   component?: React.ElementType;
   sx?: any;
   editable?: boolean;

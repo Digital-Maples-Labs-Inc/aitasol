@@ -53,20 +53,52 @@ const defaultSlides = [
   },
 ];
 
+import { useAuth } from '@/contexts/AuthContext';
+import { useEditingMode } from '@/contexts/EditingModeContext';
+import EditIcon from '@mui/icons-material/Edit';
+import PhotoCamera from '@mui/icons-material/PhotoCamera';
+import { useTheme } from '@mui/material/styles';
+import { uploadImage } from '@/services/storageService';
+
 export default function HeroSliderComponent() {
-  const { page, loading, getSection, updateSectionContent } = usePageData('home');
+  const { page, loading, getSection, updateSectionContent, updateSectionImage } = usePageData('home');
   const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true }, [Autoplay({ delay: 5000, stopOnInteraction: false })]);
+  const { user } = useAuth();
+  const { isInlineMode } = useEditingMode();
+  const [uploading, setUploading] = useState(false);
+  const theme = useTheme();
+
+  const isEditable = isInlineMode && (user?.role === 'admin' || user?.role === 'editor');
+
+  const handleImageUpload = async (event: React.ChangeEvent<HTMLInputElement>, slideId: string) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    setUploading(true);
+    try {
+      // Used static import instead of dynamic
+      const mk_name = file.name || `slide_bg_${Date.now()}.jpg`;
+      const uploadedUrl = await uploadImage(file, mk_name, 'hero-slides');
+
+      await updateSectionImage(slideId, uploadedUrl, 'Hero Slide Background');
+    } catch (error) {
+      console.error('Error uploading image:', error);
+      alert('Failed to upload image. Please try again.');
+    } finally {
+      setUploading(false);
+    }
+  };
 
   // Get hero title and subtitle from Firestore
-  const heroTitleSection = getSection('hero-title') || { 
-    id: 'hero-title', 
-    content: 'Welcome to AITAHSOLUTIONS', 
-    type: 'heading' as const 
+  const heroTitleSection = getSection('hero-title') || {
+    id: 'hero-title',
+    content: 'Welcome to AITAHSOLUTIONS',
+    type: 'heading' as const
   };
-  const heroSubtitleSection = getSection('hero-subtitle') || { 
-    id: 'hero-subtitle', 
-    content: 'Your Bridge to Global Learning', 
-    type: 'paragraph' as const 
+  const heroSubtitleSection = getSection('hero-subtitle') || {
+    id: 'hero-subtitle',
+    content: 'Your Bridge to Global Learning',
+    type: 'paragraph' as const
   };
 
   // Load slides from Firestore
@@ -75,19 +107,19 @@ export default function HeroSliderComponent() {
     for (let i = 1; i <= 5; i++) {
       const slideSection = getSection(`hero-slide-${i}`);
       const defaultSlide = defaultSlides[i - 1]; // Get the correct default for this slide index
-      
+
       // Only include active slides
       if (slideSection && slideSection.metadata?.active !== false) {
         const imageUrl = slideSection.metadata?.imageUrl || slideSection.content || '';
         // Use the image from Firestore, or fallback to default gradient for this specific slide
         const backgroundImage = imageUrl || (defaultSlide?.backgroundImage) || createGradientSVG('#0066CC', '#004499');
-        
+
         // Use Firestore data if available, otherwise use the default for THIS specific slide index
         // Important: Only use default if Firestore data is empty/undefined
         const title = slideSection.metadata?.title?.trim() || defaultSlide?.title || '';
         const subtitle = slideSection.metadata?.subtitle?.trim() || defaultSlide?.subtitle || '';
         const description = slideSection.metadata?.description?.trim() || defaultSlide?.description || '';
-        
+
         loadedSlides.push({
           id: `hero-slide-${i}`,
           backgroundImage,
@@ -108,12 +140,12 @@ export default function HeroSliderComponent() {
         }
       }
     }
-    
+
     // If no slides found in Firestore, use defaults
     if (loadedSlides.length === 0) {
       return defaultSlides.filter((_, index) => index < 3); // First 3 defaults
     }
-    
+
     return loadedSlides;
   };
 
@@ -185,7 +217,7 @@ export default function HeroSliderComponent() {
         '--slide-height': '100%',
         '--slide-spacing': '10px', // Default mobile spacing
         '--slide-size': '100%', // Default mobile full width
-        [theme => theme.breakpoints.up('md')]: {
+        [theme.breakpoints.up('md')]: {
           '--slide-spacing': '50px', // Desktop spacing
           '--slide-size': '75%', // Desktop 75% width
         },
@@ -216,7 +248,7 @@ export default function HeroSliderComponent() {
             // Calculate opacity based on distance from center
             // Center (distance 0) = 1.0, adjacent (distance 1) = 0.4, further = 0.2
             const slideOpacity = distance === 0 ? 1 : distance === 1 ? 0.4 : 0.2;
-            
+
             return (
               <Box
                 key={slide.id}
@@ -252,130 +284,163 @@ export default function HeroSliderComponent() {
                   },
                 }}
               >
-              <Box
-                sx={{
-                  position: 'absolute',
-                  top: 0,
-                  left: 0,
-                  right: 0,
-                  bottom: 0,
-                  backgroundColor: isSelected ? 'rgba(0, 0, 0, 0.6)' : 'rgba(0, 0, 0, 0.8)',
-                  zIndex: 2,
-                  transition: 'background-color 0.5s ease-in-out',
-                }}
-              />
-              <Container
-                sx={{
-                  position: 'relative',
-                  zIndex: 3,
-                  height: '100%',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  paddingTop: { xs: '100px', sm: '0' }, // Add top padding on mobile to avoid header
-                }}
-              >
-                <Stack
-                  spacing={{ xs: 2, md: 3 }}
+                {/* Edit Background Button */}
+                {isEditable && (
+                  <Box
+                    sx={{
+                      position: 'absolute',
+                      top: 20,
+                      right: 20,
+                      zIndex: 20,
+                    }}
+                  >
+                    <input
+                      accept="image/*"
+                      style={{ display: 'none' }}
+                      id={`raised-button-file-${slide.id}`}
+                      type="file"
+                      onChange={(e) => handleImageUpload(e, slide.id)}
+                    />
+                    <label htmlFor={`raised-button-file-${slide.id}`}>
+                      <Button
+                        variant="contained"
+                        component="span"
+                        color="primary"
+                        startIcon={uploading ? <CircularProgress size={20} color="inherit" /> : <PhotoCamera />}
+                        disabled={uploading}
+                        sx={{ bgcolor: 'rgba(0,0,0,0.7)', '&:hover': { bgcolor: 'rgba(0,0,0,0.9)' } }}
+                      >
+                        {uploading ? 'Uploading...' : 'Change Baground'}
+                      </Button>
+                    </label>
+                  </Box>
+                )}
+
+                <Box
                   sx={{
+                    position: 'absolute',
+                    top: 0,
+                    left: 0,
+                    right: 0,
+                    bottom: 0,
+                    backgroundColor: isSelected ? 'rgba(0, 0, 0, 0.6)' : 'rgba(0, 0, 0, 0.8)',
+                    zIndex: 2,
+                    transition: 'background-color 0.5s ease-in-out',
+                  }}
+                />
+                <Container
+                  sx={{
+                    position: 'relative',
+                    zIndex: 3,
+                    height: '100%',
+                    display: 'flex',
                     alignItems: 'center',
-                    textAlign: 'center',
-                    color: 'white',
-                    maxWidth: { xs: '95%', sm: '80%', md: '70%' },
-                    paddingTop: { xs: '20px', sm: '0' }, // Extra padding on mobile
+                    justifyContent: 'center',
+                    paddingTop: { xs: '150px', sm: '120px' }, // Add more top padding on mobile to avoid header
                   }}
                 >
-                  {index === 0 ? (
-                    <>
-                      <EditableTextMUI
-                        value={heroTitleSection.content}
-                        onSave={(value) => updateSectionContent(heroTitleSection.id, value)}
-                        variant="h1"
-                        sx={{
-                          fontSize: { xs: '1.75rem', sm: '2.5rem', md: '4.5rem' },
-                          fontWeight: 700,
-                          color: 'white',
-                          textShadow: '2px 2px 4px rgba(0,0,0,0.5)',
-                          mb: { xs: 1, md: 2 },
-                          lineHeight: { xs: 1.2, md: 1.3 },
-                        }}
-                      />
-                      <EditableTextMUI
-                        value={heroSubtitleSection.content}
-                        onSave={(value) => updateSectionContent(heroSubtitleSection.id, value)}
-                        variant="h4"
-                        sx={{
-                          fontSize: { xs: '1rem', sm: '1.25rem', md: '1.75rem' },
-                          fontWeight: 400,
-                          color: 'white',
-                          textShadow: '1px 1px 2px rgba(0,0,0,0.5)',
-                          lineHeight: { xs: 1.3, md: 1.4 },
-                        }}
-                      />
-                    </>
-                  ) : (
-                    <>
-                      <Typography
-                        variant="h1"
-                        sx={{
-                          fontSize: { xs: '1.75rem', sm: '2.5rem', md: '4.5rem' },
-                          fontWeight: 700,
-                          color: 'white',
-                          textShadow: '2px 2px 4px rgba(0,0,0,0.5)',
-                          mb: { xs: 1, md: 2 },
-                          lineHeight: { xs: 1.2, md: 1.3 },
-                        }}
-                      >
-                        {slide.title}
-                      </Typography>
-                      <Typography
-                        variant="h4"
-                        sx={{
-                          fontSize: { xs: '1rem', sm: '1.25rem', md: '1.75rem' },
-                          fontWeight: 400,
-                          color: 'white',
-                          textShadow: '1px 1px 2px rgba(0,0,0,0.5)',
-                          mb: { xs: 1, md: 2 },
-                          lineHeight: { xs: 1.3, md: 1.4 },
-                        }}
-                      >
-                        {slide.subtitle}
-                      </Typography>
-                    </>
-                  )}
-                  <Typography
-                    variant="body1"
+                  <Stack
+                    spacing={{ xs: 2, md: 3 }}
                     sx={{
-                      fontSize: { xs: '0.875rem', sm: '1rem', md: '1.25rem' },
+                      alignItems: 'center',
+                      textAlign: 'center',
                       color: 'white',
-                      textShadow: '1px 1px 2px rgba(0,0,0,0.5)',
-                      maxWidth: '600px',
-                      lineHeight: { xs: 1.4, md: 1.6 },
-                      px: { xs: 1, md: 0 },
+                      maxWidth: { xs: '95%', sm: '80%', md: '70%' },
+                      paddingTop: { xs: '20px', sm: '0' }, // Extra padding on mobile
                     }}
                   >
-                    {slide.description}
-                  </Typography>
-                  <Button
-                    variant="contained"
-                    size="large"
-                    sx={{
-                      mt: { xs: 1, md: 2 },
-                      px: { xs: 3, md: 4 },
-                      py: { xs: 1, md: 1.5 },
-                      fontSize: { xs: '0.875rem', sm: '1rem', md: '1.125rem' },
-                      fontWeight: 600,
-                      backgroundColor: 'primary.main',
-                      '&:hover': {
-                        backgroundColor: 'primary.dark',
-                      },
-                    }}
-                  >
-                    Get Started
-                  </Button>
-                </Stack>
-              </Container>
-            </Box>
+                    {index === 0 ? (
+                      <>
+                        <EditableTextMUI
+                          value={heroTitleSection.content}
+                          onSave={(value) => updateSectionContent(heroTitleSection.id, value)}
+                          variant="h1"
+                          sx={{
+                            fontSize: { xs: '1.75rem', sm: '2.5rem', md: '4.5rem' },
+                            fontWeight: 700,
+                            color: 'white',
+                            textShadow: '2px 2px 4px rgba(0,0,0,0.5)',
+                            mb: { xs: 1, md: 2 },
+                            lineHeight: { xs: 1.2, md: 1.3 },
+                          }}
+                        />
+                        <EditableTextMUI
+                          value={heroSubtitleSection.content}
+                          onSave={(value) => updateSectionContent(heroSubtitleSection.id, value)}
+                          variant="h4"
+                          sx={{
+                            fontSize: { xs: '1rem', sm: '1.25rem', md: '1.75rem' },
+                            fontWeight: 400,
+                            color: 'white',
+                            textShadow: '1px 1px 2px rgba(0,0,0,0.5)',
+                            lineHeight: { xs: 1.3, md: 1.4 },
+                          }}
+                        />
+                      </>
+                    ) : (
+                      <>
+                        <Typography
+                          variant="h1"
+                          sx={{
+                            fontSize: { xs: '1.75rem', sm: '2.5rem', md: '4.5rem' },
+                            fontWeight: 700,
+                            color: 'white',
+                            textShadow: '2px 2px 4px rgba(0,0,0,0.5)',
+                            mb: { xs: 1, md: 2 },
+                            lineHeight: { xs: 1.2, md: 1.3 },
+                          }}
+                        >
+                          {slide.title}
+                        </Typography>
+                        <Typography
+                          variant="h4"
+                          sx={{
+                            fontSize: { xs: '1rem', sm: '1.25rem', md: '1.75rem' },
+                            fontWeight: 400,
+                            color: 'white',
+                            textShadow: '1px 1px 2px rgba(0,0,0,0.5)',
+                            mb: { xs: 1, md: 2 },
+                            lineHeight: { xs: 1.3, md: 1.4 },
+                          }}
+                        >
+                          {slide.subtitle}
+                        </Typography>
+                      </>
+                    )}
+                    <Typography
+                      variant="body1"
+                      sx={{
+                        fontSize: { xs: '0.875rem', sm: '1rem', md: '1.25rem' },
+                        color: 'white',
+                        textShadow: '1px 1px 2px rgba(0,0,0,0.5)',
+                        maxWidth: '600px',
+                        lineHeight: { xs: 1.4, md: 1.6 },
+                        px: { xs: 1, md: 0 },
+                      }}
+                    >
+                      {slide.description}
+                    </Typography>
+                    <Button
+                      variant="contained"
+                      size="large"
+                      sx={{
+                        mt: { xs: 1, md: 2 },
+                        px: { xs: 3, md: 4 },
+                        py: { xs: 1, md: 1.5 },
+                        fontSize: { xs: '0.875rem', sm: '1rem', md: '1.125rem' },
+                        fontWeight: 600,
+                        backgroundColor: 'primary.main',
+                        '&:hover': {
+                          backgroundColor: 'primary.dark',
+                          opacity: 0.9,
+                        },
+                      }}
+                    >
+                      Get Started
+                    </Button>
+                  </Stack>
+                </Container>
+              </Box>
             );
           })}
         </Box>

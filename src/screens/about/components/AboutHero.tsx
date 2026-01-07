@@ -24,7 +24,10 @@ export default function AboutHero() {
       sx={{
         pt: { xs: 14, sm: 20 },
         pb: { xs: 8, sm: 12 },
-        backgroundImage: 'radial-gradient(ellipse 80% 50% at 50% -20%, hsl(210, 100%, 90%), transparent)',
+        backgroundImage: (theme) =>
+          theme.palette.mode === 'light'
+            ? 'radial-gradient(ellipse 80% 50% at 50% -20%, hsl(210, 100%, 90%), transparent)'
+            : 'none',
       }}
     >
       <Container>

@@ -25,6 +25,10 @@ export interface PageSection {
     buttonLink?: string;
     ctaText?: string;
     ctaLink?: string;
+    active?: boolean;
+    title?: string;
+    subtitle?: string;
+    description?: string;
   };
 }
 

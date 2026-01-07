@@ -68,7 +68,7 @@ export default function LogoCollection() {
   };
 
   return (
-    <Box id="logoCollection" sx={{ py: 4 }}>
+    <Box id="logoCollection" sx={{ py: 4, bgcolor: 'background.default' }}>
       <EditableTextMUI
         value={logoTitleSection.content}
         onSave={(value) => updateSectionContent(logoTitleSection.id, value)}

@@ -66,7 +66,7 @@ export const BlogDetailScreen: React.FC = () => {
 
   return (
     <Layout>
-      <ScrollView style={blogDetailScreenStyles.container}>
+      <ScrollView style={[blogDetailScreenStyles.container, { paddingTop: Platform.OS === 'web' ? 120 : 0 }]}>
         <View style={blogDetailScreenStyles.content}>
           {blog.featuredImage && (
             <View style={blogDetailScreenStyles.imageContainer}>

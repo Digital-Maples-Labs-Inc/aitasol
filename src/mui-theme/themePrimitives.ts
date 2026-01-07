@@ -19,7 +19,7 @@ declare module '@mui/material/styles' {
     900: string;
   }
 
-  interface PaletteColor extends ColorRange {}
+  interface PaletteColor extends ColorRange { }
 
   interface Palette {
     baseShadow: string;
@@ -273,8 +273,8 @@ export const colorSchemes = {
       },
       divider: alpha(gray[300], 0.4),
       background: {
-        default: 'hsl(0, 0%, 99%)',
-        paper: 'hsl(220, 35%, 97%)',
+        default: 'hsl(120, 50%, 98%)',
+        paper: '#ffffff',
       },
       text: {
         primary: gray[800],
@@ -323,8 +323,8 @@ export const colorSchemes = {
       },
       divider: alpha(gray[700], 0.6),
       background: {
-        default: gray[900],
-        paper: 'hsl(220, 30%, 7%)',
+        default: '#09090b',
+        paper: '#18181b',
       },
       text: {
         primary: 'hsl(0, 0%, 100%)',

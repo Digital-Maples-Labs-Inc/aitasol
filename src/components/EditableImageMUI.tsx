@@ -70,18 +70,17 @@ export const EditableImageMUI: React.FC<EditableImageMUIProps> = ({
 
       setUploading(true);
       try {
-        // For now, create a data URL (in production, upload to Firebase Storage)
-        const reader = new FileReader();
-        reader.onload = async (event) => {
-          const dataUrl = event.target?.result as string;
-          await onSave(dataUrl);
-          setIsEditing(false);
-          setUploading(false);
-        };
-        reader.readAsDataURL(file);
+        // Import dynamically to avoid circular dependencies if any, or just use the imported one
+        const { uploadImage } = await import('@/services/storageService');
+        const mk_name = file.name || 'image_upload.jpg';
+        const uploadedUrl = await uploadImage(file, mk_name, 'images');
+        
+        await onSave(uploadedUrl);
+        setIsEditing(false);
       } catch (error) {
         console.error('Error uploading image:', error);
         alert('Failed to upload image. Please try again.');
+      } finally {
         setUploading(false);
       }
     };
