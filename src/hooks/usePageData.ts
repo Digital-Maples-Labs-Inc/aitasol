@@ -3,7 +3,7 @@
  */
 
 import { useState, useEffect } from 'react';
-import { subscribeToPageBySlug, updatePageSectionContent, updatePageSectionImage } from '@/services/pageService';
+import { subscribeToPageBySlug, updatePageSectionContent, updatePageSectionImage, updatePageSection } from '@/services/pageService';
 import { Page, PageSection } from '@/types';
 
 export function usePageData(slug: string) {
@@ -40,6 +40,13 @@ export function usePageData(slug: string) {
     await updatePageSectionImage(page.id, sectionId, imageUrl, imageAlt);
   };
 
+  const updateSection = async (sectionId: string, section: Partial<PageSection>) => {
+    if (!page?.id) {
+      throw new Error('Page not loaded');
+    }
+    await updatePageSection(page.id, sectionId, section);
+  };
+
   const getSection = (sectionId: string): PageSection | undefined => {
     return page?.sections.find((s) => s.id === sectionId);
   };
@@ -50,6 +57,7 @@ export function usePageData(slug: string) {
     error,
     updateSectionContent,
     updateSectionImage,
+    updateSection,
     getSection,
   };
 }

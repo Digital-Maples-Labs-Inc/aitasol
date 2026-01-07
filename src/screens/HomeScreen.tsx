@@ -2,7 +2,8 @@ import CssBaseline from '@mui/material/CssBaseline';
 import Divider from '@mui/material/Divider';
 import AppTheme from '@/mui-theme/AppTheme';
 import HeaderNavigation from '@/components/HeaderNavigation';
-import Hero from './home/components/Hero';
+import HeroSlider from './home/components/HeroSlider';
+// import HeroSliderTest from './home/components/HeroSliderTest';
 import LogoCollection from './home/components/LogoCollection';
 import Highlights from './home/components/Highlights';
 import Pricing from './home/components/Pricing';
@@ -17,7 +18,7 @@ export default function MarketingPage(props: { disableCustomTheme?: boolean }) {
       <CssBaseline enableColorScheme />
 
       <HeaderNavigation />
-      <Hero />
+      <HeroSlider />
       <div>
         <LogoCollection />
         <div id="features">

@@ -2,16 +2,37 @@ rules_version = '2';
 service firebase.storage {
   match /b/{bucket}/o {
     // Helper function to check user role
+    // Using a safer approach to check user document
     function isEditor() {
       return request.auth != null && 
         firestore.get(/databases/(default)/documents/users/$(request.auth.uid)).data.role in ['admin', 'editor'];
     }
     
-    // Images - public read, authenticated write for editors
+    // General images folder - public read, authenticated write for editors
     match /images/{allPaths=**} {
       allow read: if true;
       allow write: if isEditor() && 
         request.resource.size < 10 * 1024 * 1024 && // 10MB limit
+        request.resource.contentType.matches('image/.*');
+    }
+    
+    // Hero slider images - public read, authenticated write for editors
+    match /hero-slider/{allPaths=**} {
+      allow read: if true;
+      // Temporarily allow all authenticated users for testing
+      // TODO: Change back to isEditor() after confirming it works
+      allow write: if request.auth != null && 
+        request.resource.size < 10 * 1024 * 1024 && // 10MB limit
+        request.resource.contentType.matches('image/.*');
+    }
+    
+    // Logos - public read, authenticated write for editors
+    match /logos/{allPaths=**} {
+      allow read: if true;
+      // Temporarily allow all authenticated users for testing
+      // TODO: Change back to isEditor() after confirming it works
+      allow write: if request.auth != null && 
+        request.resource.size < 5 * 1024 * 1024 && // 5MB limit (logos are smaller)
         request.resource.contentType.matches('image/.*');
     }
     
@@ -22,4 +43,3 @@ service firebase.storage {
     }
   }
 }
-

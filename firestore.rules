@@ -31,6 +31,7 @@ service cloud.firestore {
     // Users - read own OR admin/editor can read all, admin write
     match /users/{userId} {
       // Allow reading own user document OR allow admin/editor to read all users
+      // Storage rules can read user documents when checking permissions (they use firestore.get() which bypasses these rules)
       allow read: if request.auth != null && (
         request.auth.uid == userId || 
         isEditor()

@@ -86,6 +86,20 @@ export default function HeaderNavigation() {
     >
       <Container maxWidth="lg">
         <StyledToolbar variant="dense" disableGutters>
+          {/* Mobile: Logo on Left */}
+          <Box 
+            onClick={() => navigateTo('/')} 
+            sx={{ 
+              cursor: 'pointer', 
+              display: { xs: 'flex', md: 'none' }, 
+              alignItems: 'center',
+              flexShrink: 0,
+              mr: 'auto',
+            }}
+          >
+            <SitemarkIcon />
+          </Box>
+
           {/* Left Menu Items */}
           <Box sx={{ display: { xs: 'none', md: 'flex' }, alignItems: 'center', gap: 1, flex: 1, justifyContent: 'flex-end', pr: 4 }}>
             <Button 
@@ -153,12 +167,12 @@ export default function HeaderNavigation() {
             </Menu>
           </Box>
 
-          {/* Center Logo */}
+          {/* Center Logo - Desktop Only */}
           <Box 
             onClick={() => navigateTo('/')} 
             sx={{ 
               cursor: 'pointer', 
-              display: 'flex', 
+              display: { xs: 'none', md: 'flex' }, 
               alignItems: 'center',
               justifyContent: 'center',
               flexShrink: 0,
@@ -210,7 +224,7 @@ export default function HeaderNavigation() {
             </Button>
           </Box>
 
-          {/* Right Side Actions (Editing Mode & Theme Toggle) */}
+          {/* Right Side Actions (Editing Mode & Theme Toggle) - Desktop */}
           <Box
             sx={{
               display: { xs: 'none', md: 'flex' },
@@ -226,98 +240,113 @@ export default function HeaderNavigation() {
             )}
             <ColorModeIconDropdown />
           </Box>
-          <Box sx={{ display: { xs: 'flex', md: 'none' }, gap: 1 }}>
+          
+          {/* Mobile: Menu and Theme Toggle - Stacked Vertically on Right */}
+          <Box 
+            sx={{ 
+              display: { xs: 'flex', md: 'none' }, 
+              flexDirection: 'column',
+              gap: 0.5,
+              alignItems: 'center',
+            }}
+          >
             <ColorModeIconDropdown size="medium" />
-            <IconButton aria-label="Menu button" onClick={toggleDrawer(true)}>
+            <IconButton 
+              aria-label="Menu button" 
+              onClick={toggleDrawer(true)}
+              sx={{ padding: '4px' }}
+            >
               <MenuIcon />
             </IconButton>
-            <Drawer
-              anchor="top"
-              open={open}
-              onClose={toggleDrawer(false)}
-              PaperProps={{
-                sx: {
-                  top: 'var(--template-frame-height, 0px)',
-                },
-              }}
-            >
-              <Box sx={{ p: 2, backgroundColor: 'background.default' }}>
-                <Box
-                  sx={{
-                    display: 'flex',
-                    justifyContent: 'flex-end',
-                  }}
-                >
-                  <IconButton onClick={toggleDrawer(false)}>
-                    <CloseRoundedIcon />
-                  </IconButton>
-                </Box>
-
-                <MenuItem 
-                  onClick={() => navigateTo('/')}
-                  sx={{ fontSize: '1rem', fontWeight: 600 }}
-                >
-                  Home
-                </MenuItem>
-                <MenuItem 
-                  onClick={() => navigateTo('/about')}
-                  sx={{ fontSize: '1rem', fontWeight: 600 }}
-                >
-                  About AitaSol
-                </MenuItem>
-                <MenuItem 
-                  onClick={() => navigateTo('/services')}
-                  sx={{ fontSize: '1rem', fontWeight: 600 }}
-                >
-                  Services Overview
-                </MenuItem>
-                <MenuItem 
-                  onClick={() => navigateTo('/services/study-in-canada')}
-                  sx={{ fontSize: '0.95rem', fontWeight: 500 }}
-                >
-                  &nbsp;&nbsp;→ Study in Canada
-                </MenuItem>
-                <MenuItem 
-                  onClick={() => navigateTo('/services/immigration-study-permits')}
-                  sx={{ fontSize: '0.95rem', fontWeight: 500 }}
-                >
-                  &nbsp;&nbsp;→ Immigration & Study Permits
-                </MenuItem>
-                <MenuItem 
-                  onClick={() => navigateTo('/services/admissions-support')}
-                  sx={{ fontSize: '0.95rem', fontWeight: 500 }}
-                >
-                  &nbsp;&nbsp;→ Admissions Support
-                </MenuItem>
-                <MenuItem 
-                  onClick={() => navigateTo('/services/career-counseling')}
-                  sx={{ fontSize: '0.95rem', fontWeight: 500 }}
-                >
-                  &nbsp;&nbsp;→ Career Counseling
-                </MenuItem>
-                <MenuItem 
-                  onClick={() => navigateTo('/testimonials')}
-                  sx={{ fontSize: '1rem', fontWeight: 600 }}
-                >
-                  Success Stories / Testimonials
-                </MenuItem>
-                <MenuItem 
-                  onClick={() => navigateTo('/blog')}
-                  sx={{ fontSize: '1rem', fontWeight: 600 }}
-                >
-                  Blog
-                </MenuItem>
-                <MenuItem 
-                  onClick={() => navigateTo('/contact')}
-                  sx={{ fontSize: '1rem', fontWeight: 600 }}
-                >
-                  Contact Us
-                </MenuItem>
-              </Box>
-            </Drawer>
           </Box>
         </StyledToolbar>
       </Container>
+      
+      {/* Mobile Drawer - Outside StyledToolbar */}
+      <Drawer
+        anchor="top"
+        open={open}
+        onClose={toggleDrawer(false)}
+        PaperProps={{
+          sx: {
+            top: 'var(--template-frame-height, 0px)',
+          },
+        }}
+      >
+        <Box sx={{ p: 2, backgroundColor: 'background.default' }}>
+          <Box
+            sx={{
+              display: 'flex',
+              justifyContent: 'flex-end',
+            }}
+          >
+            <IconButton onClick={toggleDrawer(false)}>
+              <CloseRoundedIcon />
+            </IconButton>
+          </Box>
+
+          <MenuItem 
+            onClick={() => navigateTo('/')}
+            sx={{ fontSize: '1rem', fontWeight: 600 }}
+          >
+            Home
+          </MenuItem>
+          <MenuItem 
+            onClick={() => navigateTo('/about')}
+            sx={{ fontSize: '1rem', fontWeight: 600 }}
+          >
+            About AitaSol
+          </MenuItem>
+          <MenuItem 
+            onClick={() => navigateTo('/services')}
+            sx={{ fontSize: '1rem', fontWeight: 600 }}
+          >
+            Services Overview
+          </MenuItem>
+          <MenuItem 
+            onClick={() => navigateTo('/services/study-in-canada')}
+            sx={{ fontSize: '0.95rem', fontWeight: 500 }}
+          >
+            &nbsp;&nbsp;→ Study in Canada
+          </MenuItem>
+          <MenuItem 
+            onClick={() => navigateTo('/services/immigration-study-permits')}
+            sx={{ fontSize: '0.95rem', fontWeight: 500 }}
+          >
+            &nbsp;&nbsp;→ Immigration & Study Permits
+          </MenuItem>
+          <MenuItem 
+            onClick={() => navigateTo('/services/admissions-support')}
+            sx={{ fontSize: '0.95rem', fontWeight: 500 }}
+          >
+            &nbsp;&nbsp;→ Admissions Support
+          </MenuItem>
+          <MenuItem 
+            onClick={() => navigateTo('/services/career-counseling')}
+            sx={{ fontSize: '0.95rem', fontWeight: 500 }}
+          >
+            &nbsp;&nbsp;→ Career Counseling
+          </MenuItem>
+          <MenuItem 
+            onClick={() => navigateTo('/testimonials')}
+            sx={{ fontSize: '1rem', fontWeight: 600 }}
+          >
+            Success Stories / Testimonials
+          </MenuItem>
+          <MenuItem 
+            onClick={() => navigateTo('/blog')}
+            sx={{ fontSize: '1rem', fontWeight: 600 }}
+          >
+            Blog
+          </MenuItem>
+          <MenuItem 
+            onClick={() => navigateTo('/contact')}
+            sx={{ fontSize: '1rem', fontWeight: 600 }}
+          >
+            Contact Us
+          </MenuItem>
+        </Box>
+      </Drawer>
     </AppBar>
   );
 }

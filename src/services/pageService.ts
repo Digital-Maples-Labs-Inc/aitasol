@@ -131,12 +131,51 @@ export const updatePageSection = async (
     const pageData = pageDoc.data();
     const sections = pageData.sections || [];
     const sectionIndex = sections.findIndex((s: PageSection) => s.id === sectionId);
+    const existingSection = sectionIndex >= 0 ? sections[sectionIndex] : null;
+    
+    // Helper function to clean metadata - only allow strings, numbers, booleans
+    const cleanMetadata = (metadata: any): Record<string, any> => {
+      if (!metadata || typeof metadata !== 'object' || Array.isArray(metadata)) {
+        return {};
+      }
+      
+      const cleaned: Record<string, any> = {};
+      for (const [key, value] of Object.entries(metadata)) {
+        if (value === null || value === undefined) {
+          continue; // Skip null/undefined
+        }
+        
+        // Only allow primitive types
+        if (typeof value === 'string' || typeof value === 'number' || typeof value === 'boolean') {
+          cleaned[key] = value;
+        }
+        // Reject Date objects, functions, arrays, and nested objects
+      }
+      return cleaned;
+    };
+    
+    // Merge metadata from existing section and new section, then clean it
+    const mergedMetadata = {
+      ...(existingSection?.metadata || {}),
+      ...(section.metadata || {}),
+    };
+    
+    // Clean the section data to only include valid PageSection properties
+    const cleanSection: PageSection = {
+      id: sectionId,
+      type: (section.type || existingSection?.type || 'paragraph') as PageSection['type'],
+      content: String(section.content ?? existingSection?.content ?? ''),
+      editable: section.editable !== false,
+      metadata: cleanMetadata(mergedMetadata),
+    };
     
     if (sectionIndex === -1) {
-      throw new Error('Section not found');
+      // If section not found, create a new one
+      sections.push(cleanSection);
+    } else {
+      // Replace the entire section to avoid spreading invalid properties
+      sections[sectionIndex] = cleanSection;
     }
-    
-    sections[sectionIndex] = { ...sections[sectionIndex], ...section };
     
     await updateDoc(pageRef, {
       sections,

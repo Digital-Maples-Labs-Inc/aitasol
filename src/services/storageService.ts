@@ -1,9 +1,11 @@
 /**
  * Storage service
- * Handles image and media using local assets folder instead of Firebase Storage
+ * Handles image and media uploads to Firebase Storage
  */
 
 import { Media } from '@/types';
+import { storage } from './firebase';
+import { ref, uploadBytes, getDownloadURL, deleteObject, UploadResult } from 'firebase/storage';
 
 /**
  * Upload image to local assets folder
@@ -15,31 +17,62 @@ export const uploadImage = async (
   folder: string = 'images'
 ): Promise<string> => {
   try {
-    // For web, we'll create a data URL or save to a local path
-    // In production, you might want to save to a public assets folder
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        // Return as data URL for now
-        // In a real app, you'd save to /public/assets/images/ and return the public path
-        const dataUrl = e.target?.result as string;
-        resolve(dataUrl);
-      };
-      reader.onerror = reject;
-      reader.readAsDataURL(file);
+    // Create a storage reference
+    const timestamp = Date.now();
+    const sanitizedFileName = fileName.replace(/[^a-zA-Z0-9.-]/g, '_');
+    const storageRef = ref(storage, `${folder}/${timestamp}_${sanitizedFileName}`);
+    
+    // Determine content type
+    let contentType = 'image/jpeg';
+    if (file instanceof File) {
+      contentType = file.type || 'image/jpeg';
+    }
+    
+    // Upload the file
+    const snapshot: UploadResult = await uploadBytes(storageRef, file, {
+      contentType,
     });
+    
+    // Get the download URL
+    const downloadURL = await getDownloadURL(snapshot.ref);
+    
+    return downloadURL;
   } catch (error) {
-    console.error('Error processing image:', error);
+    console.error('Error uploading image to Firebase Storage:', error);
     throw error;
   }
 };
 
 /**
- * Delete image (no-op for local assets)
+ * Delete image from Firebase Storage
  */
 export const deleteImage = async (url: string): Promise<void> => {
-  // No-op for local assets - images are stored as data URLs or in public folder
-  console.log('Local asset deletion not implemented - image stored as data URL');
+  try {
+    // Extract the path from the Firebase Storage URL
+    // URL format: https://firebasestorage.googleapis.com/v0/b/{bucket}/o/{path}?alt=media&token={token}
+    if (!url || !url.includes('firebasestorage.googleapis.com')) {
+      console.log('Not a Firebase Storage URL, skipping deletion:', url);
+      return;
+    }
+    
+    // Parse the URL to get the path
+    const urlObj = new URL(url);
+    const pathMatch = urlObj.pathname.match(/\/o\/(.+)\?/);
+    if (!pathMatch) {
+      console.error('Could not extract path from Firebase Storage URL:', url);
+      return;
+    }
+    
+    // Decode the path (Firebase Storage URLs are URL-encoded)
+    const decodedPath = decodeURIComponent(pathMatch[1]);
+    const storageRef = ref(storage, decodedPath);
+    
+    await deleteObject(storageRef);
+    console.log('Image deleted from Firebase Storage:', decodedPath);
+  } catch (error) {
+    console.error('Error deleting image from Firebase Storage:', error);
+    // Don't throw - deletion is often optional
+  }
 };
 
 /**
