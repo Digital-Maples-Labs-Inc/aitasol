@@ -67,8 +67,8 @@ export default function ServiceCards() {
         }),
       })}
     >
-      <Container sx={{ pb: { xs: 8, sm: 16 } }}>
-        <Grid container spacing={4}>
+    <Container sx={{ pb: { xs: 8, sm: 16 } }}>
+      <Grid container spacing={4}>
         {services.map((service, index) => {
           const serviceTitleSection = getSection(`service-card-${index}-title`) || { 
             id: `service-card-${index}-title`, 
@@ -111,7 +111,7 @@ export default function ServiceCards() {
           );
         })}
       </Grid>
-      </Container>
+    </Container>
     </Box>
   );
 }

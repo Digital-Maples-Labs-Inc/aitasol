@@ -3,7 +3,6 @@ import Accordion from '@mui/material/Accordion';
 import AccordionDetails from '@mui/material/AccordionDetails';
 import AccordionSummary from '@mui/material/AccordionSummary';
 import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
 import Container from '@mui/material/Container';
 import CircularProgress from '@mui/material/CircularProgress';
 import Typography from '@mui/material/Typography';
@@ -74,9 +73,9 @@ const faqItems = [
   },
 ];
 
-export default function FAQ() {
+export default function FAQContent() {
   const [expanded, setExpanded] = React.useState<string[]>([]);
-  const { page, loading, getSection, updateSectionContent } = usePageData('home');
+  const { page, loading, getSection, updateSectionContent } = usePageData('faq');
 
   const handleChange =
     (panel: string) => (event: React.SyntheticEvent, isExpanded: boolean) => {
@@ -95,96 +94,114 @@ export default function FAQ() {
     );
   }
 
-  const faqTitleSection = getSection('faq-title') || { id: 'faq-title', content: 'Frequently Asked Questions', type: 'heading' as const };
-  
-  const navigateTo = (path: string) => {
-    if (typeof window !== 'undefined') {
-      window.location.href = path;
-    }
+  const faqTitleSection = getSection('faq-title') || { 
+    id: 'faq-title', 
+    content: 'Frequently Asked Questions', 
+    type: 'heading' as const 
+  };
+  const faqSubtitleSection = getSection('faq-subtitle') || { 
+    id: 'faq-subtitle', 
+    content: 'Find answers to common questions about our services and how we can help you achieve your educational goals.', 
+    type: 'paragraph' as const 
   };
 
   return (
-    <Container
-      id="faq"
-      sx={{
-        pt: { xs: 4, sm: 12 },
-        pb: { xs: 8, sm: 16 },
-        position: 'relative',
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        gap: { xs: 3, sm: 6 },
-      }}
+    <Box
+      component="main"
+      sx={(theme) => ({
+        backgroundColor: '#ffffff',
+        minHeight: '100vh',
+        pt: { xs: 14, sm: 20 },
+        pb: { xs: 8, sm: 12 },
+        ...theme.applyStyles('dark', {
+          backgroundColor: '#09090b',
+        }),
+      })}
     >
-      <EditableTextMUI
-        value={faqTitleSection.content}
-        onSave={(value) => updateSectionContent(faqTitleSection.id, value)}
-        variant="h4"
+      <Container
+        id="faq"
+        maxWidth="md"
         sx={{
-          color: 'text.primary',
-          width: { sm: '100%', md: '60%' },
-          textAlign: { sm: 'left', md: 'center' },
-          display: 'block',
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          gap: { xs: 3, sm: 6 },
         }}
-      />
-      <Box sx={{ width: '100%', maxWidth: '900px' }}>
-        {/* Show only first 4 FAQs on homepage */}
-        {faqItems.slice(0, 4).map((item, index) => {
-          const questionSection = getSection(`faq-${index + 1}-question`) || { 
-            id: `faq-${index + 1}-question`, 
-            content: item.question, 
-            type: 'heading' as const 
-          };
-          const answerSection = getSection(`faq-${index + 1}-answer`) || { 
-            id: `faq-${index + 1}-answer`, 
-            content: item.answer, 
-            type: 'paragraph' as const 
-          };
-          return (
-            <Accordion
-              key={index}
-              expanded={expanded.includes(`panel${index + 1}`)}
-              onChange={handleChange(`panel${index + 1}`)}
-              sx={{ mb: 1 }}
-            >
-              <AccordionSummary
-                expandIcon={<ExpandMoreIcon />}
-                aria-controls={`panel${index + 1}d-content`}
-                id={`panel${index + 1}d-header`}
-              >
-                <EditableTextMUI
-                  value={questionSection.content}
-                  onSave={(value) => updateSectionContent(questionSection.id, value)}
-                  variant="subtitle2"
-                  sx={{ display: 'block', fontWeight: 600 }}
-                  hideEditButton={true}
-                />
-              </AccordionSummary>
-              <AccordionDetails>
-                <EditableTextMUI
-                  value={answerSection.content}
-                  onSave={(value) => updateSectionContent(answerSection.id, value)}
-                  variant="body2"
-                  multiline
-                  sx={{ display: 'block', lineHeight: 1.7 }}
-                />
-              </AccordionDetails>
-            </Accordion>
-          );
-        })}
-        
-        {/* Link to full FAQ page */}
-        <Box sx={{ textAlign: 'center', mt: 4 }}>
-          <Button
-            variant="outlined"
-            size="large"
-            onClick={() => navigateTo('/faq')}
-            sx={{ mt: 2 }}
-          >
-            View All FAQs
-          </Button>
+      >
+        <Box sx={{ textAlign: 'center', mb: 2, width: '100%' }}>
+          <EditableTextMUI
+            value={faqTitleSection.content}
+            onSave={(value) => updateSectionContent(faqTitleSection.id, value)}
+            variant="h1"
+            sx={{
+              fontSize: { xs: '2rem', sm: '2.5rem', md: '3rem' },
+              fontWeight: 700,
+              mb: 2,
+              display: 'block',
+            }}
+          />
+          <EditableTextMUI
+            value={faqSubtitleSection.content}
+            onSave={(value) => updateSectionContent(faqSubtitleSection.id, value)}
+            variant="body1"
+            multiline
+            sx={{
+              color: 'text.secondary',
+              fontSize: { xs: '1rem', sm: '1.125rem' },
+              maxWidth: '700px',
+              mx: 'auto',
+              display: 'block',
+            }}
+          />
         </Box>
-      </Box>
-    </Container>
+        
+        <Box sx={{ width: '100%', maxWidth: '900px' }}>
+          {faqItems.map((item, index) => {
+            const questionSection = getSection(`faq-${index + 1}-question`) || { 
+              id: `faq-${index + 1}-question`, 
+              content: item.question, 
+              type: 'heading' as const 
+            };
+            const answerSection = getSection(`faq-${index + 1}-answer`) || { 
+              id: `faq-${index + 1}-answer`, 
+              content: item.answer, 
+              type: 'paragraph' as const 
+            };
+            return (
+              <Accordion
+                key={index}
+                expanded={expanded.includes(`panel${index + 1}`)}
+                onChange={handleChange(`panel${index + 1}`)}
+                sx={{ mb: 1 }}
+              >
+                <AccordionSummary
+                  expandIcon={<ExpandMoreIcon />}
+                  aria-controls={`panel${index + 1}d-content`}
+                  id={`panel${index + 1}d-header`}
+                >
+                  <EditableTextMUI
+                    value={questionSection.content}
+                    onSave={(value) => updateSectionContent(questionSection.id, value)}
+                    variant="subtitle2"
+                    sx={{ display: 'block', fontWeight: 600 }}
+                    hideEditButton={true}
+                  />
+                </AccordionSummary>
+                <AccordionDetails>
+                  <EditableTextMUI
+                    value={answerSection.content}
+                    onSave={(value) => updateSectionContent(answerSection.id, value)}
+                    variant="body2"
+                    multiline
+                    sx={{ display: 'block', lineHeight: 1.7 }}
+                  />
+                </AccordionDetails>
+              </Accordion>
+            );
+          })}
+        </Box>
+      </Container>
+    </Box>
   );
 }
+

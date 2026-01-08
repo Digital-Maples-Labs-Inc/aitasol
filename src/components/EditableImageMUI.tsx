@@ -68,6 +68,12 @@ export const EditableImageMUI: React.FC<EditableImageMUIProps> = ({
       const file = e.target.files?.[0];
       if (!file) return;
 
+      // Check if user is authenticated
+      if (!user) {
+        alert('You must be logged in to upload images. Please sign in and try again.');
+        return;
+      }
+
       setUploading(true);
       try {
         // Import dynamically to avoid circular dependencies if any, or just use the imported one
@@ -77,9 +83,14 @@ export const EditableImageMUI: React.FC<EditableImageMUIProps> = ({
         
         await onSave(uploadedUrl);
         setIsEditing(false);
-      } catch (error) {
+      } catch (error: any) {
         console.error('Error uploading image:', error);
-        alert('Failed to upload image. Please try again.');
+        const errorMessage = error?.message || 'Failed to upload image';
+        if (errorMessage.includes('permission') || errorMessage.includes('unauthorized')) {
+          alert('Permission denied. Please ensure you are logged in with an admin or editor account, and that your Firebase Storage rules are properly configured.');
+        } else {
+          alert(`Failed to upload image: ${errorMessage}`);
+        }
       } finally {
         setUploading(false);
       }

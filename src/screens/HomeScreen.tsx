@@ -5,6 +5,9 @@ import HeaderNavigation from '@/components/HeaderNavigation';
 import HeroSlider from './home/components/HeroSlider';
 // import HeroSliderTest from './home/components/HeroSliderTest';
 import LogoCollection from './home/components/LogoCollection';
+import HomeIntro from './home/components/HomeIntro';
+import WhatWeDo from './home/components/WhatWeDo';
+import AboutUsHome from './home/components/AboutUsHome';
 import Highlights from './home/components/Highlights';
 import Pricing from './home/components/Pricing';
 import Features from './home/components/Features';
@@ -20,6 +23,12 @@ export default function MarketingPage(props: { disableCustomTheme?: boolean }) {
       <HeaderNavigation />
       <HeroSlider />
       <div>
+        <HomeIntro />
+        <Divider />
+        <WhatWeDo />
+        <Divider />
+        <AboutUsHome />
+        <Divider />
         <LogoCollection />
         <div id="features">
           <Features />

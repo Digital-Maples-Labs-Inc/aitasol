@@ -22,6 +22,9 @@ import ServicesScreen from '@/screens/ServicesScreen';
 import ServiceDetailScreen from '@/screens/ServiceDetailScreen';
 import TestimonialsScreen from '@/screens/TestimonialsScreen';
 import ContactScreen from '@/screens/ContactScreen';
+import PrivacyScreen from '@/screens/PrivacyScreen';
+import TermsScreen from '@/screens/TermsScreen';
+import FAQScreen from '@/screens/FAQScreen';
 import { AdminDashboardScreen } from '@/screens/AdminDashboardScreen';
 import AdminPagesWrapper from '@/screens/admin-dashboard/components/AdminPagesWrapper';
 import AdminBlogsWrapper from '@/screens/admin-dashboard/components/AdminBlogsWrapper';
@@ -42,6 +45,9 @@ const linking = {
       Blog: '/blog',
       BlogDetail: '/blog/:slug',
       Contact: '/contact',
+      Privacy: '/privacy',
+      Terms: '/terms',
+      FAQ: '/faq',
       DMLabs: '/dmlabs',
       AdminDashboard: '/admin/dashboard',
       AdminPages: '/admin/pages',
@@ -97,6 +103,18 @@ export default function App() {
             <Stack.Screen
               name="Contact"
               component={ContactScreen}
+            />
+            <Stack.Screen
+              name="Privacy"
+              component={PrivacyScreen}
+            />
+            <Stack.Screen
+              name="Terms"
+              component={TermsScreen}
+            />
+            <Stack.Screen
+              name="FAQ"
+              component={FAQScreen}
             />
             <Stack.Screen
               name="DMLabs"

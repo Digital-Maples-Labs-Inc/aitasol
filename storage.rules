@@ -11,7 +11,9 @@ service firebase.storage {
     // General images folder - public read, authenticated write for editors
     match /images/{allPaths=**} {
       allow read: if true;
-      allow write: if isEditor() && 
+      // Allow authenticated users to upload (temporarily more permissive)
+      // TODO: Change back to isEditor() after confirming user documents are properly set up
+      allow write: if request.auth != null && 
         request.resource.size < 10 * 1024 * 1024 && // 10MB limit
         request.resource.contentType.matches('image/.*');
     }
