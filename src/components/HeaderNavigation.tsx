@@ -38,7 +38,7 @@ export default function HeaderNavigation() {
   const [open, setOpen] = React.useState(false);
   const [servicesAnchorEl, setServicesAnchorEl] = React.useState<null | HTMLElement>(null);
   const servicesMenuOpen = Boolean(servicesAnchorEl);
-  
+
   // Check if user is logged in and has editor/admin role
   const showEditingModeSwitcher = user && (user.role === 'admin' || user.role === 'editor');
 
@@ -86,11 +86,11 @@ export default function HeaderNavigation() {
       <Container maxWidth="lg">
         <StyledToolbar variant="dense" disableGutters>
           {/* Mobile: Logo on Left */}
-          <Box 
-            onClick={() => navigateTo('/')} 
-            sx={{ 
-              cursor: 'pointer', 
-              display: { xs: 'flex', md: 'none' }, 
+          <Box
+            onClick={() => navigateTo('/')}
+            sx={{
+              cursor: 'pointer',
+              display: { xs: 'flex', md: 'none' },
               alignItems: 'center',
               flexShrink: 0,
               mr: 'auto',
@@ -101,12 +101,12 @@ export default function HeaderNavigation() {
 
           {/* Left Menu Items */}
           <Box sx={{ display: { xs: 'none', md: 'flex' }, alignItems: 'center', gap: 1, flex: 1, justifyContent: 'flex-end', pr: 4 }}>
-            <Button 
-              variant="text" 
-              color="info" 
+            <Button
+              variant="text"
+              color="info"
               size="medium"
               onClick={() => navigateTo('/')}
-              sx={{ 
+              sx={{
                 fontSize: '1rem',
                 fontWeight: 600,
                 textTransform: 'none',
@@ -114,12 +114,12 @@ export default function HeaderNavigation() {
             >
               Home
             </Button>
-            <Button 
-              variant="text" 
-              color="info" 
+            <Button
+              variant="text"
+              color="info"
               size="medium"
               onClick={() => navigateTo('/about')}
-              sx={{ 
+              sx={{
                 fontSize: '1rem',
                 fontWeight: 600,
                 textTransform: 'none',
@@ -133,7 +133,7 @@ export default function HeaderNavigation() {
               size="medium"
               onClick={handleServicesMenuOpen}
               endIcon={<ArrowDropDownIcon />}
-              sx={{ 
+              sx={{
                 fontSize: '1rem',
                 fontWeight: 600,
                 textTransform: 'none',
@@ -151,27 +151,33 @@ export default function HeaderNavigation() {
             >
               <MenuItem onClick={() => navigateTo('/services')}>Services Overview</MenuItem>
               <Divider />
-              <MenuItem onClick={() => navigateTo('/services/study-in-canada')}>
-                Study in Canada
+              <MenuItem onClick={() => navigateTo('/services/program-selection')}>
+                Program and Institution Selection
               </MenuItem>
-              <MenuItem onClick={() => navigateTo('/services/immigration-study-permits')}>
-                Immigration & Study Permits
+              <MenuItem onClick={() => navigateTo('/services/application-support')}>
+                Application Process Support
               </MenuItem>
-              <MenuItem onClick={() => navigateTo('/services/admissions-support')}>
-                Admissions Support
+              <MenuItem onClick={() => navigateTo('/services/admissions-docs')}>
+                Admissions Documentation
               </MenuItem>
-              <MenuItem onClick={() => navigateTo('/services/career-counseling')}>
-                Career Counseling
+              <MenuItem onClick={() => navigateTo('/services/scholarships')}>
+                Scholarships & Funding
+              </MenuItem>
+              <MenuItem onClick={() => navigateTo('/services/career-pathway')}>
+                Career Counselling
+              </MenuItem>
+              <MenuItem onClick={() => navigateTo('/services/immigration-support')}>
+                Immigration & Pre-Arrival
               </MenuItem>
             </Menu>
           </Box>
 
           {/* Center Logo - Desktop Only */}
-          <Box 
-            onClick={() => navigateTo('/')} 
-            sx={{ 
-              cursor: 'pointer', 
-              display: { xs: 'none', md: 'flex' }, 
+          <Box
+            onClick={() => navigateTo('/')}
+            sx={{
+              cursor: 'pointer',
+              display: { xs: 'none', md: 'flex' },
               alignItems: 'center',
               justifyContent: 'center',
               flexShrink: 0,
@@ -182,12 +188,12 @@ export default function HeaderNavigation() {
 
           {/* Right Menu Items */}
           <Box sx={{ display: { xs: 'none', md: 'flex' }, alignItems: 'center', gap: 1, flex: 1, justifyContent: 'flex-start', pl: 4 }}>
-            <Button 
-              variant="text" 
-              color="info" 
+            <Button
+              variant="text"
+              color="info"
               size="medium"
               onClick={() => navigateTo('/testimonials')}
-              sx={{ 
+              sx={{
                 fontSize: '1rem',
                 fontWeight: 600,
                 textTransform: 'none',
@@ -195,12 +201,12 @@ export default function HeaderNavigation() {
             >
               Testimonials
             </Button>
-            <Button 
-              variant="text" 
-              color="info" 
+            <Button
+              variant="text"
+              color="info"
               size="medium"
               onClick={() => navigateTo('/blog')}
-              sx={{ 
+              sx={{
                 fontSize: '1rem',
                 fontWeight: 600,
                 textTransform: 'none',
@@ -208,12 +214,12 @@ export default function HeaderNavigation() {
             >
               Blog
             </Button>
-            <Button 
-              variant="text" 
-              color="info" 
+            <Button
+              variant="text"
+              color="info"
               size="medium"
               onClick={() => navigateTo('/contact')}
-              sx={{ 
+              sx={{
                 fontSize: '1rem',
                 fontWeight: 600,
                 textTransform: 'none',
@@ -236,16 +242,16 @@ export default function HeaderNavigation() {
               <SelectContent />
             </Box>
           )}
-          
+
           {/* Mobile: Menu Button */}
-          <Box 
-            sx={{ 
-              display: { xs: 'flex', md: 'none' }, 
+          <Box
+            sx={{
+              display: { xs: 'flex', md: 'none' },
               alignItems: 'center',
             }}
           >
-            <IconButton 
-              aria-label="Menu button" 
+            <IconButton
+              aria-label="Menu button"
               onClick={toggleDrawer(true)}
               sx={{ padding: '4px' }}
             >
@@ -254,7 +260,7 @@ export default function HeaderNavigation() {
           </Box>
         </StyledToolbar>
       </Container>
-      
+
       {/* Mobile Drawer - Outside StyledToolbar */}
       <Drawer
         anchor="top"
@@ -278,61 +284,73 @@ export default function HeaderNavigation() {
             </IconButton>
           </Box>
 
-          <MenuItem 
+          <MenuItem
             onClick={() => navigateTo('/')}
             sx={{ fontSize: '1rem', fontWeight: 600 }}
           >
             Home
           </MenuItem>
-          <MenuItem 
+          <MenuItem
             onClick={() => navigateTo('/about')}
             sx={{ fontSize: '1rem', fontWeight: 600 }}
           >
             About AitaSol
           </MenuItem>
-          <MenuItem 
+          <MenuItem
             onClick={() => navigateTo('/services')}
             sx={{ fontSize: '1rem', fontWeight: 600 }}
           >
             Services Overview
           </MenuItem>
-          <MenuItem 
-            onClick={() => navigateTo('/services/study-in-canada')}
+          <MenuItem
+            onClick={() => navigateTo('/services/program-selection')}
             sx={{ fontSize: '0.95rem', fontWeight: 500 }}
           >
-            &nbsp;&nbsp;→ Study in Canada
+            &nbsp;&nbsp;→ Program Selection
           </MenuItem>
-          <MenuItem 
-            onClick={() => navigateTo('/services/immigration-study-permits')}
+          <MenuItem
+            onClick={() => navigateTo('/services/application-support')}
             sx={{ fontSize: '0.95rem', fontWeight: 500 }}
           >
-            &nbsp;&nbsp;→ Immigration & Study Permits
+            &nbsp;&nbsp;→ Application Support
           </MenuItem>
-          <MenuItem 
-            onClick={() => navigateTo('/services/admissions-support')}
+          <MenuItem
+            onClick={() => navigateTo('/services/admissions-docs')}
             sx={{ fontSize: '0.95rem', fontWeight: 500 }}
           >
-            &nbsp;&nbsp;→ Admissions Support
+            &nbsp;&nbsp;→ Admissions Docs
           </MenuItem>
-          <MenuItem 
-            onClick={() => navigateTo('/services/career-counseling')}
+          <MenuItem
+            onClick={() => navigateTo('/services/scholarships')}
             sx={{ fontSize: '0.95rem', fontWeight: 500 }}
           >
-            &nbsp;&nbsp;→ Career Counseling
+            &nbsp;&nbsp;→ Scholarships
           </MenuItem>
-          <MenuItem 
+          <MenuItem
+            onClick={() => navigateTo('/services/career-pathway')}
+            sx={{ fontSize: '0.95rem', fontWeight: 500 }}
+          >
+            &nbsp;&nbsp;→ Career Counselling
+          </MenuItem>
+          <MenuItem
+            onClick={() => navigateTo('/services/immigration-support')}
+            sx={{ fontSize: '0.95rem', fontWeight: 500 }}
+          >
+            &nbsp;&nbsp;→ Immigration Support
+          </MenuItem>
+          <MenuItem
             onClick={() => navigateTo('/testimonials')}
             sx={{ fontSize: '1rem', fontWeight: 600 }}
           >
             Success Stories / Testimonials
           </MenuItem>
-          <MenuItem 
+          <MenuItem
             onClick={() => navigateTo('/blog')}
             sx={{ fontSize: '1rem', fontWeight: 600 }}
           >
             Blog
           </MenuItem>
-          <MenuItem 
+          <MenuItem
             onClick={() => navigateTo('/contact')}
             sx={{ fontSize: '1rem', fontWeight: 600 }}
           >

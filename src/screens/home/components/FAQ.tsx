@@ -96,7 +96,7 @@ export default function FAQ() {
   }
 
   const faqTitleSection = getSection('faq-title') || { id: 'faq-title', content: 'Frequently Asked Questions', type: 'heading' as const };
-  
+
   const navigateTo = (path: string) => {
     if (typeof window !== 'undefined') {
       window.location.href = path;
@@ -107,8 +107,8 @@ export default function FAQ() {
     <Container
       id="faq"
       sx={{
-        pt: { xs: 4, sm: 12 },
-        pb: { xs: 8, sm: 16 },
+        pt: { xs: 4, sm: 6 },
+        pb: { xs: 4, sm: 6 },
         position: 'relative',
         display: 'flex',
         flexDirection: 'column',
@@ -130,56 +130,89 @@ export default function FAQ() {
       <Box sx={{ width: '100%', maxWidth: '900px' }}>
         {/* Show only first 4 FAQs on homepage */}
         {faqItems.slice(0, 4).map((item, index) => {
-          const questionSection = getSection(`faq-${index + 1}-question`) || { 
-            id: `faq-${index + 1}-question`, 
-            content: item.question, 
-            type: 'heading' as const 
+          const questionSection = getSection(`faq-${index + 1}-question`) || {
+            id: `faq-${index + 1}-question`,
+            content: item.question,
+            type: 'heading' as const
           };
-          const answerSection = getSection(`faq-${index + 1}-answer`) || { 
-            id: `faq-${index + 1}-answer`, 
-            content: item.answer, 
-            type: 'paragraph' as const 
+          const answerSection = getSection(`faq-${index + 1}-answer`) || {
+            id: `faq-${index + 1}-answer`,
+            content: item.answer,
+            type: 'paragraph' as const
           };
           return (
             <Accordion
               key={index}
               expanded={expanded.includes(`panel${index + 1}`)}
               onChange={handleChange(`panel${index + 1}`)}
-              sx={{ mb: 1 }}
+              sx={{
+                mb: 2,
+                borderRadius: '16px !important',
+                border: '1px solid',
+                borderColor: 'divider',
+                boxShadow: 'none',
+                overflow: 'hidden',
+                '&:before': { display: 'none' }, // Remove default MUI separator
+                backgroundColor: 'background.paper',
+                transition: 'all 0.2s ease-in-out',
+                '&:hover': {
+                  boxShadow: '0 4px 12px rgba(0,0,0,0.05)',
+                  borderColor: 'primary.main',
+                }
+              }}
             >
               <AccordionSummary
                 expandIcon={<ExpandMoreIcon />}
                 aria-controls={`panel${index + 1}d-content`}
                 id={`panel${index + 1}d-header`}
+                sx={{
+                  fontWeight: 600,
+                  '&.Mui-expanded': {
+                    minHeight: 48,
+                    borderBottom: '1px solid',
+                    borderColor: 'divider',
+                  }
+                }}
               >
                 <EditableTextMUI
                   value={questionSection.content}
                   onSave={(value) => updateSectionContent(questionSection.id, value)}
-                  variant="subtitle2"
-                  sx={{ display: 'block', fontWeight: 600 }}
+                  variant="subtitle1"
+                  sx={{ display: 'block', fontWeight: 600, fontSize: '1rem' }}
                   hideEditButton={true}
                 />
               </AccordionSummary>
-              <AccordionDetails>
+              <AccordionDetails sx={{ p: 3 }}>
                 <EditableTextMUI
                   value={answerSection.content}
                   onSave={(value) => updateSectionContent(answerSection.id, value)}
                   variant="body2"
                   multiline
-                  sx={{ display: 'block', lineHeight: 1.7 }}
+                  sx={{ display: 'block', lineHeight: 1.7, color: 'text.secondary' }}
                 />
               </AccordionDetails>
             </Accordion>
           );
         })}
-        
+
         {/* Link to full FAQ page */}
         <Box sx={{ textAlign: 'center', mt: 4 }}>
           <Button
             variant="outlined"
             size="large"
             onClick={() => navigateTo('/faq')}
-            sx={{ mt: 2 }}
+            sx={{
+              mt: 2,
+              borderRadius: '50px',
+              textTransform: 'none',
+              fontWeight: 600,
+              px: 4,
+              py: 1.5,
+              borderWidth: 2,
+              '&:hover': {
+                borderWidth: 2,
+              }
+            }}
           >
             View All FAQs
           </Button>

@@ -60,54 +60,62 @@ export default function TeamSection() {
         />
         <Grid container spacing={4}>
           {defaultTeamMembers.map((member, index) => {
-            const memberNameSection = getSection(`team-member-${index}-name`) || { 
-              id: `team-member-${index}-name`, 
-              content: member.name, 
-              type: 'heading' as const 
+            const memberNameSection = getSection(`team-member-${index}-name`) || {
+              id: `team-member-${index}-name`,
+              content: member.name,
+              type: 'heading' as const
             };
-            const memberRoleSection = getSection(`team-member-${index}-role`) || { 
-              id: `team-member-${index}-role`, 
-              content: member.role, 
-              type: 'paragraph' as const 
+            const memberRoleSection = getSection(`team-member-${index}-role`) || {
+              id: `team-member-${index}-role`,
+              content: member.role,
+              type: 'paragraph' as const
             };
-            const memberAvatarSection = getSection(`team-member-${index}-avatar`) || { 
-              id: `team-member-${index}-avatar`, 
-              content: member.avatar, 
+            const memberAvatarSection = getSection(`team-member-${index}-avatar`) || {
+              id: `team-member-${index}-avatar`,
+              content: member.avatar,
               type: 'image' as const,
               metadata: { imageUrl: member.avatar, imageAlt: member.name }
             };
             return (
               <Grid size={{ xs: 12, sm: 6, md: 4 }} key={index}>
-                <Card>
-                  <CardContent sx={{ textAlign: 'center', pt: 4 }}>
-                    <Box sx={{ mb: 2, display: 'flex', justifyContent: 'center' }}>
-                      <EditableImageMUI
-                        src={memberAvatarSection.metadata?.imageUrl || memberAvatarSection.content || member.avatar}
-                        alt={memberAvatarSection.metadata?.imageAlt || member.name}
-                        onSave={(url) => updateSectionImage(memberAvatarSection.id, url, memberNameSection.content)}
-                        sx={{
-                          width: 120,
-                          height: 120,
-                          borderRadius: '50%',
-                          overflow: 'hidden',
-                        }}
-                        aspectRatio="1/1"
-                      />
-                    </Box>
-                    <EditableTextMUI
-                      value={memberNameSection.content}
-                      onSave={(value) => updateSectionContent(memberNameSection.id, value)}
-                      variant="h6"
-                      sx={{ mb: 1, display: 'block' }}
+                <Box sx={{ textAlign: 'center', p: 2 }}>
+                  <Box
+                    sx={{
+                      mb: 3,
+                      display: 'flex',
+                      justifyContent: 'center',
+                      transition: 'transform 0.3s ease-in-out',
+                      '&:hover': { transform: 'scale(1.05)' }
+                    }}
+                  >
+                    <EditableImageMUI
+                      src={memberAvatarSection.metadata?.imageUrl || memberAvatarSection.content || member.avatar}
+                      alt={memberAvatarSection.metadata?.imageAlt || member.name}
+                      onSave={(url) => updateSectionImage(memberAvatarSection.id, url, memberNameSection.content)}
+                      sx={{
+                        width: 200, // Larger size
+                        height: 200,
+                        borderRadius: '50%',
+                        overflow: 'hidden',
+                        boxShadow: '0 8px 24px rgba(0,0,0,0.1)', // Soft shadow
+                      }}
+                      aspectRatio="1/1"
                     />
-                    <EditableTextMUI
-                      value={memberRoleSection.content}
-                      onSave={(value) => updateSectionContent(memberRoleSection.id, value)}
-                      variant="body2"
-                      sx={{ color: 'text.secondary', display: 'block' }}
-                    />
-                  </CardContent>
-                </Card>
+                  </Box>
+                  <EditableTextMUI
+                    value={memberNameSection.content}
+                    onSave={(value) => updateSectionContent(memberNameSection.id, value)}
+                    variant="h5"
+                    sx={{ mb: 0.5, display: 'block', fontWeight: 700 }}
+                  />
+                  <EditableTextMUI
+                    value={memberRoleSection.content}
+                    onSave={(value) => updateSectionContent(memberRoleSection.id, value)}
+                    variant="body1"
+                    sx={{ color: 'primary.main', display: 'block', fontWeight: 500, mb: 1 }}
+                  />
+                  {/* Optional short bio or links could go here */}
+                </Box>
               </Grid>
             );
           })}

@@ -7,34 +7,33 @@ import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
 import { styled } from '@mui/material/styles';
 
-import DevicesRoundedIcon from '@mui/icons-material/DevicesRounded';
-import EdgesensorHighRoundedIcon from '@mui/icons-material/EdgesensorHighRounded';
-import ViewQuiltRoundedIcon from '@mui/icons-material/ViewQuiltRounded';
+import SchoolRoundedIcon from '@mui/icons-material/SchoolRounded';
+import AccessTimeRoundedIcon from '@mui/icons-material/AccessTimeRounded';
+import SupportAgentRoundedIcon from '@mui/icons-material/SupportAgentRounded';
+import { EditableTextMUI } from '@/components/EditableTextMUI'; // Assuming this exists or using simple text
+import { usePageData } from '@/hooks/usePageData'; // If needed for editability
 
 const items = [
   {
-    icon: <ViewQuiltRoundedIcon />,
-    title: 'Dashboard',
+    icon: <SchoolRoundedIcon />,
+    title: 'Personalized Study Plans',
     description:
-      'This item could provide a snapshot of the most important metrics or data points related to the product.',
-    imageLight: `url("${process.env.TEMPLATE_IMAGE_URL || 'https://mui.com'}/static/images/templates/templates-images/dash-light.png")`,
-    imageDark: `url("${process.env.TEMPLATE_IMAGE_URL || 'https://mui.com'}/static/images/templates/templates-images/dash-dark.png")`,
+      'We tailor every lesson to your specific goals, ensuring you make the fastest progress possible.',
+    gradient: 'linear-gradient(135deg, #FF6B6B 0%, #FF8E53 100%)',
   },
   {
-    icon: <EdgesensorHighRoundedIcon />,
-    title: 'Mobile integration',
+    icon: <AccessTimeRoundedIcon />,
+    title: 'Flexible Scheduling',
     description:
-      'This item could provide information about the mobile app version of the product.',
-    imageLight: `url("${process.env.TEMPLATE_IMAGE_URL || 'https://mui.com'}/static/images/templates/templates-images/mobile-light.png")`,
-    imageDark: `url("${process.env.TEMPLATE_IMAGE_URL || 'https://mui.com'}/static/images/templates/templates-images/mobile-dark.png")`,
+      'Book lessons at times that work for you. Our global network of teachers means you can learn 24/7.',
+    gradient: 'linear-gradient(135deg, #11998e 0%, #38ef7d 100%)',
   },
   {
-    icon: <DevicesRoundedIcon />,
-    title: 'Available on all platforms',
+    icon: <SupportAgentRoundedIcon />,
+    title: 'Expert Guidance',
     description:
-      'This item could let users know the product is available on all platforms, such as web, mobile, and desktop.',
-    imageLight: `url("${process.env.TEMPLATE_IMAGE_URL || 'https://mui.com'}/static/images/templates/templates-images/devices-light.png")`,
-    imageDark: `url("${process.env.TEMPLATE_IMAGE_URL || 'https://mui.com'}/static/images/templates/templates-images/devices-dark.png")`,
+      'Our consultants and teachers are certified professionals with years of experience in international education.',
+    gradient: 'linear-gradient(135deg, #FC466B 0%, #3F5EFB 100%)',
   },
 ];
 
@@ -93,34 +92,28 @@ export function MobileLayout({
             label={title}
             onClick={() => handleItemClick(index)}
             selected={selectedItemIndex === index}
+            sx={{ borderRadius: '50px' }}
           />
         ))}
       </Box>
-      <Card variant="outlined">
+      <Card variant="outlined" sx={{ borderRadius: '24px', overflow: 'hidden' }}>
         <Box
-          sx={(theme) => ({
-            mb: 2,
-            backgroundSize: 'cover',
-            backgroundPosition: 'center',
+          sx={{
             minHeight: 280,
-            backgroundImage: 'var(--items-imageLight)',
-            ...theme.applyStyles('dark', {
-              backgroundImage: 'var(--items-imageDark)',
-            }),
-          })}
-          style={
-            items[selectedItemIndex]
-              ? ({
-                  '--items-imageLight': items[selectedItemIndex].imageLight,
-                  '--items-imageDark': items[selectedItemIndex].imageDark,
-                } as any)
-              : {}
-          }
-        />
-        <Box sx={{ px: 2, pb: 2 }}>
+            background: selectedFeature.gradient,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}
+        >
+          {/* Large Icon Display */}
+          {React.cloneElement(selectedFeature.icon as React.ReactElement, { sx: { fontSize: '6rem', color: 'white', opacity: 0.9 } })}
+        </Box>
+        <Box sx={{ px: 2, pb: 2, pt: 2 }}>
           <Typography
             gutterBottom
-            sx={{ color: 'text.primary', fontWeight: 'medium' }}
+            sx={{ color: 'text.primary', fontWeight: 'bold' }}
+            variant="h6"
           >
             {selectedFeature.title}
           </Typography>
@@ -135,6 +128,7 @@ export function MobileLayout({
 
 export default function Features() {
   const [selectedItemIndex, setSelectedItemIndex] = React.useState(0);
+  const { page, loading, getSection, updateSectionContent } = usePageData('home');
 
   const handleItemClick = (index: number) => {
     setSelectedItemIndex(index);
@@ -142,25 +136,25 @@ export default function Features() {
 
   const selectedFeature = items[selectedItemIndex];
 
+  // Using existing section keys or creating generic ones
+  const featureTitle = getSection('features-title') || { id: 'features-title', content: 'Our Educational Approach', type: 'heading' as const };
+  const featureDesc = getSection('features-desc') || { id: 'features-desc', content: 'We combine personalized attention with proven methodologies to ensure your success.', type: 'paragraph' as const };
+
   return (
-    <Container id="features" sx={{ py: { xs: 8, sm: 16 } }}>
+    <Container id="features" sx={{ py: { xs: 4, sm: 6 } }}>
       <Box sx={{ width: { sm: '100%', md: '60%' } }}>
-        <Typography
-          component="h2"
-          variant="h4"
-          gutterBottom
-          sx={{ color: 'text.primary' }}
-        >
-          Product features
-        </Typography>
-        <Typography
-          variant="body1"
-          sx={{ color: 'text.secondary', mb: { xs: 2, sm: 4 } }}
-        >
-          Provide a brief overview of the key features of the product. For example,
-          you could list the number of features, their types or benefits, and
-          add-ons.
-        </Typography>
+        <EditableTextMUI
+          value={featureTitle.content}
+          onSave={(v) => updateSectionContent(featureTitle.id, v)}
+          variant="h2"
+          sx={{ color: 'text.primary', mb: 2, fontWeight: 700 }}
+        />
+        <EditableTextMUI
+          value={featureDesc.content}
+          onSave={(v) => updateSectionContent(featureDesc.id, v)}
+          variant="h6"
+          sx={{ color: 'text.secondary', mb: { xs: 2, sm: 4 }, fontWeight: 400 }}
+        />
       </Box>
       <Box
         sx={{
@@ -188,6 +182,8 @@ export default function Features() {
                     p: 2,
                     height: '100%',
                     width: '100%',
+                    borderRadius: '16px',
+                    textAlign: 'left',
                     '&:hover': {
                       backgroundColor: (theme.vars || theme).palette.action.hover,
                     },
@@ -214,9 +210,11 @@ export default function Features() {
                     },
                   ]}
                 >
-                  {icon}
+                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
+                    {React.cloneElement(icon as React.ReactElement, { sx: { fontSize: '1.5rem' } })}
+                    <Typography variant="h6" sx={{ fontWeight: 600 }}>{title}</Typography>
+                  </Box>
 
-                  <Typography variant="h6">{title}</Typography>
                   <Typography variant="body2">{description}</Typography>
                 </Box>
               </Box>
@@ -242,28 +240,25 @@ export default function Features() {
               width: '100%',
               display: { xs: 'none', sm: 'flex' },
               pointerEvents: 'none',
+              borderRadius: '24px',
+              border: 'none', // Remove border for cleaner look if keeping shadow
+              boxShadow: 3,
             }}
           >
             <Box
-              sx={(theme) => ({
-                m: 'auto',
-                width: 420,
+              sx={{
+                m: 0,
+                width: '100%',
                 height: 500,
-                backgroundSize: 'contain',
-                backgroundImage: 'var(--items-imageLight)',
-                ...theme.applyStyles('dark', {
-                  backgroundImage: 'var(--items-imageDark)',
-                }),
-              })}
-              style={
-                items[selectedItemIndex]
-                  ? ({
-                      '--items-imageLight': items[selectedItemIndex].imageLight,
-                      '--items-imageDark': items[selectedItemIndex].imageDark,
-                    } as any)
-                  : {}
-              }
-            />
+                background: selectedFeature.gradient,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center'
+              }}
+            >
+              {/* Large Icon / Illustration Placeholder */}
+              {React.cloneElement(selectedFeature.icon as React.ReactElement, { sx: { fontSize: '12rem', color: 'rgba(255,255,255,0.8)', filter: 'drop-shadow(0 10px 20px rgba(0,0,0,0.2))' } })}
+            </Box>
           </Card>
         </Box>
       </Box>

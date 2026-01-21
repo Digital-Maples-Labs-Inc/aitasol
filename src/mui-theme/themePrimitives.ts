@@ -30,17 +30,18 @@ const defaultTheme = createTheme();
 
 const customShadows: Shadows = [...defaultTheme.shadows];
 
+// Neon Green Brand Palette (#BFF549)
 export const brand = {
-  50: 'hsl(210, 100%, 95%)',
-  100: 'hsl(210, 100%, 92%)',
-  200: 'hsl(210, 100%, 80%)',
-  300: 'hsl(210, 100%, 65%)',
-  400: 'hsl(210, 98%, 48%)',
-  500: 'hsl(210, 98%, 42%)',
-  600: 'hsl(210, 98%, 55%)',
-  700: 'hsl(210, 100%, 35%)',
-  800: 'hsl(210, 100%, 16%)',
-  900: 'hsl(210, 100%, 21%)',
+  50: '#f4fde6',
+  100: '#eefccd',
+  200: '#e1fb9b',
+  300: '#d5fa69',
+  400: '#bff549', // Primary Main
+  500: '#a3d82a',
+  600: '#7cac1a',
+  700: '#568010',
+  800: '#305406',
+  900: '#0a2800',
 };
 
 export const gray = {
@@ -108,9 +109,9 @@ export const getDesignTokens = (mode: PaletteMode) => {
         light: brand[200],
         main: brand[400],
         dark: brand[700],
-        contrastText: brand[50],
+        contrastText: '#000000', // Contrast text on Neon Green should be black
         ...(mode === 'dark' && {
-          contrastText: brand[50],
+          contrastText: '#000000',
           light: brand[300],
           main: brand[400],
           dark: brand[700],
@@ -165,13 +166,13 @@ export const getDesignTokens = (mode: PaletteMode) => {
       background: {
         default: 'hsl(0, 0%, 99%)',
         paper: 'hsl(220, 35%, 97%)',
-        ...(mode === 'dark' && { default: gray[900], paper: 'hsl(220, 30%, 7%)' }),
+        ...(mode === 'dark' && { default: '#000000', paper: '#09090b' }),
       },
       text: {
         primary: gray[800],
         secondary: gray[600],
         warning: orange[400],
-        ...(mode === 'dark' && { primary: 'hsl(0, 0%, 100%)', secondary: gray[400] }),
+        ...(mode === 'dark' && { primary: '#FFFFFF', secondary: gray[400] }),
       },
       action: {
         hover: alpha(gray[200], 0.2),
@@ -232,7 +233,7 @@ export const getDesignTokens = (mode: PaletteMode) => {
       },
     },
     shape: {
-      borderRadius: 8,
+      borderRadius: 0,
     },
     shadows: customShadows,
   };
@@ -245,7 +246,7 @@ export const colorSchemes = {
         light: brand[200],
         main: brand[400],
         dark: brand[700],
-        contrastText: brand[50],
+        contrastText: '#000000',
       },
       info: {
         light: brand[100],
@@ -292,7 +293,7 @@ export const colorSchemes = {
   dark: {
     palette: {
       primary: {
-        contrastText: brand[50],
+        contrastText: '#000000',
         light: brand[300],
         main: brand[400],
         dark: brand[700],
@@ -323,11 +324,11 @@ export const colorSchemes = {
       },
       divider: alpha(gray[700], 0.6),
       background: {
-        default: '#09090b',
-        paper: '#18181b',
+        default: '#000000',
+        paper: '#09090b',
       },
       text: {
-        primary: 'hsl(0, 0%, 100%)',
+        primary: '#FFFFFF',
         secondary: gray[400],
       },
       action: {
@@ -391,7 +392,7 @@ export const typography = {
 };
 
 export const shape = {
-  borderRadius: 8,
+  borderRadius: 0,
 };
 
 // @ts-ignore

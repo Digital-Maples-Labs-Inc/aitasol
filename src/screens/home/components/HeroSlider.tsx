@@ -10,8 +10,6 @@ import IconButton from '@mui/material/IconButton';
 import { EditableTextMUI } from '@/components/EditableTextMUI';
 import { usePageData } from '@/hooks/usePageData';
 import CircularProgress from '@mui/material/CircularProgress';
-import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
-import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import '@/styles/components/EmblaCarousel.css';
 
 // Default slide images - using SVG data URIs as reliable backgrounds
@@ -207,8 +205,8 @@ export default function HeroSliderComponent() {
       sx={{
         width: '100%',
         maxWidth: '100%',
-        height: { xs: '60vh', sm: '80vh', md: '90vh' },
-        minHeight: { xs: '400px', sm: '600px', md: '700px' },
+        height: { xs: '70vh', sm: '92vh', md: '100vh' },
+        minHeight: { xs: '460px', sm: '690px', md: '800px' },
         position: 'relative',
         overflow: 'hidden',
         margin: 0,
@@ -420,24 +418,6 @@ export default function HeroSliderComponent() {
                     >
                       {slide.description}
                     </Typography>
-                    <Button
-                      variant="contained"
-                      size="large"
-                      sx={{
-                        mt: { xs: 1, md: 2 },
-                        px: { xs: 3, md: 4 },
-                        py: { xs: 1, md: 1.5 },
-                        fontSize: { xs: '0.875rem', sm: '1rem', md: '1.125rem' },
-                        fontWeight: 600,
-                        backgroundColor: 'primary.main',
-                        '&:hover': {
-                          backgroundColor: 'primary.dark',
-                          opacity: 0.9,
-                        },
-                      }}
-                    >
-                      Get Started
-                    </Button>
                   </Stack>
                 </Container>
               </Box>

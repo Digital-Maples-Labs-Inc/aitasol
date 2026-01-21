@@ -23,7 +23,7 @@ export default function AboutHero() {
     <Box
       sx={(theme) => ({
         pt: { xs: 14, sm: 20 },
-        pb: { xs: 8, sm: 12 },
+        pb: { xs: 4, sm: 6 },
         backgroundColor: '#ffffff',
         backgroundImage: 'radial-gradient(ellipse 80% 50% at 50% -20%, hsl(210, 100%, 90%), transparent)',
         ...theme.applyStyles('dark', {

@@ -77,8 +77,8 @@ export default function Pricing() {
     <Container
       id="pricing"
       sx={{
-        pt: { xs: 4, sm: 12 },
-        pb: { xs: 8, sm: 16 },
+        pt: { xs: 4, sm: 6 },
+        pb: { xs: 4, sm: 6 },
         position: 'relative',
         display: 'flex',
         flexDirection: 'column',
@@ -95,15 +95,15 @@ export default function Pricing() {
         <EditableTextMUI
           value={pricingTitleSection.content}
           onSave={(value) => updateSectionContent(pricingTitleSection.id, value)}
-          variant="h4"
-          sx={{ mb: 2, display: 'block', color: 'text.primary' }}
+          variant="h2"
+          sx={{ mb: 2, display: 'block', color: 'text.primary', fontWeight: 700 }}
         />
         <EditableTextMUI
           value={pricingSubtitleSection.content}
           onSave={(value) => updateSectionContent(pricingSubtitleSection.id, value)}
-          variant="body1"
+          variant="h6"
           multiline
-          sx={{ color: 'text.secondary', display: 'block' }}
+          sx={{ color: 'text.secondary', display: 'block', fontWeight: 400 }}
         />
       </Box>
       <Grid
@@ -119,23 +119,35 @@ export default function Pricing() {
             <Card
               sx={[
                 {
-                  p: 2,
+                  p: 3,
                   display: 'flex',
                   flexDirection: 'column',
                   gap: 4,
+                  borderRadius: '24px',
+                  bgcolor: 'background.paper',
+                  border: '1px solid',
+                  borderColor: 'divider',
+                  transition: 'transform 0.2s, box-shadow 0.2s',
+                  '&:hover': {
+                    transform: 'translateY(-5px)',
+                    boxShadow: 6,
+                  },
                 },
                 tier.title === 'Professional' &&
-                  ((theme) => ({
-                    border: 'none',
-                    background:
-                      'radial-gradient(circle at 50% 0%, hsl(220, 20%, 35%), hsl(220, 30%, 6%))',
-                    boxShadow: `0 8px 12px hsla(220, 20%, 42%, 0.2)`,
-                    ...theme.applyStyles('dark', {
-                      background:
-                        'radial-gradient(circle at 50% 0%, hsl(220, 20%, 20%), hsl(220, 30%, 16%))',
-                      boxShadow: `0 8px 12px hsla(0, 0%, 0%, 0.8)`,
-                    }),
-                  })),
+                ((theme) => ({
+                  border: 'none',
+                  background: 'linear-gradient(135deg, #FF6B6B 0%, #FF8E53 100%)', // Brand gradient
+                  boxShadow: `0 8px 24px rgba(255, 107, 107, 0.4)`,
+                  '&:hover': {
+                    transform: 'translateY(-5px)',
+                    boxShadow: `0 12px 32px rgba(255, 107, 107, 0.5)`,
+                  },
+                  ...theme.applyStyles('dark', {
+                    background: 'linear-gradient(135deg, #FF6B6B 0%, #FF8E53 100%)', // Keep vibrant in dark mode? Or darker?
+                    // Let's keep it vibrant as it's a highlight card
+                    boxShadow: `0 8px 24px rgba(255, 107, 107, 0.2)`,
+                  }),
+                })),
               ]}
             >
               <CardContent>
@@ -149,18 +161,27 @@ export default function Pricing() {
                       gap: 2,
                     },
                     tier.title === 'Professional'
-                      ? { color: 'grey.100' }
-                      : { color: '' },
+                      ? { color: 'white' }
+                      : { color: 'text.primary' },
                   ]}
                 >
                   <EditableTextMUI
                     value={getSection(`pricing-tier-${tier.title.toLowerCase()}-title`)?.content || tier.title}
                     onSave={(value) => updateSectionContent(`pricing-tier-${tier.title.toLowerCase()}-title`, value)}
-                    variant="h6"
-                    sx={{ color: 'inherit' }}
+                    variant="h5"
+                    sx={{ color: 'inherit', fontWeight: 700 }}
                   />
                   {tier.title === 'Professional' && (
-                    <Chip icon={<AutoAwesomeIcon />} label={tier.subheader} />
+                    <Chip
+                      icon={<AutoAwesomeIcon sx={{ color: 'primary.main', fill: 'currentColor' }} />}
+                      label={tier.subheader}
+                      sx={{
+                        backgroundColor: 'white',
+                        color: 'primary.main',
+                        fontWeight: 700,
+                        '& .MuiChip-icon': { color: 'primary.main' }
+                      }}
+                    />
                   )}
                 </Box>
                 <Box
@@ -170,26 +191,26 @@ export default function Pricing() {
                       alignItems: 'baseline',
                     },
                     tier.title === 'Professional'
-                      ? { color: 'grey.50' }
-                      : { color: null },
+                      ? { color: 'white' }
+                      : { color: 'text.primary' },
                   ]}
                 >
                   <EditableTextMUI
                     value={getSection(`pricing-tier-${tier.title.toLowerCase()}-price`)?.content || `$${tier.price}`}
                     onSave={(value) => updateSectionContent(`pricing-tier-${tier.title.toLowerCase()}-price`, value)}
                     variant="h2"
-                    sx={{ color: 'inherit' }}
+                    sx={{ color: 'inherit', fontWeight: 800 }}
                   />
-                  <Typography component="h3" variant="h6">
+                  <Typography component="h3" variant="h6" sx={{ color: tier.title === 'Professional' ? 'rgba(255,255,255,0.7)' : 'text.secondary' }}>
                     &nbsp; per month
                   </Typography>
                 </Box>
-                <Divider sx={{ my: 2, opacity: 0.8, borderColor: 'divider' }} />
+                <Divider sx={{ my: 2, opacity: 0.8, borderColor: tier.title === 'Professional' ? 'rgba(255,255,255,0.2)' : 'divider' }} />
                 {tier.description.map((line, lineIndex) => {
-                  const lineSection = getSection(`pricing-tier-${tier.title.toLowerCase()}-desc-${lineIndex}`) || { 
-                    id: `pricing-tier-${tier.title.toLowerCase()}-desc-${lineIndex}`, 
-                    content: line, 
-                    type: 'paragraph' as const 
+                  const lineSection = getSection(`pricing-tier-${tier.title.toLowerCase()}-desc-${lineIndex}`) || {
+                    id: `pricing-tier-${tier.title.toLowerCase()}-desc-${lineIndex}`,
+                    content: line,
+                    type: 'paragraph' as const
                   };
                   return (
                     <Box
@@ -202,18 +223,19 @@ export default function Pricing() {
                             width: 20,
                           },
                           tier.title === 'Professional'
-                            ? { color: 'primary.light' }
+                            ? { color: 'white' }
                             : { color: 'primary.main' },
                         ]}
                       />
                       <EditableTextMUI
                         value={lineSection.content}
                         onSave={(value) => updateSectionContent(lineSection.id, value)}
-                        variant="subtitle2"
+                        variant="body2"
                         sx={[
                           tier.title === 'Professional'
-                            ? { color: 'grey.50' }
-                            : { color: null },
+                            ? { color: 'rgba(255,255,255,0.9)' }
+                            : { color: 'text.secondary' },
+                          { fontWeight: 500 }
                         ]}
                       />
                     </Box>
@@ -224,7 +246,24 @@ export default function Pricing() {
                 <Button
                   fullWidth
                   variant={tier.buttonVariant as 'outlined' | 'contained'}
-                  color={tier.buttonColor as 'primary' | 'secondary'}
+                  // color={tier.buttonColor as 'primary' | 'secondary'} 
+                  // Override colors for premium look
+                  sx={{
+                    borderRadius: '50px',
+                    textTransform: 'none',
+                    fontWeight: 700,
+                    py: 1.5,
+                    ...(tier.title === 'Professional'
+                      ? {
+                        bgcolor: 'white',
+                        color: 'primary.main',
+                        '&:hover': { bgcolor: 'grey.100' }
+                      }
+                      : {
+                        // Standard button style
+                      }
+                    )
+                  }}
                 >
                   {tier.buttonText}
                 </Button>

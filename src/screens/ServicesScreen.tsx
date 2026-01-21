@@ -12,7 +12,6 @@ export default function ServicesScreen(props: { disableCustomTheme?: boolean }) 
       <CssBaseline enableColorScheme />
       <HeaderNavigation />
       <ServicesHero />
-      <ServicesOverview />
       <ServiceCards />
       <Footer />
     </AppTheme>

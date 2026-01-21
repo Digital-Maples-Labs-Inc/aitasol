@@ -32,10 +32,19 @@ export const BlogDetailScreen: React.FC = () => {
   }, [slug]);
 
   const loadBlog = async () => {
-    if (!slug) return;
+    // Handle potential array slug
+    const currentSlug = Array.isArray(slug) ? slug[0] : slug;
+
+    console.log('Loading blog for slug:', currentSlug);
+
+    if (!currentSlug) {
+      setLoading(false);
+      return;
+    }
 
     try {
-      const blogData = await getBlogBySlug(slug);
+      const blogData = await getBlogBySlug(currentSlug);
+      console.log('Blog data loaded:', blogData ? 'Found' : 'Not Found');
       setBlog(blogData);
     } catch (error) {
       console.error('Error loading blog:', error);

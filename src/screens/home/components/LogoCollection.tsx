@@ -53,7 +53,7 @@ export default function LogoCollection() {
     );
   }
 
-  const logoTitleSection = getSection('logo-title') || { id: 'logo-title', content: 'Trusted by the best companies', type: 'paragraph' as const };
+  const logoTitleSection = getSection('logo-title') || { id: 'logo-title', content: 'Our Trusted Partners & Educational Institutions', type: 'paragraph' as const };
 
   // Get logo sections from Firestore, fallback to defaults
   const getLogoUrl = (index: number): string => {

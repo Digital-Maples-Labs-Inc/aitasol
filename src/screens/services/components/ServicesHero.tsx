@@ -22,39 +22,41 @@ export default function ServicesHero() {
   return (
     <Box
       sx={(theme) => ({
-        pt: { xs: 14, sm: 20 },
-        pb: { xs: 8, sm: 12 },
-        backgroundColor: '#ffffff',
-        backgroundImage: 'radial-gradient(ellipse 80% 50% at 50% -20%, hsl(210, 100%, 90%), transparent)',
-        ...theme.applyStyles('dark', {
-          backgroundColor: '#09090b',
-          backgroundImage: 'radial-gradient(ellipse 80% 50% at 50% -20%, hsl(210, 100%, 16%), transparent)',
-        }),
+        pt: { xs: 16, sm: 24 },
+        pb: { xs: 0, sm: 2 },
+        backgroundColor: 'background.default',
       })}
     >
       <Container>
-        <EditableTextMUI
-          value={heroTitleSection.content}
-          onSave={(value) => updateSectionContent(heroTitleSection.id, value)}
-          variant="h1"
-          sx={{
-            fontSize: 'clamp(2.5rem, 10vw, 4rem)',
-            fontWeight: 600,
-            textAlign: 'center',
-            mb: 2,
-            display: 'block',
-          }}
-        />
+        <Box sx={{ borderBottom: 1, borderColor: 'divider', pb: 2, mb: 4 }}>
+          <EditableTextMUI
+            value={heroTitleSection.content}
+            onSave={(value) => updateSectionContent(heroTitleSection.id, value)}
+            variant="h2"
+            sx={{
+              fontSize: { xs: '2.5rem', md: '3.5rem' },
+              fontWeight: 700,
+              textAlign: 'left',
+              textTransform: 'uppercase',
+              letterSpacing: '0.05em',
+              color: 'text.primary',
+              display: 'block',
+              fontFamily: 'serif', // Trying to mimic the reference vibe
+            }}
+          />
+        </Box>
+
         <EditableTextMUI
           value={heroSubtitleSection.content}
           onSave={(value) => updateSectionContent(heroSubtitleSection.id, value)}
-          variant="h5"
+          variant="h6"
           sx={{
-            textAlign: 'center',
+            textAlign: 'left',
             color: 'text.secondary',
             maxWidth: '800px',
-            mx: 'auto',
             display: 'block',
+            fontWeight: 400,
+            fontFamily: 'sans-serif'
           }}
         />
       </Container>

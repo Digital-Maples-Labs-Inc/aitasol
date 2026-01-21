@@ -26,7 +26,7 @@ interface ArticleInfo {
 const transformBlogToArticle = (blog: Blog): ArticleInfo => {
   const tag = blog.tags && blog.tags.length > 0 ? blog.tags[0] : 'Company';
   const description = blog.excerpt || (blog.content ? blog.content.substring(0, 150) + '...' : '');
-  const authors = blog.authorName 
+  const authors = blog.authorName
     ? [{ name: blog.authorName, avatar: '/static/images/avatar/1.jpg' }]
     : [{ name: 'AitaSol Team', avatar: '/static/images/avatar/1.jpg' }];
 
@@ -86,14 +86,14 @@ const TitleTypography = styled(Typography)(({ theme }) => ({
   },
 }));
 
-function Author({ 
-  authors, 
-  publishedAt 
-}: { 
+function Author({
+  authors,
+  publishedAt
+}: {
   authors: { name: string; avatar: string }[];
   publishedAt?: Date;
 }) {
-  const dateStr = publishedAt 
+  const dateStr = publishedAt
     ? format(publishedAt, 'MMMM dd, yyyy')
     : 'Recently';
 
@@ -134,7 +134,7 @@ export default function Latest() {
   const [loading, setLoading] = React.useState(true);
   const [focusedCardIndex, setFocusedCardIndex] = React.useState<number | null>(null);
   const [page, setPage] = React.useState(1);
-  const itemsPerPage = 10;
+  const itemsPerPage = 2;
 
   // Subscribe to published blogs with real-time updates
   React.useEffect(() => {
@@ -238,12 +238,12 @@ export default function Latest() {
       </Grid>
       {totalPages > 1 && (
         <Box sx={{ display: 'flex', flexDirection: 'row', pt: 4, justifyContent: 'center' }}>
-          <Pagination 
-            count={totalPages} 
+          <Pagination
+            count={totalPages}
             page={page}
             onChange={handlePageChange}
-            hidePrevButton 
-            hideNextButton 
+            hidePrevButton
+            hideNextButton
             boundaryCount={totalPages <= 10 ? totalPages : 10}
           />
         </Box>

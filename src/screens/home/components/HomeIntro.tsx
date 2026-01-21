@@ -5,6 +5,7 @@ import Typography from '@mui/material/Typography';
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
 import Chip from '@mui/material/Chip';
+import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';
 import { EditableTextMUI } from '@/components/EditableTextMUI';
 import { usePageData } from '@/hooks/usePageData';
 import CircularProgress from '@mui/material/CircularProgress';
@@ -20,25 +21,20 @@ export default function HomeIntro() {
     );
   }
 
-  const introTitleSection = getSection('intro-title') || { 
-    id: 'intro-title', 
-    content: 'Clear Guidance for Global Education Decisions', 
-    type: 'heading' as const 
+  const introTitleSection = getSection('intro-title') || {
+    id: 'intro-title',
+    content: 'Clear Guidance for Global Education Decisions',
+    type: 'heading' as const
   };
-  const introTextSection = getSection('intro-text') || { 
-    id: 'intro-text', 
-    content: 'AitahSolutions Educational Consultancy supports students in making informed, ethical, and realistic decisions about studying abroad. Since 2019, we have guided students through program selection, applications, documentation, funding awareness, and pre-departure preparation with clarity and integrity.', 
-    type: 'paragraph' as const 
+  const introTextSection = getSection('intro-text') || {
+    id: 'intro-text',
+    content: 'AitahSolutions Educational Consultancy supports students in making informed, ethical, and realistic decisions about studying abroad. Since 2019, we have guided students through program selection, applications, and pre-departure with integrity.',
+    type: 'paragraph' as const
   };
-  const introText2Section = getSection('intro-text-2') || { 
-    id: 'intro-text-2', 
-    content: 'We understand that international education is a major financial and life decision. Our role is not to sell opportunities, but to help students evaluate them critically — based on academic readiness, financial sustainability, and long-term career alignment.', 
-    type: 'paragraph' as const 
-  };
-  const introText3Section = getSection('intro-text-3') || { 
-    id: 'intro-text-3', 
-    content: 'We work with established education platforms and professional partners while remaining independent in our advice. Admissions decisions, visas, and funding outcomes are never guaranteed; informed decision-making is.', 
-    type: 'paragraph' as const 
+  const introText2Section = getSection('intro-text-2') || {
+    id: 'intro-text-2',
+    content: 'We understand that international education is a major financial and life decision. Our role is not to sell opportunities, but to help students evaluate them critically — based on academic readiness, financial sustainability, and long-term career alignment.',
+    type: 'paragraph' as const
   };
 
   const navigateTo = (path: string) => {
@@ -49,40 +45,53 @@ export default function HomeIntro() {
 
   return (
     <Box
-      sx={(theme) => ({
-        backgroundColor: '#ffffff',
-        pt: { xs: 8, sm: 12 },
-        pb: { xs: 8, sm: 12 },
-        ...theme.applyStyles('dark', {
-          backgroundColor: '#09090b',
-        }),
-      })}
+      sx={{
+        backgroundColor: 'background.default',
+        pt: { xs: 4, sm: 6 },
+        pb: { xs: 4, sm: 6 },
+      }}
     >
       <Container maxWidth="lg">
         <Stack spacing={4} alignItems="center" sx={{ textAlign: 'center' }}>
+          <Chip
+            icon={<AutoAwesomeIcon sx={{ fontSize: '1rem !important' }} />}
+            label="Why Choose Aitasol"
+            sx={{
+              backgroundColor: (theme) => theme.palette.mode === 'dark' ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.05)',
+              color: 'primary.main',
+              border: '1px solid',
+              borderColor: (theme) => theme.palette.mode === 'dark' ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)',
+              fontWeight: 600,
+              px: 1,
+            }}
+          />
+
           <EditableTextMUI
             value={introTitleSection.content}
             onSave={(value) => updateSectionContent(introTitleSection.id, value)}
-            variant="h1"
+            variant="h2"
             sx={{
-              fontSize: { xs: '2rem', sm: '2.5rem', md: '3rem' },
+              fontSize: { xs: '2rem', sm: '2.5rem', md: '3.5rem' },
               fontWeight: 700,
               maxWidth: '900px',
               display: 'block',
+              lineHeight: 1.2,
+              color: 'text.primary',
             }}
           />
-          
+
           <Stack spacing={3} sx={{ maxWidth: '800px' }}>
             <EditableTextMUI
               value={introTextSection.content}
               onSave={(value) => updateSectionContent(introTextSection.id, value)}
               variant="body1"
               multiline
-              sx={{ 
-                fontSize: { xs: '1rem', sm: '1.125rem' },
-                lineHeight: 1.8,
+              sx={{
+                fontSize: { xs: '1.1rem', sm: '1.25rem' },
+                lineHeight: 1.6,
                 color: 'text.secondary',
                 display: 'block',
+                fontWeight: 400
               }}
             />
             <EditableTextMUI
@@ -90,35 +99,12 @@ export default function HomeIntro() {
               onSave={(value) => updateSectionContent(introText2Section.id, value)}
               variant="body1"
               multiline
-              sx={{ 
-                fontSize: { xs: '1rem', sm: '1.125rem' },
-                lineHeight: 1.8,
+              sx={{
+                fontSize: { xs: '1.1rem', sm: '1.25rem' },
+                lineHeight: 1.6,
                 color: 'text.secondary',
                 display: 'block',
-              }}
-            />
-            <EditableTextMUI
-              value={introText3Section.content}
-              onSave={(value) => updateSectionContent(introText3Section.id, value)}
-              variant="body1"
-              multiline
-              sx={{ 
-                fontSize: { xs: '1rem', sm: '1.125rem' },
-                lineHeight: 1.8,
-                color: 'text.secondary',
-                display: 'block',
-              }}
-            />
-          </Stack>
-
-          <Stack direction="row" spacing={2} sx={{ mt: 2, flexWrap: 'wrap', justifyContent: 'center' }}>
-            <Chip 
-              label="📌 Ethical guidance. Transparent processes. Student-centered outcomes."
-              sx={{ 
-                fontSize: '0.95rem',
-                py: 2.5,
-                px: 1,
-                height: 'auto',
+                fontWeight: 400
               }}
             />
           </Stack>
@@ -129,16 +115,19 @@ export default function HomeIntro() {
             onClick={() => navigateTo('/contact')}
             sx={{
               mt: 2,
-              px: 4,
+              px: 6,
               py: 1.5,
               fontSize: '1rem',
+              borderRadius: '50px',
+              fontWeight: 600,
+              textTransform: 'none',
+              boxShadow: 2
             }}
           >
-            👉 Book a Consultation
+            Book a Consultation
           </Button>
         </Stack>
       </Container>
     </Box>
   );
 }
-

@@ -21,7 +21,7 @@ import { useTheme } from '@mui/material/styles';
 interface EditableTextMUIProps {
   value: string;
   onSave: (newValue: string) => Promise<void>;
-  variant?: 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'subtitle1' | 'subtitle2' | 'body1' | 'body2' | 'caption';
+  variant?: 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'subtitle1' | 'subtitle2' | 'body1' | 'body2' | 'caption' | 'overline';
   component?: React.ElementType;
   sx?: any;
   editable?: boolean;
@@ -98,7 +98,7 @@ export const EditableTextMUI: React.FC<EditableTextMUIProps> = ({
         }}
         onClick={handleClick}
       >
-        <Typography variant={variant} component={component} sx={sx}>
+        <Typography variant={variant} component={component || 'div'} sx={sx}>
           {value || placeholder}
         </Typography>
         {isEditable && !hideEditButton && (

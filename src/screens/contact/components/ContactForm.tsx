@@ -9,14 +9,14 @@ import { EditableTextMUI } from '@/components/EditableTextMUI';
 import { usePageData } from '@/hooks/usePageData';
 
 const StyledCard = styled(Box)(({ theme }) => ({
-  borderRadius: theme.shape.borderRadius * 2,
-  backgroundColor: theme.palette.mode === 'dark' 
-    ? theme.palette.background.paper 
-    : '#ffffff',
+  borderRadius: (theme.shape.borderRadius as number) * 2,
   padding: theme.spacing(4),
-  boxShadow: theme.palette.mode === 'dark' 
-    ? 'none' 
-    : '0px 10px 40px rgba(0, 0, 0, 0.1)',
+  backgroundColor: '#ffffff',
+  boxShadow: '0px 10px 40px rgba(0, 0, 0, 0.1)',
+  ...theme.applyStyles('dark', {
+    backgroundColor: theme.palette.background.paper,
+    boxShadow: 'none',
+  }),
   [theme.breakpoints.up('sm')]: {
     padding: theme.spacing(5),
   },
@@ -35,48 +35,48 @@ const StyledTextField = styled(TextField)(({ theme }) => ({
   '& .MuiInputBase-root': {
     backgroundColor: 'transparent',
     border: 'none',
-    borderBottom: `1px solid ${theme.palette.mode === 'dark' ? 'rgba(255, 255, 255, 0.1)' : '#f1f1f1'}`,
+    borderBottom: '1px solid #f1f1f1',
     borderRadius: 0,
     paddingBottom: theme.spacing(1.5),
     '&:hover': {
-      borderBottomColor: theme.palette.mode === 'dark' 
-        ? 'rgba(255, 255, 255, 0.2)' 
-        : theme.palette.primary.main,
+      borderBottomColor: theme.palette.primary.main,
     },
     '&.Mui-focused': {
       borderBottomColor: theme.palette.primary.main,
       backgroundColor: 'transparent',
     },
-    '&::before': {
-      display: 'none',
-    },
-    '&::after': {
-      display: 'none',
-    },
+    '&::before': { display: 'none' },
+    '&::after': { display: 'none' },
+    ...theme.applyStyles('dark', {
+      borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
+      '&:hover': {
+        borderBottomColor: 'rgba(255, 255, 255, 0.2)',
+      },
+    }),
   },
   '& .MuiInputBase-input': {
     padding: 0,
     '&::placeholder': {
-      color: theme.palette.mode === 'dark' 
-        ? 'rgba(255, 255, 255, 0.5)' 
-        : 'rgba(0, 0, 0, 0.4)',
+      color: 'rgba(0, 0, 0, 0.4)',
       opacity: 0.6,
     },
+    ...theme.applyStyles('dark', {
+      '&::placeholder': {
+        color: 'rgba(255, 255, 255, 0.5)',
+      },
+    }),
   },
   '& .MuiInputLabel-root': {
     fontSize: '0.875rem',
     marginBottom: theme.spacing(2),
-    color: theme.palette.mode === 'dark' 
-      ? 'rgba(255, 255, 255, 0.6)' 
-      : 'rgba(0, 0, 0, 0.6)',
+    color: 'rgba(0, 0, 0, 0.6)',
+    ...theme.applyStyles('dark', {
+      color: 'rgba(255, 255, 255, 0.6)',
+    }),
   },
   '& .MuiInput-underline': {
-    '&::before': {
-      display: 'none',
-    },
-    '&::after': {
-      display: 'none',
-    },
+    '&::before': { display: 'none' },
+    '&::after': { display: 'none' },
   },
 }));
 
@@ -84,35 +84,43 @@ const StyledTextArea = styled(TextField)(({ theme }) => ({
   '& .MuiInputBase-root': {
     backgroundColor: 'transparent',
     border: 'none',
-    borderBottom: `1px solid ${theme.palette.mode === 'dark' ? 'rgba(255, 255, 255, 0.1)' : '#f1f1f1'}`,
+    borderBottom: '1px solid #f1f1f1',
     borderRadius: 0,
     paddingBottom: theme.spacing(1.5),
     '&:hover': {
-      borderBottomColor: theme.palette.mode === 'dark' 
-        ? 'rgba(255, 255, 255, 0.2)' 
-        : theme.palette.primary.main,
+      borderBottomColor: theme.palette.primary.main,
     },
     '&.Mui-focused': {
       borderBottomColor: theme.palette.primary.main,
       backgroundColor: 'transparent',
     },
+    ...theme.applyStyles('dark', {
+      borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
+      '&:hover': {
+        borderBottomColor: 'rgba(255, 255, 255, 0.2)',
+      },
+    }),
   },
   '& .MuiInputBase-input': {
     padding: 0,
     resize: 'none',
     '&::placeholder': {
-      color: theme.palette.mode === 'dark' 
-        ? 'rgba(255, 255, 255, 0.5)' 
-        : 'rgba(0, 0, 0, 0.4)',
+      color: 'rgba(0, 0, 0, 0.4)',
       opacity: 0.6,
     },
+    ...theme.applyStyles('dark', {
+      '&::placeholder': {
+        color: 'rgba(255, 255, 255, 0.5)',
+      },
+    }),
   },
   '& .MuiInputLabel-root': {
     fontSize: '0.875rem',
     marginBottom: theme.spacing(2),
-    color: theme.palette.mode === 'dark' 
-      ? 'rgba(255, 255, 255, 0.6)' 
-      : 'rgba(0, 0, 0, 0.6)',
+    color: 'rgba(0, 0, 0, 0.6)',
+    ...theme.applyStyles('dark', {
+      color: 'rgba(255, 255, 255, 0.6)',
+    }),
   },
 }));
 

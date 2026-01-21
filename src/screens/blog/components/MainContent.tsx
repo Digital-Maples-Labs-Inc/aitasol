@@ -35,15 +35,15 @@ interface BlogCard {
 const transformBlogToCard = (blog: Blog): BlogCard => {
   // Get first tag or default to 'Company'
   const tag = blog.tags && blog.tags.length > 0 ? blog.tags[0] : 'Company';
-  
+
   // Use featured image or placeholder
   const img = blog.featuredImage || 'https://picsum.photos/800/450?random=' + blog.id;
-  
+
   // Use excerpt or first 150 chars of content
   const description = blog.excerpt || (blog.content ? blog.content.substring(0, 150) + '...' : '');
-  
+
   // Create author array
-  const authors = blog.authorName 
+  const authors = blog.authorName
     ? [{ name: blog.authorName, avatar: '/static/images/avatar/1.jpg' }]
     : [{ name: 'AitaSol Team', avatar: '/static/images/avatar/1.jpg' }];
 
@@ -64,7 +64,10 @@ const StyledCard = styled(Card)(({ theme }) => ({
   flexDirection: 'column',
   padding: 0,
   height: '100%',
-  backgroundColor: (theme.vars || theme).palette.background.paper,
+  backgroundColor: '#ffffff',
+  ...theme.applyStyles('dark', {
+    backgroundColor: (theme.vars || theme).palette.background.paper,
+  }),
   '&:hover': {
     backgroundColor: 'transparent',
     cursor: 'pointer',
@@ -95,14 +98,14 @@ const StyledTypography = styled(Typography)({
   textOverflow: 'ellipsis',
 });
 
-function Author({ 
-  authors, 
-  publishedAt 
-}: { 
+function Author({
+  authors,
+  publishedAt
+}: {
   authors: { name: string; avatar: string }[];
   publishedAt?: Date;
 }) {
-  const dateStr = publishedAt 
+  const dateStr = publishedAt
     ? format(publishedAt, 'MMMM dd, yyyy')
     : 'Recently';
 
@@ -278,9 +281,9 @@ export default function MainContent() {
             overflow: 'auto',
           }}
         >
-          <Chip 
-            onClick={() => handleCategoryClick('All categories')} 
-            size="medium" 
+          <Chip
+            onClick={() => handleCategoryClick('All categories')}
+            size="medium"
             label="All categories"
             sx={{
               backgroundColor: selectedCategory === 'All categories' ? undefined : 'transparent',
@@ -352,7 +355,7 @@ export default function MainContent() {
             </StyledCard>
           </Grid>
         ))}
-        
+
         {/* Remaining cards - responsive layout */}
         {remainingCards.length > 0 && (
           <>
@@ -391,7 +394,7 @@ export default function MainContent() {
                 </StyledCard>
               </Grid>
             )}
-            
+
             {remainingCards[1] && remainingCards[2] && (
               <Grid size={{ xs: 12, md: 4 }}>
                 <Box
@@ -470,7 +473,7 @@ export default function MainContent() {
                 </Box>
               </Grid>
             )}
-            
+
             {remainingCards[3] && (
               <Grid size={{ xs: 12, md: 4 }}>
                 <StyledCard

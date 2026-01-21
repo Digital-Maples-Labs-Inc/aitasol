@@ -4,7 +4,7 @@ import HeaderNavigation from '@/components/HeaderNavigation';
 import Footer from '@/components/Footer';
 import AboutHero from './about/components/AboutHero';
 import CompanyStory from './about/components/CompanyStory';
-import TeamSection from './about/components/TeamSection';
+
 import CredentialsSection from './about/components/CredentialsSection';
 
 export default function AboutScreen(props: { disableCustomTheme?: boolean }) {
@@ -14,7 +14,6 @@ export default function AboutScreen(props: { disableCustomTheme?: boolean }) {
       <HeaderNavigation />
       <AboutHero />
       <CompanyStory />
-      <TeamSection />
       <CredentialsSection />
       <Footer />
     </AppTheme>

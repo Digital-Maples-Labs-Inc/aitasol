@@ -36,7 +36,8 @@ export default function ContactContent() {
       id="contact"
       sx={(theme) => ({
         position: 'relative',
-        py: { xs: 10, md: 15 },
+        pt: { xs: 20, md: 25 },
+        pb: { xs: 10, md: 15 },
         minHeight: '100vh',
         backgroundColor: '#ffffff',
         ...theme.applyStyles('dark', {
@@ -50,8 +51,8 @@ export default function ContactContent() {
           zIndex: -1,
           height: { xs: '50%', lg: '45%', xl: '50%' },
           width: '100%',
-          backgroundColor: theme.palette.mode === 'dark' 
-            ? 'rgba(0, 0, 0, 0.3)' 
+          backgroundColor: theme.palette.mode === 'dark'
+            ? 'rgba(0, 0, 0, 0.3)'
             : 'rgba(233, 249, 255, 1)',
         },
       })}

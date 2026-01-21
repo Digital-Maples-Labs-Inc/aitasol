@@ -13,6 +13,7 @@ import PagesCountCard from './PagesCountCard';
 import BlogsCountCard from './BlogsCountCard';
 import LastVisitorCard from './LastVisitorCard';
 import UsersCountCard from './UsersCountCard';
+import HomePageControls from './HomePageControls';
 
 export default function MainGrid() {
   return (
@@ -55,6 +56,7 @@ export default function MainGrid() {
         </Grid>
         <Grid size={{ xs: 12, lg: 3 }}>
           <Stack gap={2} direction={{ xs: 'column', sm: 'row', lg: 'column' }}>
+            <HomePageControls />
             <CustomizedTreeView />
             <ChartUserByCountry />
           </Stack>
