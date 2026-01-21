@@ -1,10 +1,11 @@
+import Box from '@mui/material/Box';
 import CssBaseline from '@mui/material/CssBaseline';
 import AppTheme from '@/mui-theme/AppTheme';
 import HeaderNavigation from '@/components/HeaderNavigation';
 import Footer from '@/components/Footer';
 import AboutHero from './about/components/AboutHero';
 import CompanyStory from './about/components/CompanyStory';
-
+import TeamSection from './about/components/TeamSection';
 import CredentialsSection from './about/components/CredentialsSection';
 
 export default function AboutScreen(props: { disableCustomTheme?: boolean }) {
@@ -12,10 +13,13 @@ export default function AboutScreen(props: { disableCustomTheme?: boolean }) {
     <AppTheme {...props}>
       <CssBaseline enableColorScheme />
       <HeaderNavigation />
-      <AboutHero />
-      <CompanyStory />
-      <CredentialsSection />
-      <Footer />
+      <Box sx={{ bgcolor: 'background.default', color: 'text.primary', minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
+        <AboutHero />
+        <CompanyStory />
+        <CredentialsSection />
+        <TeamSection />
+        <Footer />
+      </Box>
     </AppTheme>
   );
 }

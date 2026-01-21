@@ -32,7 +32,7 @@ export default function ServiceHero({ serviceSlug, defaultData }: ServiceHeroPro
   const imageSectionId = `hero-image-${serviceSlug}`;
 
   return (
-    <Box sx={{ py: { xs: 8, md: 10 }, bgcolor: 'background.default' }}>
+    <Box sx={{ pt: { xs: 20, md: 24 }, pb: { xs: 8, md: 10 }, bgcolor: 'background.default' }}>
       <Container maxWidth="lg">
         <Stack alignItems="center" spacing={4} sx={{ textAlign: 'center', mb: 8 }}>
 

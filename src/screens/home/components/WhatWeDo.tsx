@@ -109,6 +109,7 @@ export default function WhatWeDo() {
               fontWeight: 700,
               lineHeight: 1.2,
               maxWidth: '800px',
+              textAlign: 'center',
             }}
           />
 
@@ -121,6 +122,7 @@ export default function WhatWeDo() {
               fontWeight: 400,
               maxWidth: '600px',
               fontSize: { xs: '1rem', sm: '1.25rem' },
+              textAlign: 'center',
             }}
           />
         </Stack>

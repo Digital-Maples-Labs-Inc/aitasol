@@ -3,6 +3,7 @@ import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
 import CircularProgress from '@mui/material/CircularProgress';
 import Grid from '@mui/material/Grid';
+import Typography from '@mui/material/Typography';
 import { EditableTextMUI } from '@/components/EditableTextMUI';
 import { EditableImageMUI } from '@/components/EditableImageMUI';
 import { usePageData } from '@/hooks/usePageData';
@@ -53,15 +54,7 @@ export default function CompanyStory() {
   ];
 
   return (
-    <Box
-      sx={(theme) => ({
-        backgroundColor: '#ffffff',
-        ...theme.applyStyles('dark', {
-          backgroundColor: '#09090b',
-        }),
-        py: { xs: 4, sm: 6 },
-      })}
-    >
+    <Box sx={{ py: { xs: 8, md: 10 }, bgcolor: 'transparent' }}>
       <Container maxWidth="lg">
         {sections.map((section, index) => (
           <Grid
@@ -70,33 +63,69 @@ export default function CompanyStory() {
             spacing={{ xs: 6, md: 10 }}
             alignItems="center"
             direction={section.align === 'right' ? { xs: 'column-reverse', md: 'row-reverse' } : { xs: 'column-reverse', md: 'row' }}
-            sx={{ mb: { xs: 8, md: 10 }, '&:last-child': { mb: 0 } }}
+            sx={{ mb: { xs: 10, md: 16 }, '&:last-child': { mb: 0 } }}
           >
             {/* Image Side */}
             <Grid size={{ xs: 12, md: 6 }}>
-              <Box sx={{ borderRadius: '24px', overflow: 'hidden', boxShadow: '0 20px 40px rgba(0,0,0,0.1)' }}>
+              <Box sx={{
+                borderRadius: '32px',
+                overflow: 'hidden',
+                boxShadow: '0 20px 40px -10px rgba(0,0,0,0.3)',
+                border: '1px solid',
+                borderColor: 'divider',
+                aspectRatio: '4/3' // Standardize vertical/horizontal feel
+              }}>
                 <EditableImageMUI
                   src={(section.image.metadata as any)?.imageUrl || section.image.content}
-                  alt={(section.image.metadata as any)?.imageAlt || 'Image'}
                   onSave={(url) => updateSectionImage(section.image.id, url, (section.image.metadata as any)?.imageAlt)}
-                  sx={{ width: '100%', height: '100%', minHeight: '400px', objectFit: 'cover' }}
-                  aspectRatio="4/3"
+                  sx={{ width: '100%', height: '100%', objectFit: 'cover' }}
                 />
               </Box>
             </Grid>
             {/* Text Side */}
             <Grid size={{ xs: 12, md: 6 }}>
+              {/* Add a subtle badge for the first section only? Or generic "OUR VALUES" if it fits. 
+                   Let's keep it clean. */}
+              {index === 0 && (
+                <Box sx={{
+                  border: '1px solid',
+                  borderColor: 'divider',
+                  borderRadius: '100px',
+                  px: 2,
+                  py: 0.5,
+                  bgcolor: 'background.paper',
+                  display: 'inline-flex',
+                  mb: 3
+                }}>
+                  <Typography variant="overline" sx={{ fontWeight: 700, letterSpacing: 1.5, color: 'text.secondary', lineHeight: 1 }}>
+                    OUR STORY
+                  </Typography>
+                </Box>
+              )}
+
               <EditableTextMUI
                 value={section.title.content}
                 onSave={(value) => updateSectionContent(section.title.id, value)}
-                variant="h3"
-                sx={{ fontWeight: 700, mb: 3, display: 'block', fontSize: { xs: '2rem', md: '2.5rem' } }}
+                variant="h2"
+                sx={{
+                  fontFamily: 'serif',
+                  fontWeight: 500,
+                  mb: 3,
+                  display: 'block',
+                  fontSize: { xs: '2rem', md: '3rem' }
+                }}
               />
               <EditableTextMUI
                 value={section.desc.content}
                 onSave={(value) => updateSectionContent(section.desc.id, value)}
                 variant="body1"
-                sx={{ color: 'text.secondary', fontSize: '1.125rem', lineHeight: 1.7, display: 'block', whiteSpace: 'pre-wrap' }}
+                sx={{
+                  color: 'text.secondary',
+                  fontSize: '1.125rem',
+                  lineHeight: 1.8,
+                  display: 'block',
+                  whiteSpace: 'pre-wrap'
+                }}
                 multiline
               />
             </Grid>
