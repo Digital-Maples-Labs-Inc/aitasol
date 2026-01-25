@@ -238,6 +238,6 @@ export default function HeaderNavigation() {
           </MenuItem>
         </Box>
       </Drawer>
-    </AppBar >
+    </AppBar>
   );
 }

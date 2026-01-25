@@ -14,6 +14,7 @@ import Features from './home/components/Features';
 import ProcessFlow from './home/components/ProcessFlow';
 import Testimonials from './home/components/Testimonials';
 import AnnouncementBar from './home/components/AnnouncementBar';
+import UniversityStats from './home/components/UniversityStats';
 import FAQ from './home/components/FAQ';
 import Footer from '@/components/Footer';
 import { usePageData } from '@/hooks/usePageData';
@@ -55,6 +56,13 @@ export default function MarketingPage(props: { disableCustomTheme?: boolean }) {
         {isVisible('section-visibility-process-flow') && (
           <>
             <ProcessFlow />
+            <Divider />
+          </>
+        )}
+
+        {isVisible('section-visibility-university-stats') && (
+          <>
+            <UniversityStats />
             <Divider />
           </>
         )}
