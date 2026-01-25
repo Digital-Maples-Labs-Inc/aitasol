@@ -1,8 +1,6 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
-import Typography from '@mui/material/Typography';
-import Stack from '@mui/material/Stack';
 import SchoolIcon from '@mui/icons-material/School';
 import { EditableTextMUI } from '@/components/EditableTextMUI';
 import { usePageData } from '@/hooks/usePageData';
@@ -24,24 +22,6 @@ export default function UniversityStats() {
         type: 'paragraph' as const
     };
 
-    const stats = [
-        {
-            id: 'stat-nationalities',
-            label: 'Student Nationalities',
-            defaultValue: '100+'
-        },
-        {
-            id: 'stat-international',
-            label: 'International Students',
-            defaultValue: '25%'
-        },
-        {
-            id: 'stat-majors',
-            label: 'Different Majors',
-            defaultValue: '20'
-        }
-    ];
-
     return (
         <Box
             sx={{
@@ -51,7 +31,7 @@ export default function UniversityStats() {
         >
             <Container maxWidth="lg">
                 {/* Icon and Title */}
-                <Box sx={{ textAlign: 'center', mb: 6 }}>
+                <Box sx={{ textAlign: 'center' }}>
                     <SchoolIcon
                         sx={{
                             fontSize: 60,
@@ -90,69 +70,6 @@ export default function UniversityStats() {
                         }}
                     />
                 </Box>
-
-                {/* Statistics */}
-                <Stack
-                    direction={{ xs: 'column', sm: 'row' }}
-                    spacing={4}
-                    justifyContent="center"
-                    alignItems="center"
-                >
-                    {stats.map((stat) => {
-                        const statSection = getSection(stat.id) || {
-                            id: stat.id,
-                            content: stat.defaultValue,
-                            type: 'paragraph' as const
-                        };
-
-                        return (
-                            <Box
-                                key={stat.id}
-                                sx={{
-                                    textAlign: 'center',
-                                    p: 4,
-                                    borderRadius: 2,
-                                    minWidth: { xs: '100%', sm: '200px' },
-                                    transition: 'all 0.3s ease',
-                                    '&:hover': {
-                                        transform: 'translateY(-8px)',
-                                        boxShadow: (theme) => `0 8px 24px ${theme.palette.primary.main}40`,
-                                    }
-                                }}
-                            >
-                                <Typography
-                                    variant="caption"
-                                    sx={{
-                                        fontSize: '0.875rem',
-                                        fontWeight: 500,
-                                        color: 'text.secondary',
-                                        textTransform: 'uppercase',
-                                        letterSpacing: '0.05em',
-                                        mb: 2,
-                                        display: 'block'
-                                    }}
-                                >
-                                    {stat.label}
-                                </Typography>
-
-                                <EditableTextMUI
-                                    value={statSection.content}
-                                    onSave={(value) => updateSectionContent(statSection.id, value)}
-                                    variant="h2"
-                                    sx={{
-                                        fontSize: { xs: '3rem', sm: '4rem', md: '5rem' },
-                                        fontWeight: 700,
-                                        color: 'secondary.main',
-                                        lineHeight: 1,
-                                        WebkitTextStroke: '2px transparent',
-                                        WebkitTextFillColor: 'transparent',
-                                        WebkitTextStrokeColor: 'secondary.main',
-                                    }}
-                                />
-                            </Box>
-                        );
-                    })}
-                </Stack>
             </Container>
         </Box>
     );
