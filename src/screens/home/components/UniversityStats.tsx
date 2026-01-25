@@ -18,7 +18,7 @@ export default function UniversityStats() {
 
     const subtitleSection = getSection('university-stats-subtitle') || {
         id: 'university-stats-subtitle',
-        content: 'Education, empowering them to become well-rounded leaders who make a positive impact on the world.',
+        content: 'Guiding students to achieve their academic dreams and unlock opportunities for global education and career success.',
         type: 'paragraph' as const
     };
 
