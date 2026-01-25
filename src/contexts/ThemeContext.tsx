@@ -6,7 +6,7 @@
 
 import React, { createContext, useContext, useEffect, useState, ReactNode } from 'react';
 import { Theme, ThemeColors, Typography, defaultThemeColors, defaultTypography } from '@/types/theme';
-import { getActiveTheme, getThemeById } from '@/services/themeService';
+import { getActiveTheme, getThemeById, saveTheme } from '@/services/themeService';
 
 interface ThemeContextType {
   colors: ThemeColors;
@@ -32,7 +32,7 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
     try {
       setLoading(true);
       const activeTheme = await getActiveTheme();
-      
+
       if (activeTheme) {
         setTheme(activeTheme);
         setColors(activeTheme.colors);
@@ -60,6 +60,44 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
   const refreshTheme = async () => {
     await loadTheme();
   };
+
+  // Migration: Auto-update legacy theme colors to new identity
+  useEffect(() => {
+    const migrateTheme = async () => {
+      // Check if current theme mismatches the new exact Gold (#fdc500)
+      if (theme && theme.colors.primary !== '#fdc500') {
+        console.log('Migrating theme to new Exact Gold/Blue identity...');
+        const updatedColors = {
+          ...theme.colors,
+          ...defaultThemeColors,
+          // Ensure these are explicitly set from defaults
+          primary: '#fdc500',
+          primaryLight: '#ffd500',
+          backgroundTertiary: '#00296b',
+          accent1: '#003f88',
+          accent2: '#00509d',
+          accent3: '#ffd500',
+        };
+        const updatedTheme = { ...theme, colors: updatedColors };
+
+        // Update state immediately
+        setTheme(updatedTheme);
+        setColors(updatedColors);
+
+        // Update in Firestore
+        try {
+          await saveTheme(updatedTheme);
+          console.log('Theme migration successful - Database updated to Gold/Blue');
+        } catch (err) {
+          console.error('Failed to migrate theme:', err);
+        }
+      }
+    };
+
+    if (theme && !loading) {
+      migrateTheme();
+    }
+  }, [theme, loading]);
 
   // Inject Google Fonts for web
   React.useEffect(() => {

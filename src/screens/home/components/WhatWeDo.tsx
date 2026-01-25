@@ -16,7 +16,7 @@ import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';
 import { EditableTextMUI } from '@/components/EditableTextMUI';
 import { usePageData } from '@/hooks/usePageData';
 import CircularProgress from '@mui/material/CircularProgress';
-import { useTheme } from '@mui/material/styles';
+import { useTheme, alpha } from '@mui/material/styles';
 
 const defaultServices = [
   {
@@ -153,15 +153,17 @@ export default function WhatWeDo() {
                     flexDirection: 'column',
                     alignItems: 'flex-start',
                     p: 4,
-                    bgcolor: 'background.paper', // White in light, grey in dark
+                    // Subtle Blue Tint
+                    bgcolor: (theme) => alpha(theme.palette.secondary.main, 0.04),
                     borderRadius: '24px',
                     border: '1px solid',
-                    borderColor: 'divider',
+                    borderColor: (theme) => alpha(theme.palette.secondary.main, 0.15),
                     transition: 'all 0.3s ease',
                     '&:hover': {
                       transform: 'translateY(-5px)',
-                      borderColor: 'primary.main',
-                      boxShadow: (theme) => theme.palette.mode === 'dark' ? '0 10px 40px -10px rgba(0,0,0,0.5)' : '0 10px 40px -10px rgba(0,0,0,0.1)',
+                      borderColor: 'primary.main', // Highlight with Yellow
+                      bgcolor: (theme) => alpha(theme.palette.secondary.main, 0.08),
+                      boxShadow: (theme) => `0 10px 40px -10px ${alpha(theme.palette.primary.main, 0.2)}`,
                     },
                   }}
                 >
@@ -183,8 +185,8 @@ export default function WhatWeDo() {
                     {/* SVG Gradient Definition for Icons */}
                     <svg width="0" height="0">
                       <linearGradient id={'icon-gradient-' + index} x1="100%" y1="100%" x2="0%" y2="0%">
-                        <stop stopColor="#FF8E53" offset="0%" />
-                        <stop stopColor="#FE6B8B" offset="100%" />
+                        <stop stopColor={theme.palette.primary.main} offset="0%" />
+                        <stop stopColor={theme.palette.secondary.main} offset="100%" />
                       </linearGradient>
                     </svg>
                     {service.icon}

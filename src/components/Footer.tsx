@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { alpha } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
 import Divider from '@mui/material/Divider';
@@ -31,11 +32,13 @@ const FooterLink: React.FC<FooterLinkProps> = ({ label, onClick, href }) => {
         component="button"
         onClick={handleClick}
         sx={{
-          color: 'text.secondary',
+          color: 'rgba(255,255,255,0.7)', // Lighter text for dark background
           fontSize: '0.875rem',
           textDecoration: 'none',
+          transition: 'color 0.2s',
           '&:hover': {
-            textDecoration: 'underline',
+            textDecoration: 'none',
+            color: 'primary.main', // Yellow hover
           },
           cursor: 'pointer',
           background: 'none',
@@ -52,11 +55,13 @@ const FooterLink: React.FC<FooterLinkProps> = ({ label, onClick, href }) => {
     <Link
       href={href}
       sx={{
-        color: 'text.secondary',
+        color: 'rgba(255,255,255,0.7)',
         fontSize: '0.875rem',
         textDecoration: 'none',
+        transition: 'color 0.2s',
         '&:hover': {
-          textDecoration: 'underline',
+          textDecoration: 'none',
+          color: 'primary.main',
         },
       }}
     >
@@ -77,12 +82,13 @@ export default function Footer() {
       component="footer"
       sx={(theme) => ({
         px: { xs: 3, sm: 6 },
-        py: { xs: 2.5, sm: 5 },
-        backgroundColor: '#ffffff',
+        py: { xs: 6, sm: 8 }, // Increased vertical padding
+        background: `linear-gradient(135deg, ${theme.palette.secondary.main} 0%, ${theme.palette.secondary.dark} 100%)`, // Deep Blue Gradient
+        color: 'white',
         borderTop: '1px solid',
-        borderColor: 'divider',
+        borderColor: alpha(theme.palette.primary.main, 0.2), // Subtle Yellow border top
         ...theme.applyStyles('dark', {
-          backgroundColor: '#09090b',
+          background: `linear-gradient(135deg, ${theme.palette.secondary.dark} 0%, ${theme.palette.secondary.dark} 100%)`,
         }),
       })}
     >
@@ -124,7 +130,7 @@ export default function Footer() {
           <Typography
             variant="body2"
             sx={{
-              color: 'text.secondary',
+              color: 'rgba(255,255,255,0.5)',
               fontSize: '0.75rem',
             }}
           >
@@ -134,10 +140,11 @@ export default function Footer() {
               target="_blank"
               rel="noopener noreferrer"
               sx={{
-                color: 'text.secondary',
+                color: 'rgba(255,255,255,0.7)',
                 textDecoration: 'none',
                 '&:hover': {
-                  textDecoration: 'underline',
+                  color: 'primary.main',
+                  textDecoration: 'none',
                 },
               }}
             >
@@ -169,7 +176,7 @@ export default function Footer() {
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="GitHub"
-                sx={{ color: 'text.secondary' }}
+                sx={{ color: 'rgba(255,255,255,0.7)', '&:hover': { color: 'primary.main' } }}
               >
                 <GitHubIcon fontSize="small" />
               </IconButton>
@@ -180,7 +187,7 @@ export default function Footer() {
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="X"
-                sx={{ color: 'text.secondary' }}
+                sx={{ color: 'rgba(255,255,255,0.7)', '&:hover': { color: 'primary.main' } }}
               >
                 <TwitterIcon fontSize="small" />
               </IconButton>
@@ -191,14 +198,14 @@ export default function Footer() {
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="LinkedIn"
-                sx={{ color: 'text.secondary' }}
+                sx={{ color: 'rgba(255,255,255,0.7)', '&:hover': { color: 'primary.main' } }}
               >
                 <LinkedInIcon fontSize="small" />
               </IconButton>
               <ColorModeIconDropdown
                 size="small"
                 color="inherit"
-                sx={{ color: 'text.secondary' }}
+                sx={{ color: 'rgba(255,255,255,0.7)' }}
               />
             </Stack>
           </Stack>

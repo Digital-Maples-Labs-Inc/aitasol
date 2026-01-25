@@ -13,6 +13,10 @@ import Menu from '@mui/material/Menu';
 import MenuIcon from '@mui/icons-material/Menu';
 import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
+import GitHubIcon from '@mui/icons-material/GitHub';
+import LinkedInIcon from '@mui/icons-material/LinkedIn';
+import TwitterIcon from '@mui/icons-material/X';
+import Stack from '@mui/material/Stack';
 import { useAuth } from '@/contexts/AuthContext';
 import SelectContent from '@/screens/admin-dashboard/components/SelectContent';
 import SitemarkIcon from './SitemarkIcon';
@@ -25,10 +29,8 @@ const StyledToolbar = styled(Toolbar)(({ theme }) => ({
   borderRadius: `calc(${theme.shape.borderRadius}px + 8px)`,
   backdropFilter: 'blur(24px)',
   border: '1px solid',
-  borderColor: (theme.vars || theme).palette.divider,
-  backgroundColor: theme.vars
-    ? `rgba(${theme.vars.palette.background.defaultChannel} / 0.4)`
-    : alpha(theme.palette.background.default, 0.4),
+  borderColor: alpha(theme.palette.secondary.main, 0.1),
+  background: alpha(theme.palette.primary.main, 0.9), // Subtle Yellow
   boxShadow: (theme.vars || theme).shadows[1],
   padding: '2px 12px',
 }));
@@ -85,176 +87,54 @@ export default function HeaderNavigation() {
     >
       <Container maxWidth="lg">
         <StyledToolbar variant="dense" disableGutters>
-          {/* Mobile: Logo on Left */}
+          {/* LEFT: Logo */}
           <Box
             onClick={() => navigateTo('/')}
             sx={{
               cursor: 'pointer',
-              display: { xs: 'flex', md: 'none' },
+              display: 'flex',
               alignItems: 'center',
-              flexShrink: 0,
-              mr: 'auto',
+              mr: 3,
+              filter: 'drop-shadow(0px 2px 4px rgba(0,0,0,0.25))', // Added shadow for visibility
             }}
           >
             <SitemarkIcon />
           </Box>
 
-          {/* Left Menu Items */}
-          <Box sx={{ display: { xs: 'none', md: 'flex' }, alignItems: 'center', gap: 1, flex: 1, justifyContent: 'flex-end', pr: 4 }}>
-            <Button
-              variant="text"
-              color="info"
-              size="medium"
-              onClick={() => navigateTo('/')}
-              sx={{
-                fontSize: '1rem',
-                fontWeight: 600,
-                textTransform: 'none',
-              }}
-            >
-              Home
-            </Button>
-            <Button
-              variant="text"
-              color="info"
-              size="medium"
-              onClick={() => navigateTo('/about')}
-              sx={{
-                fontSize: '1rem',
-                fontWeight: 600,
-                textTransform: 'none',
-              }}
-            >
-              About
-            </Button>
-            <Button
-              variant="text"
-              color="info"
-              size="medium"
-              onClick={handleServicesMenuOpen}
-              endIcon={<ArrowDropDownIcon />}
-              sx={{
-                fontSize: '1rem',
-                fontWeight: 600,
-                textTransform: 'none',
-              }}
-            >
-              Services
-            </Button>
-            <Menu
-              anchorEl={servicesAnchorEl}
-              open={servicesMenuOpen}
-              onClose={handleServicesMenuClose}
-              MenuListProps={{
-                'aria-labelledby': 'services-button',
-              }}
-            >
-              <MenuItem onClick={() => navigateTo('/services')}>Services Overview</MenuItem>
-              <Divider />
-              <MenuItem onClick={() => navigateTo('/services/program-selection')}>
-                Program and Institution Selection
-              </MenuItem>
-              <MenuItem onClick={() => navigateTo('/services/application-support')}>
-                Application Process Support
-              </MenuItem>
-              <MenuItem onClick={() => navigateTo('/services/admissions-docs')}>
-                Admissions Documentation
-              </MenuItem>
-              <MenuItem onClick={() => navigateTo('/services/scholarships')}>
-                Scholarships & Funding
-              </MenuItem>
-              <MenuItem onClick={() => navigateTo('/services/career-pathway')}>
-                Career Counselling
-              </MenuItem>
-              <MenuItem onClick={() => navigateTo('/services/immigration-support')}>
-                Immigration & Pre-Arrival
-              </MenuItem>
-            </Menu>
+          {/* SPACER */}
+          <Box sx={{ flexGrow: 1 }} />
+
+          {/* RIGHT: Navigation Links (Desktop Only) */}
+          <Box sx={{ display: { xs: 'none', md: 'flex' }, alignItems: 'center', gap: 2 }}>
+            {['Home', 'About', 'Services', 'Testimonials', 'Blog', 'Contact'].map((item) => (
+              <Button
+                key={item}
+                variant="text"
+                onClick={() => navigateTo(item === 'Home' ? '/' : `/${item.toLowerCase()}`)}
+                sx={{
+                  color: 'text.primary', // Dark text for contrast
+                  fontWeight: 600,
+                  fontSize: '0.9rem',
+                  textTransform: 'uppercase',
+                  letterSpacing: '0.05em',
+                  '&:hover': { color: 'white' }, // White on hover against yellow
+                }}
+              >
+                {item}
+              </Button>
+            ))}
           </Box>
 
-          {/* Center Logo - Desktop Only */}
-          <Box
-            onClick={() => navigateTo('/')}
-            sx={{
-              cursor: 'pointer',
-              display: { xs: 'none', md: 'flex' },
-              alignItems: 'center',
-              justifyContent: 'center',
-              flexShrink: 0,
-            }}
-          >
-            <SitemarkIcon />
-          </Box>
-
-          {/* Right Menu Items */}
-          <Box sx={{ display: { xs: 'none', md: 'flex' }, alignItems: 'center', gap: 1, flex: 1, justifyContent: 'flex-start', pl: 4 }}>
-            <Button
-              variant="text"
-              color="info"
-              size="medium"
-              onClick={() => navigateTo('/testimonials')}
-              sx={{
-                fontSize: '1rem',
-                fontWeight: 600,
-                textTransform: 'none',
-              }}
-            >
-              Testimonials
-            </Button>
-            <Button
-              variant="text"
-              color="info"
-              size="medium"
-              onClick={() => navigateTo('/blog')}
-              sx={{
-                fontSize: '1rem',
-                fontWeight: 600,
-                textTransform: 'none',
-              }}
-            >
-              Blog
-            </Button>
-            <Button
-              variant="text"
-              color="info"
-              size="medium"
-              onClick={() => navigateTo('/contact')}
-              sx={{
-                fontSize: '1rem',
-                fontWeight: 600,
-                textTransform: 'none',
-              }}
-            >
-              Contact
-            </Button>
-          </Box>
-
-          {/* Right Side Actions (Editing Mode) - Desktop */}
+          {/* RIGHT Actions (Editing Mode) */}
           {showEditingModeSwitcher && (
-            <Box
-              sx={{
-                display: { xs: 'none', md: 'flex' },
-                gap: 1,
-                alignItems: 'center',
-                ml: 2,
-              }}
-            >
+            <Box sx={{ display: { xs: 'none', md: 'flex' }, ml: 2 }}>
               <SelectContent />
             </Box>
           )}
 
-          {/* Mobile: Menu Button */}
-          <Box
-            sx={{
-              display: { xs: 'flex', md: 'none' },
-              alignItems: 'center',
-            }}
-          >
-            <IconButton
-              aria-label="Menu button"
-              onClick={toggleDrawer(true)}
-              sx={{ padding: '4px' }}
-            >
+          {/* MOBILE: Menu Button */}
+          <Box sx={{ display: { xs: 'flex', md: 'none' }, ml: 'auto' }}>
+            <IconButton aria-label="Menu button" onClick={toggleDrawer(true)}>
               <MenuIcon />
             </IconButton>
           </Box>
@@ -358,6 +238,6 @@ export default function HeaderNavigation() {
           </MenuItem>
         </Box>
       </Drawer>
-    </AppBar>
+    </AppBar >
   );
 }

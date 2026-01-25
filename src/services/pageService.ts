@@ -29,11 +29,11 @@ export const getPageBySlug = async (slug: string): Promise<Page | null> => {
     const pagesRef = collection(db, 'pages');
     const q = query(pagesRef, where('slug', '==', slug), where('published', '==', true));
     const querySnapshot = await getDocs(q);
-    
+
     if (querySnapshot.empty) {
       return null;
     }
-    
+
     const docData = querySnapshot.docs[0].data();
     return {
       id: querySnapshot.docs[0].id,
@@ -59,7 +59,7 @@ export const getAllPages = async (): Promise<Page[]> => {
   try {
     const pagesRef = collection(db, 'pages');
     const querySnapshot = await getDocs(pagesRef);
-    
+
     return querySnapshot.docs.map((doc) => {
       const data = doc.data();
       return {
@@ -95,7 +95,7 @@ export const savePage = async (page: Partial<Page> & { slug: string; title: stri
       updatedAt: serverTimestamp(),
       ...(page.id ? {} : { createdAt: serverTimestamp() }),
     };
-    
+
     if (page.id) {
       // Update existing page
       await updateDoc(doc(db, 'pages', page.id), pageData);
@@ -123,28 +123,28 @@ export const updatePageSection = async (
   try {
     const pageRef = doc(db, 'pages', pageId);
     const pageDoc = await getDoc(pageRef);
-    
+
     if (!pageDoc.exists()) {
       throw new Error('Page not found');
     }
-    
+
     const pageData = pageDoc.data();
     const sections = pageData.sections || [];
     const sectionIndex = sections.findIndex((s: PageSection) => s.id === sectionId);
     const existingSection = sectionIndex >= 0 ? sections[sectionIndex] : null;
-    
+
     // Helper function to clean metadata - only allow strings, numbers, booleans
     const cleanMetadata = (metadata: any): Record<string, any> => {
       if (!metadata || typeof metadata !== 'object' || Array.isArray(metadata)) {
         return {};
       }
-      
+
       const cleaned: Record<string, any> = {};
       for (const [key, value] of Object.entries(metadata)) {
         if (value === null || value === undefined) {
           continue; // Skip null/undefined
         }
-        
+
         // Only allow primitive types
         if (typeof value === 'string' || typeof value === 'number' || typeof value === 'boolean') {
           cleaned[key] = value;
@@ -153,13 +153,13 @@ export const updatePageSection = async (
       }
       return cleaned;
     };
-    
+
     // Merge metadata from existing section and new section, then clean it
     const mergedMetadata = {
       ...(existingSection?.metadata || {}),
       ...(section.metadata || {}),
     };
-    
+
     // Clean the section data to only include valid PageSection properties
     const cleanSection: PageSection = {
       id: sectionId,
@@ -168,7 +168,7 @@ export const updatePageSection = async (
       editable: section.editable !== false,
       metadata: cleanMetadata(mergedMetadata),
     };
-    
+
     if (sectionIndex === -1) {
       // If section not found, create a new one
       sections.push(cleanSection);
@@ -176,7 +176,7 @@ export const updatePageSection = async (
       // Replace the entire section to avoid spreading invalid properties
       sections[sectionIndex] = cleanSection;
     }
-    
+
     await updateDoc(pageRef, {
       sections,
       updatedAt: serverTimestamp(),
@@ -250,25 +250,34 @@ export const updatePageSectionContent = async (
   try {
     const pageRef = doc(db, 'pages', pageId);
     const pageDoc = await getDoc(pageRef);
-    
+
     if (!pageDoc.exists()) {
       throw new Error('Page not found');
     }
-    
+
     const pageData = pageDoc.data();
     const sections = pageData.sections || [];
     const sectionIndex = sections.findIndex((s: PageSection) => s.id === sectionId);
-    
+
     if (sectionIndex === -1) {
-      throw new Error('Section not found');
+      // Section doesn't exist, create it
+      const newSection: PageSection = {
+        id: sectionId,
+        type: 'paragraph', // Default type for text content
+        content,
+        editable: true,
+        metadata: {},
+      };
+      sections.push(newSection);
+    } else {
+      // Section exists, update it
+      sections[sectionIndex] = {
+        ...sections[sectionIndex],
+        content,
+        updatedAt: new Date().toISOString(),
+      };
     }
-    
-    sections[sectionIndex] = { 
-      ...sections[sectionIndex], 
-      content,
-      updatedAt: new Date().toISOString(),
-    };
-    
+
     await updateDoc(pageRef, {
       sections,
       updatedAt: serverTimestamp(),
@@ -292,15 +301,15 @@ export const updatePageSectionImage = async (
   try {
     const pageRef = doc(db, 'pages', pageId);
     const pageDoc = await getDoc(pageRef);
-    
+
     if (!pageDoc.exists()) {
       throw new Error('Page not found');
     }
-    
+
     const pageData = pageDoc.data();
     const sections = pageData.sections || [];
     const sectionIndex = sections.findIndex((s: PageSection) => s.id === sectionId);
-    
+
     if (sectionIndex === -1) {
       // Section doesn't exist, create it
       const newSection: PageSection = {
@@ -316,8 +325,8 @@ export const updatePageSectionImage = async (
       sections.push(newSection);
     } else {
       // Section exists, update it
-      sections[sectionIndex] = { 
-        ...sections[sectionIndex], 
+      sections[sectionIndex] = {
+        ...sections[sectionIndex],
         content: imageUrl,
         metadata: {
           ...sections[sectionIndex].metadata,
@@ -327,7 +336,7 @@ export const updatePageSectionImage = async (
         updatedAt: new Date().toISOString(),
       };
     }
-    
+
     await updateDoc(pageRef, {
       sections,
       updatedAt: serverTimestamp(),

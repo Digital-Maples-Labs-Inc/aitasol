@@ -13,6 +13,7 @@ import Pricing from './home/components/Pricing';
 import Features from './home/components/Features';
 import ProcessFlow from './home/components/ProcessFlow';
 import Testimonials from './home/components/Testimonials';
+import AnnouncementBar from './home/components/AnnouncementBar';
 import FAQ from './home/components/FAQ';
 import Footer from '@/components/Footer';
 import { usePageData } from '@/hooks/usePageData';
@@ -35,6 +36,7 @@ export default function MarketingPage(props: { disableCustomTheme?: boolean }) {
 
       <HeaderNavigation />
       {isVisible('section-visibility-hero-slider') && <HeroSlider />}
+      {isVisible('section-visibility-announcement-bar') && <AnnouncementBar />}
       <div>
         {isVisible('section-visibility-home-intro') && (
           <>

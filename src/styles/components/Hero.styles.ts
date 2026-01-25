@@ -7,14 +7,14 @@ import { StyleSheet, Platform } from 'react-native';
 
 export const createHeroStyles = (colors: any) => {
   const isWeb = Platform.OS === 'web';
-  
+
   return StyleSheet.create({
     hero: {
       minHeight: isWeb ? 600 : 500,
       paddingHorizontal: isWeb ? 64 : 20,
       paddingTop: isWeb ? 28 : 20,
       paddingBottom: isWeb ? 80 : 40,
-      backgroundColor: colors.backgroundTertiary || '#25283b',
+      backgroundColor: '#00296b', // Deepest Blue
       position: 'relative',
     },
     heroContent: {
@@ -33,7 +33,7 @@ export const createHeroStyles = (colors: any) => {
     },
     badgeText: {
       fontSize: 13,
-      color: colors.textPrimary || '#fff',
+      color: '#ffffff',
       fontWeight: '500',
     },
     headingContainer: {
@@ -52,7 +52,7 @@ export const createHeroStyles = (colors: any) => {
       fontSize: isWeb ? 56 : 36,
       lineHeight: isWeb ? 64 : 44,
       fontWeight: '700',
-      color: colors.textPrimary || '#fff',
+      color: '#ffffff',
       textAlign: 'center',
       flex: 1,
       minWidth: 200,
@@ -72,7 +72,7 @@ export const createHeroStyles = (colors: any) => {
     subtitle: {
       fontSize: isWeb ? 18 : 16,
       lineHeight: isWeb ? 28 : 24,
-      color: colors.textSecondary || 'rgba(255,255,255,0.75)',
+      color: 'rgba(255,255,255,0.8)',
       textAlign: 'center',
       marginBottom: 28,
       paddingHorizontal: 20,

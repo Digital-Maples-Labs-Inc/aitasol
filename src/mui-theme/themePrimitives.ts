@@ -30,18 +30,34 @@ const defaultTheme = createTheme();
 
 const customShadows: Shadows = [...defaultTheme.shadows];
 
-// Neon Green Brand Palette (#BFF549)
-export const brand = {
-  50: '#f4fde6',
-  100: '#eefccd',
-  200: '#e1fb9b',
-  300: '#d5fa69',
-  400: '#bff549', // Primary Main
-  500: '#a3d82a',
-  600: '#7cac1a',
-  700: '#568010',
-  800: '#305406',
-  900: '#0a2800',
+// User Selected Palette (Gold/Yellow & Blues)
+export const brandBlue = {
+  50: '#e5f0fa',
+  100: '#bdddf5',
+  200: '#92c9ef',
+  300: '#66b4ea',
+  400: '#3fa0e6',
+  500: '#00509d', // Main Blue
+  600: '#00468c',
+  700: '#003f88', // Darker Blue
+  800: '#003478',
+  900: '#00296b', // Deepest Blue (Background)
+};
+
+// Alias for generic "brand" usage if needed, defaulting to Blue for branding elements
+export const brand = brandBlue;
+
+export const brandYellow = {
+  50: '#fffdf5',
+  100: '#fff6cc',
+  200: '#ffea85',
+  300: '#ffd500', // Bright Yellow
+  400: '#fdc500', // Gold Main
+  500: '#e6b200',
+  600: '#cc9e00',
+  700: '#b38b00',
+  800: '#997700',
+  900: '#806300',
 };
 
 export const gray = {
@@ -106,27 +122,39 @@ export const getDesignTokens = (mode: PaletteMode) => {
     palette: {
       mode,
       primary: {
-        light: brand[200],
-        main: brand[400],
-        dark: brand[700],
-        contrastText: '#000000', // Contrast text on Neon Green should be black
+        light: brandYellow[300],
+        main: brandYellow[400],
+        dark: brandYellow[600],
+        contrastText: '#000000',
         ...(mode === 'dark' && {
           contrastText: '#000000',
-          light: brand[300],
-          main: brand[400],
-          dark: brand[700],
+          light: brandYellow[300],
+          main: brandYellow[400],
+          dark: brandYellow[600],
+        }),
+      },
+      secondary: {
+        light: brandBlue[300],
+        main: brandBlue[500],
+        dark: brandBlue[700],
+        contrastText: '#ffffff',
+        ...(mode === 'dark' && {
+          contrastText: '#ffffff',
+          light: brandBlue[300],
+          main: brandBlue[500],
+          dark: brandBlue[700],
         }),
       },
       info: {
-        light: brand[100],
-        main: brand[300],
-        dark: brand[600],
-        contrastText: gray[50],
+        light: brandBlue[100],
+        main: brandBlue[500],
+        dark: brandBlue[700],
+        contrastText: '#ffffff',
         ...(mode === 'dark' && {
-          contrastText: brand[300],
-          light: brand[500],
-          main: brand[700],
-          dark: brand[900],
+          contrastText: '#ffffff',
+          light: brandBlue[300],
+          main: brandBlue[500],
+          dark: brandBlue[700],
         }),
       },
       warning: {
@@ -166,20 +194,26 @@ export const getDesignTokens = (mode: PaletteMode) => {
       background: {
         default: 'hsl(0, 0%, 99%)',
         paper: 'hsl(220, 35%, 97%)',
-        ...(mode === 'dark' && { default: '#000000', paper: '#09090b' }),
+        ...(mode === 'dark' && {
+          default: brandBlue[900], // Deep Blue Background
+          paper: brandBlue[800],   // Slightly lighter Blue Paper
+        }),
       },
       text: {
         primary: gray[800],
         secondary: gray[600],
         warning: orange[400],
-        ...(mode === 'dark' && { primary: '#FFFFFF', secondary: gray[400] }),
+        ...(mode === 'dark' && {
+          primary: '#FFFFFF',
+          secondary: brandBlue[100], // Light Blue Text
+        }),
       },
       action: {
         hover: alpha(gray[200], 0.2),
         selected: `${alpha(gray[200], 0.3)}`,
         ...(mode === 'dark' && {
-          hover: alpha(gray[600], 0.2),
-          selected: alpha(gray[600], 0.3),
+          hover: alpha(brandBlue[600], 0.2),
+          selected: alpha(brandBlue[600], 0.3),
         }),
       },
     },
@@ -243,16 +277,22 @@ export const colorSchemes = {
   light: {
     palette: {
       primary: {
-        light: brand[200],
-        main: brand[400],
-        dark: brand[700],
+        light: brandYellow[300],
+        main: brandYellow[400],
+        dark: brandYellow[600],
         contrastText: '#000000',
       },
+      secondary: {
+        light: brandBlue[300],
+        main: brandBlue[500],
+        dark: brandBlue[700],
+        contrastText: '#ffffff',
+      },
       info: {
-        light: brand[100],
-        main: brand[300],
-        dark: brand[600],
-        contrastText: gray[50],
+        light: brandBlue[100],
+        main: brandBlue[500],
+        dark: brandBlue[700],
+        contrastText: '#ffffff',
       },
       warning: {
         light: orange[300],
@@ -274,7 +314,7 @@ export const colorSchemes = {
       },
       divider: alpha(gray[300], 0.4),
       background: {
-        default: 'hsl(120, 50%, 98%)',
+        default: '#FFFFFF',
         paper: '#ffffff',
       },
       text: {
@@ -294,15 +334,21 @@ export const colorSchemes = {
     palette: {
       primary: {
         contrastText: '#000000',
-        light: brand[300],
-        main: brand[400],
-        dark: brand[700],
+        light: brandYellow[300],
+        main: brandYellow[400],
+        dark: brandYellow[600],
+      },
+      secondary: {
+        contrastText: '#ffffff',
+        light: brandBlue[300],
+        main: brandBlue[500],
+        dark: brandBlue[700],
       },
       info: {
-        contrastText: brand[300],
-        light: brand[500],
-        main: brand[700],
-        dark: brand[900],
+        contrastText: '#ffffff',
+        light: brandBlue[300],
+        main: brandBlue[500],
+        dark: brandBlue[700],
       },
       warning: {
         light: orange[400],
@@ -324,16 +370,16 @@ export const colorSchemes = {
       },
       divider: alpha(gray[700], 0.6),
       background: {
-        default: '#000000',
-        paper: '#09090b',
+        default: brandBlue[900],
+        paper: brandBlue[800],
       },
       text: {
         primary: '#FFFFFF',
-        secondary: gray[400],
+        secondary: brandBlue[100],
       },
       action: {
-        hover: alpha(gray[600], 0.2),
-        selected: alpha(gray[600], 0.3),
+        hover: alpha(brandBlue[600], 0.2),
+        selected: alpha(brandBlue[600], 0.3),
       },
       baseShadow:
         'hsla(220, 30%, 5%, 0.7) 0px 4px 16px 0px, hsla(220, 25%, 10%, 0.8) 0px 8px 16px -5px',

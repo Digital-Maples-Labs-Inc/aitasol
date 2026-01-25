@@ -30,21 +30,21 @@ const createGradientSVG = (color1: string, color2: string) => {
 const defaultSlides = [
   {
     id: 'hero-slide-1',
-    backgroundImage: createGradientSVG('#0066CC', '#004499'),
+    backgroundImage: createGradientSVG('#00296b', '#003f88'),
     title: 'Welcome to AITAHSOLUTIONS',
     subtitle: 'Your Bridge to Global Learning',
     description: 'Expert educational consultancy services to help you achieve your academic dreams in Canada and beyond.',
   },
   {
     id: 'hero-slide-2',
-    backgroundImage: createGradientSVG('#0099FF', '#0066CC'),
+    backgroundImage: createGradientSVG('#0b192c', '#06101c'),
     title: 'Study in Canada',
     subtitle: 'World-Class Education Awaits',
     description: 'Navigate your path to Canadian universities with our comprehensive support and guidance.',
   },
   {
     id: 'hero-slide-3',
-    backgroundImage: createGradientSVG('#003366', '#001133'),
+    backgroundImage: createGradientSVG('#00296b', '#111111'),
     title: 'Immigration & Study Permits',
     subtitle: 'Your Journey Starts Here',
     description: 'Professional assistance with visa applications and study permit processes.',
@@ -108,9 +108,20 @@ export default function HeroSliderComponent() {
 
       // Only include active slides
       if (slideSection && slideSection.metadata?.active !== false) {
-        const imageUrl = slideSection.metadata?.imageUrl || slideSection.content || '';
-        // Use the image from Firestore, or fallback to default gradient for this specific slide
-        const backgroundImage = imageUrl || (defaultSlide?.backgroundImage) || createGradientSVG('#0066CC', '#004499');
+        const rawImageUrl = slideSection.metadata?.imageUrl || slideSection.content || '';
+
+        // Check if the stored image is an OLD Blue gradient (containing old hex codes)
+        const isOldGradient = rawImageUrl && (
+          rawImageUrl.includes('%230066CC') ||
+          rawImageUrl.includes('%230099FF') ||
+          rawImageUrl.includes('%23003366') ||
+          rawImageUrl.includes('#0066CC') ||
+          rawImageUrl.includes('#0099FF') ||
+          rawImageUrl.includes('#003366')
+        );
+
+        const imageUrl = isOldGradient ? '' : rawImageUrl;
+        const backgroundImage = imageUrl || (defaultSlide?.backgroundImage) || createGradientSVG('#00296b', '#00509d');
 
         // Use Firestore data if available, otherwise use the default for THIS specific slide index
         // Important: Only use default if Firestore data is empty/undefined
@@ -274,8 +285,9 @@ export default function HeroSliderComponent() {
                     right: 0,
                     bottom: 0,
                     background: isSelected
-                      ? 'linear-gradient(to right, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.6) 20%, rgba(0,0,0,0.6) 80%, rgba(0,0,0,0.8) 100%)'
-                      : 'linear-gradient(to right, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.85) 20%, rgba(0,0,0,0.85) 80%, rgba(0,0,0,0.9) 100%)',
+                      // Lighter gradient (0.5 max) for better visibility
+                      ? 'linear-gradient(to right, rgba(0,0,0,0.5) 0%, rgba(0,0,0,0.3) 20%, rgba(0,0,0,0.3) 80%, rgba(0,0,0,0.5) 100%)'
+                      : 'linear-gradient(to right, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0.5) 20%, rgba(0,0,0,0.5) 80%, rgba(0,0,0,0.6) 100%)',
                     zIndex: 1,
                     transition: 'background 0.5s ease-in-out',
                     borderRadius: '1.8rem',
@@ -321,7 +333,8 @@ export default function HeroSliderComponent() {
                     left: 0,
                     right: 0,
                     bottom: 0,
-                    backgroundColor: isSelected ? 'rgba(0, 0, 0, 0.6)' : 'rgba(0, 0, 0, 0.8)',
+                    // Lighter solid overlay (0.35)
+                    backgroundColor: isSelected ? 'rgba(0, 0, 0, 0.35)' : 'rgba(0, 0, 0, 0.65)',
                     zIndex: 2,
                     transition: 'background-color 0.5s ease-in-out',
                   }}
