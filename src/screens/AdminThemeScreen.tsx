@@ -648,6 +648,7 @@ export const AdminThemeScreen: React.FC = () => {
         subtitle: String(updatedSlide.subtitle || ''),
         description: String(updatedSlide.description || ''),
         active: Boolean(updatedSlide.active !== false),
+        linkUrl: String(updatedSlide.linkUrl || ''),
       };
 
       // Clean the section data - only include valid PageSection properties
@@ -1130,6 +1131,23 @@ export const AdminThemeScreen: React.FC = () => {
                 placeholder="Slide description"
                 multiline
                 numberOfLines={4}
+              />
+            </View>
+
+            {/* Slide Link URL */}
+            <View style={{ marginBottom: 12 }}>
+              <Text style={adminThemeScreenStyles.colorLabel}>Link URL (Optional)</Text>
+              <TextInput
+                style={adminThemeScreenStyles.colorTextInput}
+                value={slide.linkUrl}
+                onChangeText={(text) => {
+                  const updatedSlides = [...slides];
+                  updatedSlides[slideIndex] = { ...updatedSlides[slideIndex], linkUrl: text };
+                  setSlides(updatedSlides);
+                }}
+                onBlur={() => handleSaveSlideData(slideIndex, 'linkUrl', slide.linkUrl)}
+                placeholder="https://example.com"
+                autoCapitalize="none"
               />
             </View>
           </View>

@@ -34,6 +34,7 @@ const defaultSlides = [
     title: 'Welcome to AITAHSOLUTIONS',
     subtitle: 'Your Bridge to Global Learning',
     description: 'Expert educational consultancy services to help you achieve your academic dreams in Canada and beyond.',
+    linkUrl: '',
   },
   {
     id: 'hero-slide-2',
@@ -128,6 +129,7 @@ export default function HeroSliderComponent() {
         const title = slideSection.metadata?.title?.trim() || defaultSlide?.title || '';
         const subtitle = slideSection.metadata?.subtitle?.trim() || defaultSlide?.subtitle || '';
         const description = slideSection.metadata?.description?.trim() || defaultSlide?.description || '';
+        const linkUrl = (slideSection.metadata as any)?.linkUrl?.trim() || defaultSlide?.linkUrl || '';
 
         loadedSlides.push({
           id: `hero-slide-${i}`,
@@ -135,6 +137,7 @@ export default function HeroSliderComponent() {
           title,
           subtitle,
           description,
+          linkUrl,
         });
       } else if (!slideSection) {
         // If section doesn't exist but we have a default for this index, include it
@@ -145,6 +148,7 @@ export default function HeroSliderComponent() {
             title: defaultSlide.title,
             subtitle: defaultSlide.subtitle,
             description: defaultSlide.description,
+            linkUrl: defaultSlide.linkUrl,
           });
         }
       }
@@ -275,10 +279,16 @@ export default function HeroSliderComponent() {
                   opacity: slideOpacity,
                   transition: 'opacity 0.5s ease-in-out',
                   borderRadius: 0, // No rounded corners
+                  cursor: slide.linkUrl ? 'pointer' : 'default',
                   overflow: 'hidden',
                   // Soften edges to blend images
                   maskImage: 'linear-gradient(to right, transparent, black 10%, black 90%, transparent)',
                   WebkitMaskImage: 'linear-gradient(to right, transparent, black 10%, black 90%, transparent)',
+                }}
+                onClick={() => {
+                  if (slide.linkUrl) {
+                    window.location.href = slide.linkUrl;
+                  }
                 }}
               >
                 {/* Edit Background Button */}
