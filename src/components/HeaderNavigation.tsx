@@ -82,8 +82,11 @@ export default function HeaderNavigation() {
         top: 0,
         zIndex: 1000,
         boxShadow: 2,
-        bgcolor: 'background.paper',
+        bgcolor: 'transparent',
         backgroundImage: 'none',
+        '& .MuiToolbar-root': {
+          bgcolor: 'rgba(255, 255, 255, 0.95)',
+        }
       }}
     >
 
