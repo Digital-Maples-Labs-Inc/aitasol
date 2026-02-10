@@ -28,6 +28,7 @@ import { adminThemeScreenStyles } from '@/styles/screens/AdminThemeScreen.styles
 import { usePageData } from '@/hooks/usePageData';
 import { PageSection } from '@/types';
 import { uploadImage, compressImage } from '@/services/storageService';
+import { getPopupSettings, savePopupSettings, PopupSettings } from '@/services/settingsService';
 
 interface ColorInputProps {
   label: string;
@@ -125,12 +126,30 @@ export const AdminThemeScreen: React.FC = () => {
   const [logoUploading, setLogoUploading] = useState(false);
   const [slides, setSlides] = useState<any[]>([]);
   const [slidesLoading, setSlidesLoading] = useState(false);
+  const [popupSettings, setPopupSettings] = useState<PopupSettings>({
+    imageUrl: '',
+    linkUrl: 'https://us06web.zoom.us/meeting/register/NjjjD9TGQOepHvf70xGoFA',
+    isActive: false,
+  });
+  const [popupLoading, setPopupLoading] = useState(false);
 
   useRequireAuth('admin');
 
   useEffect(() => {
     loadThemes();
+    loadPopupSettings();
   }, []);
+
+  const loadPopupSettings = async () => {
+    try {
+      const settings = await getPopupSettings();
+      if (settings) {
+        setPopupSettings(settings);
+      }
+    } catch (error) {
+      console.error('Error loading popup settings:', error);
+    }
+  };
 
   // Default slide data matching the HeroSlider component
   const defaultSlides = [
@@ -173,17 +192,17 @@ export const AdminThemeScreen: React.FC = () => {
 
   useEffect(() => {
     if (!homePage || !homePage.sections) return;
-    
+
     const logoSection = homePage.sections.find((s) => s.id === 'site-logo');
     const currentLogoUrl = logoSection?.metadata?.imageUrl || logoSection?.content || '';
     setLogoUrl(currentLogoUrl);
-    
+
     // Load slides from homePage sections
     const loadedSlides = [];
     for (let i = 1; i <= 5; i++) {
       const slideSection = homePage.sections.find((s) => s.id === `hero-slide-${i}`);
       const defaultSlide = defaultSlides[i - 1];
-      
+
       if (slideSection) {
         // Use data from Firestore, but fallback to defaults if fields are empty
         loadedSlides.push({
@@ -213,12 +232,12 @@ export const AdminThemeScreen: React.FC = () => {
 
   const loadSlides = () => {
     if (!homePage?.sections) return;
-    
+
     const loadedSlides = [];
     for (let i = 1; i <= 5; i++) {
       const slideSection = homePage.sections.find((s) => s.id === `hero-slide-${i}`);
       const defaultSlide = defaultSlides[i - 1];
-      
+
       if (slideSection) {
         // Use data from Firestore, but fallback to defaults if fields are empty
         loadedSlides.push({
@@ -250,7 +269,7 @@ export const AdminThemeScreen: React.FC = () => {
     try {
       const themesData = await getAllThemes();
       setThemes(themesData);
-      
+
       // If no themes exist, create default
       if (themesData.length === 0) {
         await createDefaultTheme();
@@ -311,7 +330,7 @@ export const AdminThemeScreen: React.FC = () => {
       await saveTheme(themeData);
       await loadThemes();
       await refreshTheme();
-      
+
       Alert.alert('Success', 'Theme saved successfully!');
       setEditingTheme(null);
     } catch (error: any) {
@@ -322,14 +341,14 @@ export const AdminThemeScreen: React.FC = () => {
         userRole: user?.role,
         userUid: user?.uid,
       });
-      
+
       const errorMessage = error?.message || 'Failed to save theme';
       let detailedMessage = errorMessage;
-      
+
       if (error?.code === 'permission-denied') {
         detailedMessage = `Permission denied.\n\nPlease ensure:\n1. You are logged in as admin (current role: ${user?.role || 'unknown'})\n2. Your user document exists in Firestore with role: "admin"\n3. Try signing out and signing back in to refresh your token\n4. Check browser console for more details`;
       }
-      
+
       Alert.alert('Error', detailedMessage);
     } finally {
       setSaving(false);
@@ -364,7 +383,7 @@ export const AdminThemeScreen: React.FC = () => {
     const input = document.createElement('input');
     input.type = 'file';
     input.accept = 'image/*';
-    
+
     input.onchange = async (e: any) => {
       const file = e.target.files?.[0];
       if (!file) return;
@@ -379,11 +398,11 @@ export const AdminThemeScreen: React.FC = () => {
       try {
         // Compress the image before uploading
         const compressedBlob = await compressImage(file, 800, 400, 0.9);
-        
+
         // Generate a unique filename
         const fileExtension = file.name.split('.').pop() || 'png';
         const fileName = `site-logo-${Date.now()}.${fileExtension}`;
-        
+
         console.log('Uploading logo to Firebase Storage:', {
           fileName,
           folder: 'logos',
@@ -391,29 +410,29 @@ export const AdminThemeScreen: React.FC = () => {
           userId: user.uid,
           role: user.role,
         });
-        
+
         // Upload to Firebase Storage
         const downloadURL = await uploadImage(compressedBlob, fileName, 'logos');
-        
+
         console.log('Logo uploaded successfully:', downloadURL);
-        
+
         // Save the Firebase Storage URL to Firestore
         await handleSaveLogo(downloadURL);
       } catch (error: any) {
         console.error('Error uploading logo:', error);
         let errorMessage = 'Unknown error';
-        
+
         if (error?.code === 'storage/unauthorized') {
           errorMessage = 'Permission denied. Please ensure:\n1. You are logged in as admin/editor\n2. Your user document exists in Firestore with the correct role\n3. Try signing out and back in';
         } else if (error?.message) {
           errorMessage = error.message;
         }
-        
+
         Alert.alert('Error', `Failed to upload logo: ${errorMessage}`);
         setLogoUploading(false);
       }
     };
-    
+
     input.click();
   };
 
@@ -431,7 +450,7 @@ export const AdminThemeScreen: React.FC = () => {
         type: 'image' as const,
         metadata: { imageUrl: '', imageAlt: 'AITAHSOLUTIONS Educational Consultancy Logo' },
       };
-      
+
       await updateSectionImage(logoSection.id, url, logoSection.metadata?.imageAlt);
       setLogoUrl(url);
       Alert.alert('Success', 'Logo updated successfully!');
@@ -452,7 +471,7 @@ export const AdminThemeScreen: React.FC = () => {
     const input = document.createElement('input');
     input.type = 'file';
     input.accept = 'image/*';
-    
+
     input.onchange = async (e: any) => {
       const file = e.target.files?.[0];
       if (!file) return;
@@ -483,12 +502,12 @@ export const AdminThemeScreen: React.FC = () => {
       try {
         // Compress the image before uploading
         const compressedBlob = await compressImage(file, 1920, 1080, 0.8);
-        
+
         // Generate a unique filename
         const slide = slides[slideIndex];
         const fileExtension = file.name.split('.').pop() || 'jpg';
         const fileName = `hero-slide-${slide.index}-${Date.now()}.${fileExtension}`;
-        
+
         console.log('Uploading image to Firebase Storage:', {
           fileName,
           folder: 'hero-slider',
@@ -497,12 +516,12 @@ export const AdminThemeScreen: React.FC = () => {
           role: user.role,
           blobSize: compressedBlob.size,
         });
-        
+
         // Upload to Firebase Storage
         const downloadURL = await uploadImage(compressedBlob, fileName, 'hero-slider');
-        
+
         console.log('Image uploaded successfully to Firebase Storage:', downloadURL);
-        
+
         // Save the Firebase Storage URL to Firestore
         console.log('Calling handleSaveSlideImage with URL:', downloadURL);
         await handleSaveSlideImage(slideIndex, downloadURL);
@@ -510,7 +529,7 @@ export const AdminThemeScreen: React.FC = () => {
       } catch (error: any) {
         console.error('Error uploading slide image:', error);
         let errorMessage = 'Unknown error';
-        
+
         if (error?.code === 'storage/unauthorized') {
           errorMessage = `Permission denied (storage/unauthorized).\n\nPlease verify:\n1. You are logged in as ${user?.role || 'unknown'}\n2. Your user document exists in Firestore at /users/${user?.uid}\n3. Your user document has role: "admin" or "editor"\n4. Try signing out and back in to refresh your token\n\nCheck the browser console for more details.`;
         } else if (error?.code === 'storage/object-not-found') {
@@ -518,12 +537,12 @@ export const AdminThemeScreen: React.FC = () => {
         } else if (error?.message) {
           errorMessage = error.message;
         }
-        
+
         Alert.alert('Error', `Failed to upload image: ${errorMessage}`);
         setSlidesLoading(false);
       }
     };
-    
+
     input.click();
   };
 
@@ -546,13 +565,13 @@ export const AdminThemeScreen: React.FC = () => {
         type: 'image' as const,
         metadata: { imageUrl: '', title: '', subtitle: '', description: '', active: true },
       };
-      
+
       // Update the slide with new image and ensure it's active
       const updatedSlide = { ...slide, imageUrl, active: true }; // Auto-activate when image is uploaded
       const updatedSlides = [...slides];
       updatedSlides[slideIndex] = updatedSlide;
       setSlides(updatedSlides);
-      
+
       // Prepare metadata - only include valid Firestore-compatible types
       const updatedMetadata: Record<string, any> = {
         imageUrl: String(imageUrl || ''),
@@ -561,33 +580,33 @@ export const AdminThemeScreen: React.FC = () => {
         description: String(updatedSlide.description || slideSection.metadata?.description || ''),
         active: Boolean(true), // Auto-activate slide when image is uploaded
       };
-      
+
       // Clean the section data - only include valid PageSection properties
       const cleanSection: Partial<PageSection> = {
         id: slide.id,
         type: slideSection.type || 'image',
         content: String(imageUrl || ''),
-        editable: slideSection.editable !== false,
+        editable: (slideSection as any).editable !== false,
         metadata: updatedMetadata,
       };
-      
+
       console.log('Saving slide data to Firestore:', {
         slideId: slide.id,
         imageUrl,
         metadata: updatedMetadata,
         cleanSection,
       });
-      
+
       // Update the section with new image and metadata
       await updateSection(slide.id, cleanSection);
-      
+
       console.log('Slide data saved to Firestore successfully');
-      
+
       // Reload slides from Firestore to ensure sync (but don't wait for it)
       setTimeout(() => {
         loadSlides();
       }, 500);
-      
+
       Alert.alert('Success', 'Slide image saved successfully! The slide is now active and will appear on the website. Refresh the page to see it in the hero slider.');
     } catch (error: any) {
       console.error('Error saving slide image to Firestore:', error);
@@ -615,34 +634,34 @@ export const AdminThemeScreen: React.FC = () => {
         type: 'image' as const,
         metadata: {},
       };
-      
+
       // Update the slide data
       const updatedSlide = { ...slide, [field]: value };
       const updatedSlides = [...slides];
       updatedSlides[slideIndex] = updatedSlide;
       setSlides(updatedSlides);
-      
+
       // Prepare metadata - only include valid Firestore-compatible types
       const updatedMetadata: Record<string, any> = {
-        imageUrl: String(updatedSlide.imageUrl || slideSection.metadata?.imageUrl || ''),
+        imageUrl: String(updatedSlide.imageUrl || (slideSection.metadata as any)?.imageUrl || ''),
         title: String(updatedSlide.title || ''),
         subtitle: String(updatedSlide.subtitle || ''),
         description: String(updatedSlide.description || ''),
         active: Boolean(updatedSlide.active !== false),
       };
-      
+
       // Clean the section data - only include valid PageSection properties
       const cleanSection: Partial<PageSection> = {
         id: slide.id,
         type: slideSection.type || 'image',
         content: String(updatedSlide.imageUrl || slideSection.content || ''),
-        editable: slideSection.editable !== false,
+        editable: (slideSection as any).editable !== false,
         metadata: updatedMetadata,
       };
-      
+
       // Update the section with new metadata
       await updateSection(slide.id, cleanSection);
-      
+
       Alert.alert('Success', 'Slide updated successfully!');
     } catch (error) {
       console.error('Error saving slide data:', error);
@@ -651,6 +670,66 @@ export const AdminThemeScreen: React.FC = () => {
       loadSlides();
     } finally {
       setSlidesLoading(false);
+    }
+  };
+
+  const handlePopupImageUpload = async () => {
+    if (typeof document === 'undefined') {
+      Alert.alert('Error', 'File upload is only available on web');
+      return;
+    }
+
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = 'image/*';
+
+    input.onchange = async (e: any) => {
+      const file = e.target.files?.[0];
+      if (!file) return;
+
+      if (!user) {
+        Alert.alert('Error', 'You must be logged in to upload images.');
+        return;
+      }
+
+      setPopupLoading(true);
+      try {
+        const compressedBlob = await compressImage(file, 800, 800, 0.8);
+        const fileExtension = file.name.split('.').pop() || 'jpg';
+        const fileName = `popup-advert-${Date.now()}.${fileExtension}`;
+
+        console.log('Uploading popup image:', fileName);
+        const downloadURL = await uploadImage(compressedBlob, fileName, 'popups');
+
+        const newSettings = { ...popupSettings, imageUrl: downloadURL };
+        setPopupSettings(newSettings);
+
+        // Auto-save when image is uploaded
+        await savePopupSettings(newSettings);
+
+        Alert.alert('Success', 'Popup image uploaded successfully!');
+      } catch (error: any) {
+        console.error('Error uploading popup image:', error);
+        Alert.alert('Error', 'Failed to upload image.');
+      } finally {
+        setPopupLoading(false);
+      }
+    };
+
+    input.click();
+  };
+
+  const handleSavePopupSettings = async (settings: PopupSettings) => {
+    setPopupLoading(true);
+    try {
+      await savePopupSettings(settings);
+      setPopupSettings(settings); // Update local state
+      Alert.alert('Success', 'Popup settings saved successfully!');
+    } catch (error) {
+      console.error('Error saving popup settings:', error);
+      Alert.alert('Error', 'Failed to save settings.');
+    } finally {
+      setPopupLoading(false);
     }
   };
 
@@ -680,7 +759,7 @@ export const AdminThemeScreen: React.FC = () => {
         <Text style={[adminThemeScreenStyles.colorLabel, { marginBottom: 16 }]}>
           Upload or enter the URL for your website logo. This logo will appear in the header and footer.
         </Text>
-        
+
         {logoUrl ? (
           <View style={{ marginBottom: 16, alignItems: 'center' }}>
             <Image
@@ -735,13 +814,108 @@ export const AdminThemeScreen: React.FC = () => {
         </View>
       </View>
 
+      {/* Popup Advert Management Section */}
+      <View style={adminThemeScreenStyles.editSection}>
+        <Text style={adminThemeScreenStyles.sectionTitle}>Popup Advert Management</Text>
+        <Text style={[adminThemeScreenStyles.colorLabel, { marginBottom: 16 }]}>
+          Manage the popup overlay advertisement. Upload an image and set a link.
+        </Text>
+
+        <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16 }}>
+          <Text style={{ fontSize: 16, fontWeight: '600' }}>Active Status</Text>
+          <TouchableOpacity
+            style={[
+              {
+                paddingHorizontal: 16,
+                paddingVertical: 8,
+                borderRadius: 4,
+                backgroundColor: popupSettings.isActive ? '#4CAF50' : '#9E9E9E',
+              },
+            ]}
+            onPress={() => handleSavePopupSettings({ ...popupSettings, isActive: !popupSettings.isActive })}
+            disabled={popupLoading}
+          >
+            <Text style={{ color: '#fff', fontWeight: '600' }}>
+              {popupSettings.isActive ? 'Active' : 'Inactive'}
+            </Text>
+          </TouchableOpacity>
+        </View>
+
+        {popupSettings.imageUrl ? (
+          <View style={{ marginBottom: 16, alignItems: 'center' }}>
+            <Image
+              source={{ uri: popupSettings.imageUrl }}
+              resizeMode="contain"
+              style={{
+                width: 200,
+                height: 200,
+                borderWidth: 1,
+                borderColor: '#ddd',
+                borderRadius: 8,
+                backgroundColor: '#f5f5f5',
+              }}
+            />
+          </View>
+        ) : null}
+
+        <View style={adminThemeScreenStyles.colorInput}>
+          <Text style={adminThemeScreenStyles.colorLabel}>Image URL</Text>
+          <TextInput
+            style={adminThemeScreenStyles.colorTextInput}
+            value={popupSettings.imageUrl}
+            onChangeText={(text) => setPopupSettings({ ...popupSettings, imageUrl: text })}
+            placeholder="https://example.com/image.png"
+            autoCapitalize="none"
+          />
+        </View>
+
+        <View style={adminThemeScreenStyles.colorInput}>
+          <Text style={adminThemeScreenStyles.colorLabel}>Link URL</Text>
+          <TextInput
+            style={adminThemeScreenStyles.colorTextInput}
+            value={popupSettings.linkUrl}
+            onChangeText={(text) => {
+              const sanitizedText = text.replace('https://google.com', '');
+              setPopupSettings({ ...popupSettings, linkUrl: sanitizedText });
+            }}
+            placeholder="https://example.com/page"
+            autoCapitalize="none"
+          />
+        </View>
+
+        <View style={{ flexDirection: 'row', gap: 12, marginTop: 12 }}>
+          <TouchableOpacity
+            style={[adminThemeScreenStyles.button, adminThemeScreenStyles.saveButton, popupLoading && adminThemeScreenStyles.buttonDisabled]}
+            onPress={handlePopupImageUpload}
+            disabled={popupLoading}
+          >
+            {popupLoading ? (
+              <ActivityIndicator color="#fff" />
+            ) : (
+              <Text style={adminThemeScreenStyles.saveButtonText}>Upload Image</Text>
+            )}
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={[adminThemeScreenStyles.button, adminThemeScreenStyles.saveButton, popupLoading && adminThemeScreenStyles.buttonDisabled]}
+            onPress={() => handleSavePopupSettings(popupSettings)}
+            disabled={popupLoading}
+          >
+            {popupLoading ? (
+              <ActivityIndicator color="#fff" />
+            ) : (
+              <Text style={adminThemeScreenStyles.saveButtonText}>Save Settings</Text>
+            )}
+          </TouchableOpacity>
+        </View>
+      </View>
+
       {/* Hero Slider Management Section */}
       <View style={adminThemeScreenStyles.editSection}>
         <Text style={adminThemeScreenStyles.sectionTitle}>Hero Slider Management</Text>
         <Text style={[adminThemeScreenStyles.colorLabel, { marginBottom: 16 }]}>
           Manage the hero slider slides. Upload images, edit content, and activate or deactivate slides.
         </Text>
-        
+
         {slides.map((slide, slideIndex) => (
           <View
             key={slide.id}
@@ -996,363 +1170,363 @@ export const AdminThemeScreen: React.FC = () => {
           </View>
 
           {activeTab === 'colors' ? (
-          <ScrollView style={adminThemeScreenStyles.colorsSection}>
-            <Text style={adminThemeScreenStyles.subsectionTitle}>Primary Colors</Text>
-            <ColorInput
-              label="Primary"
-              value={themeColors.primary}
-              onChange={(val) =>
-                setThemeColors({ ...themeColors, primary: val })
-              }
-            />
-            <ColorInput
-              label="Primary Light"
-              value={themeColors.primaryLight}
-              onChange={(val) =>
-                setThemeColors({ ...themeColors, primaryLight: val })
-              }
-            />
-            <ColorInput
-              label="Primary Dark"
-              value={themeColors.primaryDark}
-              onChange={(val) =>
-                setThemeColors({ ...themeColors, primaryDark: val })
-              }
-            />
-
-            <Text style={adminThemeScreenStyles.subsectionTitle}>Background Colors</Text>
-            <ColorInput
-              label="Background"
-              value={themeColors.background}
-              onChange={(val) =>
-                setThemeColors({ ...themeColors, background: val })
-              }
-            />
-            <ColorInput
-              label="Background Secondary"
-              value={themeColors.backgroundSecondary}
-              onChange={(val) =>
-                setThemeColors({ ...themeColors, backgroundSecondary: val })
-              }
-            />
-            <ColorInput
-              label="Background Tertiary"
-              value={themeColors.backgroundTertiary}
-              onChange={(val) =>
-                setThemeColors({ ...themeColors, backgroundTertiary: val })
-              }
-            />
-
-            <Text style={adminThemeScreenStyles.subsectionTitle}>Text Colors</Text>
-            <ColorInput
-              label="Text Primary"
-              value={themeColors.textPrimary}
-              onChange={(val) =>
-                setThemeColors({ ...themeColors, textPrimary: val })
-              }
-            />
-            <ColorInput
-              label="Text Secondary"
-              value={themeColors.textSecondary}
-              onChange={(val) =>
-                setThemeColors({ ...themeColors, textSecondary: val })
-              }
-            />
-            <ColorInput
-              label="Text Tertiary"
-              value={themeColors.textTertiary}
-              onChange={(val) =>
-                setThemeColors({ ...themeColors, textTertiary: val })
-              }
-            />
-
-            <Text style={adminThemeScreenStyles.subsectionTitle}>Accent Colors</Text>
-            <ColorInput
-              label="Accent 1"
-              value={themeColors.accent1}
-              onChange={(val) =>
-                setThemeColors({ ...themeColors, accent1: val })
-              }
-            />
-            <ColorInput
-              label="Accent 2"
-              value={themeColors.accent2}
-              onChange={(val) =>
-                setThemeColors({ ...themeColors, accent2: val })
-              }
-            />
-            <ColorInput
-              label="Accent 3"
-              value={themeColors.accent3}
-              onChange={(val) =>
-                setThemeColors({ ...themeColors, accent3: val })
-              }
-            />
-
-            <Text style={adminThemeScreenStyles.subsectionTitle}>UI Elements</Text>
-            <ColorInput
-              label="Border"
-              value={themeColors.border}
-              onChange={(val) =>
-                setThemeColors({ ...themeColors, border: val })
-              }
-            />
-            <ColorInput
-              label="Border Light"
-              value={themeColors.borderLight}
-              onChange={(val) =>
-                setThemeColors({ ...themeColors, borderLight: val })
-              }
-            />
-            <ColorInput
-              label="Shadow"
-              value={themeColors.shadow}
-              onChange={(val) =>
-                setThemeColors({ ...themeColors, shadow: val })
-              }
-            />
-
-            <Text style={adminThemeScreenStyles.subsectionTitle}>Status Colors</Text>
-            <ColorInput
-              label="Success"
-              value={themeColors.success}
-              onChange={(val) =>
-                setThemeColors({ ...themeColors, success: val })
-              }
-            />
-            <ColorInput
-              label="Warning"
-              value={themeColors.warning}
-              onChange={(val) =>
-                setThemeColors({ ...themeColors, warning: val })
-              }
-            />
-            <ColorInput
-              label="Error"
-              value={themeColors.error}
-              onChange={(val) =>
-                setThemeColors({ ...themeColors, error: val })
-              }
-            />
-            <ColorInput
-              label="Info"
-              value={themeColors.info}
-              onChange={(val) =>
-                setThemeColors({ ...themeColors, info: val })
-              }
-            />
-          </ScrollView>
-          ) : (
-          <ScrollView style={adminThemeScreenStyles.colorsSection}>
-            <Text style={adminThemeScreenStyles.subsectionTitle}>Font Family</Text>
-            <View style={adminThemeScreenStyles.colorInput}>
-              <Text style={adminThemeScreenStyles.colorLabel}>Font Family</Text>
-              <TextInput
-                style={adminThemeScreenStyles.colorTextInput}
-                value={themeTypography.fontFamily}
-                onChangeText={(val) =>
-                  setThemeTypography({ ...themeTypography, fontFamily: val })
+            <ScrollView style={adminThemeScreenStyles.colorsSection}>
+              <Text style={adminThemeScreenStyles.subsectionTitle}>Primary Colors</Text>
+              <ColorInput
+                label="Primary"
+                value={themeColors.primary}
+                onChange={(val) =>
+                  setThemeColors({ ...themeColors, primary: val })
                 }
-                placeholder="Inter, sans-serif"
               />
-            </View>
+              <ColorInput
+                label="Primary Light"
+                value={themeColors.primaryLight}
+                onChange={(val) =>
+                  setThemeColors({ ...themeColors, primaryLight: val })
+                }
+              />
+              <ColorInput
+                label="Primary Dark"
+                value={themeColors.primaryDark}
+                onChange={(val) =>
+                  setThemeColors({ ...themeColors, primaryDark: val })
+                }
+              />
 
-            <Text style={adminThemeScreenStyles.subsectionTitle}>Heading Styles</Text>
-            <TypographyInput
-              label="H1 - Heading 1"
-              fontSize={themeTypography.h1.fontSize}
-              lineHeight={themeTypography.h1.lineHeight}
-              fontWeight={themeTypography.h1.fontWeight}
-              onFontSizeChange={(val) =>
-                setThemeTypography({
-                  ...themeTypography,
-                  h1: { ...themeTypography.h1, fontSize: val },
-                })
-              }
-              onLineHeightChange={(val) =>
-                setThemeTypography({
-                  ...themeTypography,
-                  h1: { ...themeTypography.h1, lineHeight: val },
-                })
-              }
-              onFontWeightChange={(val) =>
-                setThemeTypography({
-                  ...themeTypography,
-                  h1: { ...themeTypography.h1, fontWeight: val },
-                })
-              }
-            />
-            <TypographyInput
-              label="H2 - Heading 2"
-              fontSize={themeTypography.h2.fontSize}
-              lineHeight={themeTypography.h2.lineHeight}
-              fontWeight={themeTypography.h2.fontWeight}
-              onFontSizeChange={(val) =>
-                setThemeTypography({
-                  ...themeTypography,
-                  h2: { ...themeTypography.h2, fontSize: val },
-                })
-              }
-              onLineHeightChange={(val) =>
-                setThemeTypography({
-                  ...themeTypography,
-                  h2: { ...themeTypography.h2, lineHeight: val },
-                })
-              }
-              onFontWeightChange={(val) =>
-                setThemeTypography({
-                  ...themeTypography,
-                  h2: { ...themeTypography.h2, fontWeight: val },
-                })
-              }
-            />
-            <TypographyInput
-              label="H3 - Heading 3"
-              fontSize={themeTypography.h3.fontSize}
-              lineHeight={themeTypography.h3.lineHeight}
-              fontWeight={themeTypography.h3.fontWeight}
-              onFontSizeChange={(val) =>
-                setThemeTypography({
-                  ...themeTypography,
-                  h3: { ...themeTypography.h3, fontSize: val },
-                })
-              }
-              onLineHeightChange={(val) =>
-                setThemeTypography({
-                  ...themeTypography,
-                  h3: { ...themeTypography.h3, lineHeight: val },
-                })
-              }
-              onFontWeightChange={(val) =>
-                setThemeTypography({
-                  ...themeTypography,
-                  h3: { ...themeTypography.h3, fontWeight: val },
-                })
-              }
-            />
-            <TypographyInput
-              label="H4 - Heading 4"
-              fontSize={themeTypography.h4.fontSize}
-              lineHeight={themeTypography.h4.lineHeight}
-              fontWeight={themeTypography.h4.fontWeight}
-              onFontSizeChange={(val) =>
-                setThemeTypography({
-                  ...themeTypography,
-                  h4: { ...themeTypography.h4, fontSize: val },
-                })
-              }
-              onLineHeightChange={(val) =>
-                setThemeTypography({
-                  ...themeTypography,
-                  h4: { ...themeTypography.h4, lineHeight: val },
-                })
-              }
-              onFontWeightChange={(val) =>
-                setThemeTypography({
-                  ...themeTypography,
-                  h4: { ...themeTypography.h4, fontWeight: val },
-                })
-              }
-            />
+              <Text style={adminThemeScreenStyles.subsectionTitle}>Background Colors</Text>
+              <ColorInput
+                label="Background"
+                value={themeColors.background}
+                onChange={(val) =>
+                  setThemeColors({ ...themeColors, background: val })
+                }
+              />
+              <ColorInput
+                label="Background Secondary"
+                value={themeColors.backgroundSecondary}
+                onChange={(val) =>
+                  setThemeColors({ ...themeColors, backgroundSecondary: val })
+                }
+              />
+              <ColorInput
+                label="Background Tertiary"
+                value={themeColors.backgroundTertiary}
+                onChange={(val) =>
+                  setThemeColors({ ...themeColors, backgroundTertiary: val })
+                }
+              />
 
-            <Text style={adminThemeScreenStyles.subsectionTitle}>Text Styles</Text>
-            <TypographyInput
-              label="Body"
-              fontSize={themeTypography.body.fontSize}
-              lineHeight={themeTypography.body.lineHeight}
-              fontWeight={themeTypography.body.fontWeight}
-              onFontSizeChange={(val) =>
-                setThemeTypography({
-                  ...themeTypography,
-                  body: { ...themeTypography.body, fontSize: val },
-                })
-              }
-              onLineHeightChange={(val) =>
-                setThemeTypography({
-                  ...themeTypography,
-                  body: { ...themeTypography.body, lineHeight: val },
-                })
-              }
-              onFontWeightChange={(val) =>
-                setThemeTypography({
-                  ...themeTypography,
-                  body: { ...themeTypography.body, fontWeight: val },
-                })
-              }
-            />
-            <TypographyInput
-              label="Quotes"
-              fontSize={themeTypography.quotes.fontSize}
-              lineHeight={themeTypography.quotes.lineHeight}
-              fontWeight={themeTypography.quotes.fontWeight}
-              onFontSizeChange={(val) =>
-                setThemeTypography({
-                  ...themeTypography,
-                  quotes: { ...themeTypography.quotes, fontSize: val },
-                })
-              }
-              onLineHeightChange={(val) =>
-                setThemeTypography({
-                  ...themeTypography,
-                  quotes: { ...themeTypography.quotes, lineHeight: val },
-                })
-              }
-              onFontWeightChange={(val) =>
-                setThemeTypography({
-                  ...themeTypography,
-                  quotes: { ...themeTypography.quotes, fontWeight: val },
-                })
-              }
-            />
-            <TypographyInput
-              label="Subtext"
-              fontSize={themeTypography.subtext.fontSize}
-              lineHeight={themeTypography.subtext.lineHeight}
-              fontWeight={themeTypography.subtext.fontWeight}
-              onFontSizeChange={(val) =>
-                setThemeTypography({
-                  ...themeTypography,
-                  subtext: { ...themeTypography.subtext, fontSize: val },
-                })
-              }
-              onLineHeightChange={(val) =>
-                setThemeTypography({
-                  ...themeTypography,
-                  subtext: { ...themeTypography.subtext, lineHeight: val },
-                })
-              }
-              onFontWeightChange={(val) =>
-                setThemeTypography({
-                  ...themeTypography,
-                  subtext: { ...themeTypography.subtext, fontWeight: val },
-                })
-              }
-            />
-            <TypographyInput
-              label="Span"
-              fontSize={themeTypography.span.fontSize}
-              lineHeight={themeTypography.span.lineHeight}
-              fontWeight={themeTypography.span.fontWeight}
-              onFontSizeChange={(val) =>
-                setThemeTypography({
-                  ...themeTypography,
-                  span: { ...themeTypography.span, fontSize: val },
-                })
-              }
-              onLineHeightChange={(val) =>
-                setThemeTypography({
-                  ...themeTypography,
-                  span: { ...themeTypography.span, lineHeight: val },
-                })
-              }
-              onFontWeightChange={(val) =>
-                setThemeTypography({
-                  ...themeTypography,
-                  span: { ...themeTypography.span, fontWeight: val },
-                })
-              }
-            />
-          </ScrollView>
+              <Text style={adminThemeScreenStyles.subsectionTitle}>Text Colors</Text>
+              <ColorInput
+                label="Text Primary"
+                value={themeColors.textPrimary}
+                onChange={(val) =>
+                  setThemeColors({ ...themeColors, textPrimary: val })
+                }
+              />
+              <ColorInput
+                label="Text Secondary"
+                value={themeColors.textSecondary}
+                onChange={(val) =>
+                  setThemeColors({ ...themeColors, textSecondary: val })
+                }
+              />
+              <ColorInput
+                label="Text Tertiary"
+                value={themeColors.textTertiary}
+                onChange={(val) =>
+                  setThemeColors({ ...themeColors, textTertiary: val })
+                }
+              />
+
+              <Text style={adminThemeScreenStyles.subsectionTitle}>Accent Colors</Text>
+              <ColorInput
+                label="Accent 1"
+                value={themeColors.accent1}
+                onChange={(val) =>
+                  setThemeColors({ ...themeColors, accent1: val })
+                }
+              />
+              <ColorInput
+                label="Accent 2"
+                value={themeColors.accent2}
+                onChange={(val) =>
+                  setThemeColors({ ...themeColors, accent2: val })
+                }
+              />
+              <ColorInput
+                label="Accent 3"
+                value={themeColors.accent3}
+                onChange={(val) =>
+                  setThemeColors({ ...themeColors, accent3: val })
+                }
+              />
+
+              <Text style={adminThemeScreenStyles.subsectionTitle}>UI Elements</Text>
+              <ColorInput
+                label="Border"
+                value={themeColors.border}
+                onChange={(val) =>
+                  setThemeColors({ ...themeColors, border: val })
+                }
+              />
+              <ColorInput
+                label="Border Light"
+                value={themeColors.borderLight}
+                onChange={(val) =>
+                  setThemeColors({ ...themeColors, borderLight: val })
+                }
+              />
+              <ColorInput
+                label="Shadow"
+                value={themeColors.shadow}
+                onChange={(val) =>
+                  setThemeColors({ ...themeColors, shadow: val })
+                }
+              />
+
+              <Text style={adminThemeScreenStyles.subsectionTitle}>Status Colors</Text>
+              <ColorInput
+                label="Success"
+                value={themeColors.success}
+                onChange={(val) =>
+                  setThemeColors({ ...themeColors, success: val })
+                }
+              />
+              <ColorInput
+                label="Warning"
+                value={themeColors.warning}
+                onChange={(val) =>
+                  setThemeColors({ ...themeColors, warning: val })
+                }
+              />
+              <ColorInput
+                label="Error"
+                value={themeColors.error}
+                onChange={(val) =>
+                  setThemeColors({ ...themeColors, error: val })
+                }
+              />
+              <ColorInput
+                label="Info"
+                value={themeColors.info}
+                onChange={(val) =>
+                  setThemeColors({ ...themeColors, info: val })
+                }
+              />
+            </ScrollView>
+          ) : (
+            <ScrollView style={adminThemeScreenStyles.colorsSection}>
+              <Text style={adminThemeScreenStyles.subsectionTitle}>Font Family</Text>
+              <View style={adminThemeScreenStyles.colorInput}>
+                <Text style={adminThemeScreenStyles.colorLabel}>Font Family</Text>
+                <TextInput
+                  style={adminThemeScreenStyles.colorTextInput}
+                  value={themeTypography.fontFamily}
+                  onChangeText={(val) =>
+                    setThemeTypography({ ...themeTypography, fontFamily: val })
+                  }
+                  placeholder="Inter, sans-serif"
+                />
+              </View>
+
+              <Text style={adminThemeScreenStyles.subsectionTitle}>Heading Styles</Text>
+              <TypographyInput
+                label="H1 - Heading 1"
+                fontSize={themeTypography.h1.fontSize}
+                lineHeight={themeTypography.h1.lineHeight}
+                fontWeight={themeTypography.h1.fontWeight}
+                onFontSizeChange={(val) =>
+                  setThemeTypography({
+                    ...themeTypography,
+                    h1: { ...themeTypography.h1, fontSize: val },
+                  })
+                }
+                onLineHeightChange={(val) =>
+                  setThemeTypography({
+                    ...themeTypography,
+                    h1: { ...themeTypography.h1, lineHeight: val },
+                  })
+                }
+                onFontWeightChange={(val) =>
+                  setThemeTypography({
+                    ...themeTypography,
+                    h1: { ...themeTypography.h1, fontWeight: val },
+                  })
+                }
+              />
+              <TypographyInput
+                label="H2 - Heading 2"
+                fontSize={themeTypography.h2.fontSize}
+                lineHeight={themeTypography.h2.lineHeight}
+                fontWeight={themeTypography.h2.fontWeight}
+                onFontSizeChange={(val) =>
+                  setThemeTypography({
+                    ...themeTypography,
+                    h2: { ...themeTypography.h2, fontSize: val },
+                  })
+                }
+                onLineHeightChange={(val) =>
+                  setThemeTypography({
+                    ...themeTypography,
+                    h2: { ...themeTypography.h2, lineHeight: val },
+                  })
+                }
+                onFontWeightChange={(val) =>
+                  setThemeTypography({
+                    ...themeTypography,
+                    h2: { ...themeTypography.h2, fontWeight: val },
+                  })
+                }
+              />
+              <TypographyInput
+                label="H3 - Heading 3"
+                fontSize={themeTypography.h3.fontSize}
+                lineHeight={themeTypography.h3.lineHeight}
+                fontWeight={themeTypography.h3.fontWeight}
+                onFontSizeChange={(val) =>
+                  setThemeTypography({
+                    ...themeTypography,
+                    h3: { ...themeTypography.h3, fontSize: val },
+                  })
+                }
+                onLineHeightChange={(val) =>
+                  setThemeTypography({
+                    ...themeTypography,
+                    h3: { ...themeTypography.h3, lineHeight: val },
+                  })
+                }
+                onFontWeightChange={(val) =>
+                  setThemeTypography({
+                    ...themeTypography,
+                    h3: { ...themeTypography.h3, fontWeight: val },
+                  })
+                }
+              />
+              <TypographyInput
+                label="H4 - Heading 4"
+                fontSize={themeTypography.h4.fontSize}
+                lineHeight={themeTypography.h4.lineHeight}
+                fontWeight={themeTypography.h4.fontWeight}
+                onFontSizeChange={(val) =>
+                  setThemeTypography({
+                    ...themeTypography,
+                    h4: { ...themeTypography.h4, fontSize: val },
+                  })
+                }
+                onLineHeightChange={(val) =>
+                  setThemeTypography({
+                    ...themeTypography,
+                    h4: { ...themeTypography.h4, lineHeight: val },
+                  })
+                }
+                onFontWeightChange={(val) =>
+                  setThemeTypography({
+                    ...themeTypography,
+                    h4: { ...themeTypography.h4, fontWeight: val },
+                  })
+                }
+              />
+
+              <Text style={adminThemeScreenStyles.subsectionTitle}>Text Styles</Text>
+              <TypographyInput
+                label="Body"
+                fontSize={themeTypography.body.fontSize}
+                lineHeight={themeTypography.body.lineHeight}
+                fontWeight={themeTypography.body.fontWeight}
+                onFontSizeChange={(val) =>
+                  setThemeTypography({
+                    ...themeTypography,
+                    body: { ...themeTypography.body, fontSize: val },
+                  })
+                }
+                onLineHeightChange={(val) =>
+                  setThemeTypography({
+                    ...themeTypography,
+                    body: { ...themeTypography.body, lineHeight: val },
+                  })
+                }
+                onFontWeightChange={(val) =>
+                  setThemeTypography({
+                    ...themeTypography,
+                    body: { ...themeTypography.body, fontWeight: val },
+                  })
+                }
+              />
+              <TypographyInput
+                label="Quotes"
+                fontSize={themeTypography.quotes.fontSize}
+                lineHeight={themeTypography.quotes.lineHeight}
+                fontWeight={themeTypography.quotes.fontWeight}
+                onFontSizeChange={(val) =>
+                  setThemeTypography({
+                    ...themeTypography,
+                    quotes: { ...themeTypography.quotes, fontSize: val },
+                  })
+                }
+                onLineHeightChange={(val) =>
+                  setThemeTypography({
+                    ...themeTypography,
+                    quotes: { ...themeTypography.quotes, lineHeight: val },
+                  })
+                }
+                onFontWeightChange={(val) =>
+                  setThemeTypography({
+                    ...themeTypography,
+                    quotes: { ...themeTypography.quotes, fontWeight: val },
+                  })
+                }
+              />
+              <TypographyInput
+                label="Subtext"
+                fontSize={themeTypography.subtext.fontSize}
+                lineHeight={themeTypography.subtext.lineHeight}
+                fontWeight={themeTypography.subtext.fontWeight}
+                onFontSizeChange={(val) =>
+                  setThemeTypography({
+                    ...themeTypography,
+                    subtext: { ...themeTypography.subtext, fontSize: val },
+                  })
+                }
+                onLineHeightChange={(val) =>
+                  setThemeTypography({
+                    ...themeTypography,
+                    subtext: { ...themeTypography.subtext, lineHeight: val },
+                  })
+                }
+                onFontWeightChange={(val) =>
+                  setThemeTypography({
+                    ...themeTypography,
+                    subtext: { ...themeTypography.subtext, fontWeight: val },
+                  })
+                }
+              />
+              <TypographyInput
+                label="Span"
+                fontSize={themeTypography.span.fontSize}
+                lineHeight={themeTypography.span.lineHeight}
+                fontWeight={themeTypography.span.fontWeight}
+                onFontSizeChange={(val) =>
+                  setThemeTypography({
+                    ...themeTypography,
+                    span: { ...themeTypography.span, fontSize: val },
+                  })
+                }
+                onLineHeightChange={(val) =>
+                  setThemeTypography({
+                    ...themeTypography,
+                    span: { ...themeTypography.span, lineHeight: val },
+                  })
+                }
+                onFontWeightChange={(val) =>
+                  setThemeTypography({
+                    ...themeTypography,
+                    span: { ...themeTypography.span, fontWeight: val },
+                  })
+                }
+              />
+            </ScrollView>
           )}
 
           <View style={adminThemeScreenStyles.buttonRow}>

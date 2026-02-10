@@ -9,6 +9,7 @@ import DashboardIcon from '@mui/icons-material/Dashboard';
 import ArticleIcon from '@mui/icons-material/Article';
 import PagesIcon from '@mui/icons-material/Pages';
 import PaletteIcon from '@mui/icons-material/Palette';
+import EventIcon from '@mui/icons-material/Event';
 import SettingsRoundedIcon from '@mui/icons-material/SettingsRounded';
 import { useAuth } from '@/contexts/AuthContext';
 
@@ -23,6 +24,7 @@ const mainListItems: MenuItem[] = [
   { text: 'Dashboard', icon: <DashboardIcon />, path: '/admin/dashboard' },
   { text: 'Pages', icon: <PagesIcon />, path: '/admin/pages' },
   { text: 'Blogs', icon: <ArticleIcon />, path: '/admin/blogs' },
+  { text: 'Events', icon: <EventIcon />, path: '/admin/events', adminOnly: false },
   { text: 'Theme', icon: <PaletteIcon />, path: '/admin/theme', adminOnly: true },
 ];
 

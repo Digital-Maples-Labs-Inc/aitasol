@@ -222,13 +222,13 @@ export default function HeroSliderComponent() {
         overflow: 'hidden',
         margin: 0,
         backgroundColor: '#000', // Dark background to show spacing
-        marginTop: { xs: '80px', sm: '0' }, // Add top margin on mobile to avoid header overlap
+        marginTop: 0, // No margin needed with sticky header
         '--slide-height': '100%',
-        '--slide-spacing': '10px', // Default mobile spacing
-        '--slide-size': '100%', // Default mobile full width
+        '--slide-spacing': '1rem', // Spacing between slides
+        '--slide-size': '100%', // Full width on mobile
         [theme.breakpoints.up('md')]: {
-          '--slide-spacing': '50px', // Desktop spacing
-          '--slide-size': '75%', // Desktop 75% width
+          '--slide-spacing': '2rem', // Larger spacing on desktop
+          '--slide-size': '85%', // 85% width on desktop to show adjacent slides
         },
       }}
     >
@@ -238,10 +238,10 @@ export default function HeroSliderComponent() {
         sx={{
           width: '100%',
           height: '100%',
-          backgroundColor: '#000', // Dark background to show spacing
+          backgroundColor: '#000', // Dark background behind slides
           display: 'flex',
-          alignItems: 'center', // Center vertically
-          justifyContent: { xs: 'center', md: 'flex-start' }, // Center on mobile
+          alignItems: 'center',
+          justifyContent: 'center', // Center the carousel
         }}
       >
         <Box
@@ -265,7 +265,7 @@ export default function HeroSliderComponent() {
                 sx={{
                   height: '100%',
                   backgroundImage: `url(${slide.backgroundImage})`,
-                  backgroundSize: 'cover',
+                  backgroundSize: 'cover', // Cover to fill the slide area
                   backgroundPosition: 'center',
                   backgroundRepeat: 'no-repeat',
                   display: 'flex',
@@ -274,24 +274,11 @@ export default function HeroSliderComponent() {
                   position: 'relative',
                   opacity: slideOpacity,
                   transition: 'opacity 0.5s ease-in-out',
-                  borderRadius: '1.8rem',
+                  borderRadius: 0, // No rounded corners
                   overflow: 'hidden',
-                  // Add gradient fade effect
-                  '&::before': {
-                    content: '""',
-                    position: 'absolute',
-                    top: 0,
-                    left: 0,
-                    right: 0,
-                    bottom: 0,
-                    background: isSelected
-                      // Lighter gradient (0.5 max) for better visibility
-                      ? 'linear-gradient(to right, rgba(0,0,0,0.5) 0%, rgba(0,0,0,0.3) 20%, rgba(0,0,0,0.3) 80%, rgba(0,0,0,0.5) 100%)'
-                      : 'linear-gradient(to right, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0.5) 20%, rgba(0,0,0,0.5) 80%, rgba(0,0,0,0.6) 100%)',
-                    zIndex: 1,
-                    transition: 'background 0.5s ease-in-out',
-                    borderRadius: '1.8rem',
-                  },
+                  // Soften edges to blend images
+                  maskImage: 'linear-gradient(to right, transparent, black 10%, black 90%, transparent)',
+                  WebkitMaskImage: 'linear-gradient(to right, transparent, black 10%, black 90%, transparent)',
                 }}
               >
                 {/* Edit Background Button */}
@@ -326,113 +313,7 @@ export default function HeroSliderComponent() {
                   </Box>
                 )}
 
-                <Box
-                  sx={{
-                    position: 'absolute',
-                    top: 0,
-                    left: 0,
-                    right: 0,
-                    bottom: 0,
-                    // Lighter solid overlay (0.35)
-                    backgroundColor: isSelected ? 'rgba(0, 0, 0, 0.35)' : 'rgba(0, 0, 0, 0.65)',
-                    zIndex: 2,
-                    transition: 'background-color 0.5s ease-in-out',
-                  }}
-                />
-                <Container
-                  sx={{
-                    position: 'relative',
-                    zIndex: 3,
-                    height: '100%',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    paddingTop: { xs: '150px', sm: '120px' }, // Add more top padding on mobile to avoid header
-                  }}
-                >
-                  <Stack
-                    spacing={{ xs: 2, md: 3 }}
-                    sx={{
-                      alignItems: 'center',
-                      textAlign: 'center',
-                      color: 'white',
-                      maxWidth: { xs: '95%', sm: '80%', md: '70%' },
-                      paddingTop: { xs: '20px', sm: '0' }, // Extra padding on mobile
-                    }}
-                  >
-                    {index === 0 ? (
-                      <>
-                        <EditableTextMUI
-                          value={heroTitleSection.content}
-                          onSave={(value) => updateSectionContent(heroTitleSection.id, value)}
-                          variant="h1"
-                          sx={{
-                            fontSize: { xs: '1.75rem', sm: '2.5rem', md: '4.5rem' },
-                            fontWeight: 700,
-                            color: 'white',
-                            textShadow: '2px 2px 4px rgba(0,0,0,0.5)',
-                            mb: { xs: 1, md: 2 },
-                            lineHeight: { xs: 1.2, md: 1.3 },
-                          }}
-                        />
-                        <EditableTextMUI
-                          value={heroSubtitleSection.content}
-                          onSave={(value) => updateSectionContent(heroSubtitleSection.id, value)}
-                          variant="h4"
-                          sx={{
-                            fontSize: { xs: '1rem', sm: '1.25rem', md: '1.75rem' },
-                            fontWeight: 400,
-                            color: 'white',
-                            textShadow: '1px 1px 2px rgba(0,0,0,0.5)',
-                            lineHeight: { xs: 1.3, md: 1.4 },
-                          }}
-                        />
-                      </>
-                    ) : (
-                      <>
-                        <Typography
-                          variant="h1"
-                          sx={{
-                            fontSize: { xs: '1.75rem', sm: '2.5rem', md: '4.5rem' },
-                            fontWeight: 700,
-                            color: 'white',
-                            textShadow: '2px 2px 4px rgba(0,0,0,0.5)',
-                            mb: { xs: 1, md: 2 },
-                            lineHeight: { xs: 1.2, md: 1.3 },
-                          }}
-                        >
-                          {slide.title}
-                        </Typography>
-                        <Typography
-                          variant="h4"
-                          sx={{
-                            fontSize: { xs: '1rem', sm: '1.25rem', md: '1.75rem' },
-                            fontWeight: 400,
-                            color: 'white',
-                            textShadow: '1px 1px 2px rgba(0,0,0,0.5)',
-                            mb: { xs: 1, md: 2 },
-                            lineHeight: { xs: 1.3, md: 1.4 },
-                          }}
-                        >
-                          {slide.subtitle}
-                        </Typography>
-                      </>
-                    )}
-                    <Typography
-                      variant="body1"
-                      sx={{
-                        fontSize: { xs: '0.875rem', sm: '1rem', md: '1.25rem' },
-                        color: 'white',
-                        textShadow: '1px 1px 2px rgba(0,0,0,0.5)',
-                        maxWidth: '600px',
-                        lineHeight: { xs: 1.4, md: 1.6 },
-                        px: { xs: 1, md: 0 },
-                      }}
-                    >
-                      {slide.description}
-                    </Typography>
-                  </Stack>
-                </Container>
+                {/* No text overlay - images contain their own text */}
               </Box>
             );
           })}

@@ -10,11 +10,13 @@ import { ThemeProvider } from '@/contexts/ThemeContext';
 import { EditingModeProvider } from '@/contexts/EditingModeContext';
 import GoogleAnalytics from '@/components/GoogleAnalytics';
 import RetellChatWidget from '@/components/RetellChatWidget';
+import { PopupAdvert } from '@/components/PopupAdvert';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { Platform } from 'react-native';
 import HomeScreen from '@/screens/HomeScreen';
 import BlogListScreen from '@/screens/BlogListScreen';
+import EventsScreen from '@/screens/EventsScreen';
 import { BlogDetailScreen } from '@/screens/BlogDetailScreen';
 import LoginScreen from '@/screens/LoginScreen';
 import AboutScreen from '@/screens/AboutScreen';
@@ -29,6 +31,7 @@ import { AdminDashboardScreen } from '@/screens/AdminDashboardScreen';
 import AdminPagesWrapper from '@/screens/admin-dashboard/components/AdminPagesWrapper';
 import AdminBlogsWrapper from '@/screens/admin-dashboard/components/AdminBlogsWrapper';
 import AdminThemeWrapper from '@/screens/admin-dashboard/components/AdminThemeWrapper';
+import AdminEventsWrapper from '@/screens/admin-dashboard/components/AdminEventsWrapper';
 
 const Stack = createNativeStackNavigator();
 
@@ -53,6 +56,7 @@ const linking = {
       AdminPages: '/admin/pages',
       AdminBlogs: '/admin/blogs',
       AdminTheme: '/admin/theme',
+      AdminEvents: '/admin/events',
     },
   },
 };
@@ -63,6 +67,7 @@ export default function App() {
       <EditingModeProvider>
         <ThemeProvider>
           <GoogleAnalytics />
+          <PopupAdvert />
           {/* <RetellChatWidget /> */}
           <NavigationContainer linking={Platform.OS === 'web' ? linking : undefined}>
             <StatusBar style="auto" />
@@ -135,6 +140,14 @@ export default function App() {
               <Stack.Screen
                 name="AdminTheme"
                 component={AdminThemeWrapper}
+              />
+              <Stack.Screen
+                name="AdminEvents"
+                component={AdminEventsWrapper}
+              />
+              <Stack.Screen
+                name="Events"
+                component={EventsScreen}
               />
             </Stack.Navigator>
           </NavigationContainer>

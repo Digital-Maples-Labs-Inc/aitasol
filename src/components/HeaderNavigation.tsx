@@ -26,13 +26,13 @@ const StyledToolbar = styled(Toolbar)(({ theme }) => ({
   alignItems: 'center',
   justifyContent: 'center',
   flexShrink: 0,
-  borderRadius: `calc(${theme.shape.borderRadius}px + 8px)`,
-  backdropFilter: 'blur(24px)',
-  border: '1px solid',
-  borderColor: alpha(theme.palette.secondary.main, 0.1),
-  background: alpha(theme.palette.primary.main, 0.9), // Subtle Yellow
-  boxShadow: (theme.vars || theme).shadows[1],
-  padding: '2px 12px',
+  borderRadius: 0,
+  backdropFilter: 'none',
+  border: 'none',
+  borderColor: 'transparent',
+  background: theme.palette.primary.main, // Solid Yellow
+  boxShadow: 'none',
+  padding: '8px 12px',
 }));
 
 export default function HeaderNavigation() {
@@ -76,13 +76,14 @@ export default function HeaderNavigation() {
 
   return (
     <AppBar
-      position="fixed"
+      position="sticky"
       enableColorOnDark
       sx={{
-        boxShadow: 0,
-        bgcolor: 'transparent',
+        top: 0,
+        zIndex: 1000,
+        boxShadow: 2,
+        bgcolor: 'primary.main',
         backgroundImage: 'none',
-        mt: 'calc(var(--template-frame-height, 0px) + 28px)',
       }}
     >
       <Container maxWidth="lg">
@@ -106,7 +107,7 @@ export default function HeaderNavigation() {
 
           {/* RIGHT: Navigation Links (Desktop Only) */}
           <Box sx={{ display: { xs: 'none', md: 'flex' }, alignItems: 'center', gap: 2 }}>
-            {['Home', 'About', 'Services', 'Testimonials', 'Blog', 'Contact'].map((item) => (
+            {['Home', 'About', 'Services', 'Events', 'Testimonials', 'Blog', 'Contact'].map((item) => (
               <Button
                 key={item}
                 variant="text"
@@ -217,6 +218,12 @@ export default function HeaderNavigation() {
             sx={{ fontSize: '0.95rem', fontWeight: 500 }}
           >
             &nbsp;&nbsp;→ Immigration Support
+          </MenuItem>
+          <MenuItem
+            onClick={() => navigateTo('/events')}
+            sx={{ fontSize: '1rem', fontWeight: 600 }}
+          >
+            Events
           </MenuItem>
           <MenuItem
             onClick={() => navigateTo('/testimonials')}
