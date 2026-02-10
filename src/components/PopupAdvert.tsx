@@ -39,10 +39,10 @@ export const PopupAdvert: React.FC = () => {
     };
 
     const handleImageClick = () => {
-        // Hardcoded link as requested by user
-        const targetUrl = 'https://us06web.zoom.us/meeting/register/NjjjD9TGQOepHvf70xGoFA';
-        window.open(targetUrl, '_blank', 'noopener,noreferrer');
-        handleClose();
+        if (settings?.linkUrl) {
+            window.open(settings.linkUrl, '_blank', 'noopener,noreferrer');
+            handleClose();
+        }
     };
 
     if (!settings) return null;
