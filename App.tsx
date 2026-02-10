@@ -11,6 +11,7 @@ import { EditingModeProvider } from '@/contexts/EditingModeContext';
 import GoogleAnalytics from '@/components/GoogleAnalytics';
 import RetellChatWidget from '@/components/RetellChatWidget';
 import { PopupAdvert } from '@/components/PopupAdvert';
+import AppTheme from '@/mui-theme/AppTheme';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { Platform } from 'react-native';
@@ -66,91 +67,93 @@ export default function App() {
     <AuthProvider>
       <EditingModeProvider>
         <ThemeProvider>
-          <GoogleAnalytics />
-          <PopupAdvert />
-          {/* <RetellChatWidget /> */}
-          <NavigationContainer linking={Platform.OS === 'web' ? linking : undefined}>
-            <StatusBar style="auto" />
-            <Stack.Navigator
-              initialRouteName="Home"
-              screenOptions={{
-                headerShown: false, // Hide React Navigation header, use our custom header
-              }}
-            >
-              <Stack.Screen
-                name="Home"
-                component={HomeScreen}
-              />
-              <Stack.Screen
-                name="About"
-                component={AboutScreen}
-              />
-              <Stack.Screen
-                name="Services"
-                component={ServicesScreen}
-              />
-              <Stack.Screen
-                name="ServiceDetail"
-                component={ServiceDetailScreen}
-              />
-              <Stack.Screen
-                name="Testimonials"
-                component={TestimonialsScreen}
-              />
-              <Stack.Screen
-                name="Blog"
-                component={BlogListScreen}
-              />
-              <Stack.Screen
-                name="BlogDetail"
-                component={BlogDetailScreen}
-              />
-              <Stack.Screen
-                name="Contact"
-                component={ContactScreen}
-              />
-              <Stack.Screen
-                name="Privacy"
-                component={PrivacyScreen}
-              />
-              <Stack.Screen
-                name="Terms"
-                component={TermsScreen}
-              />
-              <Stack.Screen
-                name="FAQ"
-                component={FAQScreen}
-              />
-              <Stack.Screen
-                name="DMLabs"
-                component={LoginScreen}
-              />
-              <Stack.Screen
-                name="AdminDashboard"
-                component={AdminDashboardScreen}
-              />
-              <Stack.Screen
-                name="AdminPages"
-                component={AdminPagesWrapper}
-              />
-              <Stack.Screen
-                name="AdminBlogs"
-                component={AdminBlogsWrapper}
-              />
-              <Stack.Screen
-                name="AdminTheme"
-                component={AdminThemeWrapper}
-              />
-              <Stack.Screen
-                name="AdminEvents"
-                component={AdminEventsWrapper}
-              />
-              <Stack.Screen
-                name="Events"
-                component={EventsScreen}
-              />
-            </Stack.Navigator>
-          </NavigationContainer>
+          <AppTheme>
+            <GoogleAnalytics />
+            <PopupAdvert />
+            {/* <RetellChatWidget /> */}
+            <NavigationContainer linking={Platform.OS === 'web' ? linking : undefined}>
+              <StatusBar style="auto" />
+              <Stack.Navigator
+                initialRouteName="Home"
+                screenOptions={{
+                  headerShown: false, // Hide React Navigation header, use our custom header
+                }}
+              >
+                <Stack.Screen
+                  name="Home"
+                  component={HomeScreen}
+                />
+                <Stack.Screen
+                  name="About"
+                  component={AboutScreen}
+                />
+                <Stack.Screen
+                  name="Services"
+                  component={ServicesScreen}
+                />
+                <Stack.Screen
+                  name="ServiceDetail"
+                  component={ServiceDetailScreen}
+                />
+                <Stack.Screen
+                  name="Testimonials"
+                  component={TestimonialsScreen}
+                />
+                <Stack.Screen
+                  name="Blog"
+                  component={BlogListScreen}
+                />
+                <Stack.Screen
+                  name="BlogDetail"
+                  component={BlogDetailScreen}
+                />
+                <Stack.Screen
+                  name="Contact"
+                  component={ContactScreen}
+                />
+                <Stack.Screen
+                  name="Privacy"
+                  component={PrivacyScreen}
+                />
+                <Stack.Screen
+                  name="Terms"
+                  component={TermsScreen}
+                />
+                <Stack.Screen
+                  name="FAQ"
+                  component={FAQScreen}
+                />
+                <Stack.Screen
+                  name="DMLabs"
+                  component={LoginScreen}
+                />
+                <Stack.Screen
+                  name="AdminDashboard"
+                  component={AdminDashboardScreen}
+                />
+                <Stack.Screen
+                  name="AdminPages"
+                  component={AdminPagesWrapper}
+                />
+                <Stack.Screen
+                  name="AdminBlogs"
+                  component={AdminBlogsWrapper}
+                />
+                <Stack.Screen
+                  name="AdminTheme"
+                  component={AdminThemeWrapper}
+                />
+                <Stack.Screen
+                  name="AdminEvents"
+                  component={AdminEventsWrapper}
+                />
+                <Stack.Screen
+                  name="Events"
+                  component={EventsScreen}
+                />
+              </Stack.Navigator>
+            </NavigationContainer>
+          </AppTheme>
         </ThemeProvider>
       </EditingModeProvider>
     </AuthProvider>
