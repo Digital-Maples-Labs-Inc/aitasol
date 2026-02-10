@@ -30,8 +30,8 @@ const StyledToolbar = styled(Toolbar)(({ theme }) => ({
   backdropFilter: 'none',
   border: 'none',
   borderColor: 'transparent',
-  background: theme.palette.primary.main, // Solid Yellow
-  boxShadow: 'none',
+  background: 'rgba(255, 255, 255, 0.95)', // White
+  boxShadow: '0 1px 3px rgba(0,0,0,0.1)',
   padding: '8px 12px',
 }));
 
@@ -82,7 +82,7 @@ export default function HeaderNavigation() {
         top: 0,
         zIndex: 1000,
         boxShadow: 2,
-        bgcolor: 'primary.main',
+        bgcolor: 'background.paper',
         backgroundImage: 'none',
       }}
     >
