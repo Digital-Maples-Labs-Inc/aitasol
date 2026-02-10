@@ -34,7 +34,15 @@ service firebase.storage {
       // Temporarily allow all authenticated users for testing
       // TODO: Change back to isEditor() after confirming it works
       allow write: if request.auth != null && 
-        request.resource.size < 5 * 1024 * 1024 && // 5MB limit (logos are smaller)
+        request.resource.size < 5 * 1024 * 1024 && // 5MB limit
+        request.resource.contentType.matches('image/.*');
+    }
+
+    // Popup adverts - public read, authenticated write
+    match /popups/{allPaths=**} {
+      allow read: if true;
+      allow write: if request.auth != null && 
+        request.resource.size < 5 * 1024 * 1024 && // 5MB limit
         request.resource.contentType.matches('image/.*');
     }
     
