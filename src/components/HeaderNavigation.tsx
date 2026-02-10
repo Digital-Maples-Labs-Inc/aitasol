@@ -86,68 +86,68 @@ export default function HeaderNavigation() {
         backgroundImage: 'none',
       }}
     >
-      <Container maxWidth="lg">
-        <StyledToolbar variant="dense" disableGutters>
-          {/* LEFT: Logo */}
-          <Box
-            onClick={() => navigateTo('/')}
-            sx={{
-              cursor: 'pointer',
-              display: 'flex',
-              alignItems: 'center',
-              mr: 3,
-              filter: 'drop-shadow(0px 2px 4px rgba(0,0,0,0.25))', // Added shadow for visibility
-            }}
-          >
-            <SitemarkIcon />
-          </Box>
 
-          {/* SPACER */}
-          <Box sx={{ flexGrow: 1 }} />
+      <StyledToolbar variant="dense" disableGutters>
+        {/* LEFT: Logo */}
+        <Box
+          onClick={() => navigateTo('/')}
+          sx={{
+            cursor: 'pointer',
+            display: 'flex',
+            alignItems: 'center',
+            mr: 3,
+            filter: 'drop-shadow(0px 2px 4px rgba(0,0,0,0.25))', // Added shadow for visibility
+          }}
+        >
+          <SitemarkIcon />
+        </Box>
 
-          {/* RIGHT: Navigation Links (Desktop Only) */}
-          <Box sx={{ display: { xs: 'none', md: 'flex' }, alignItems: 'center', gap: 2 }}>
-            {['Home', 'About', 'Services', 'Events', 'Testimonials', 'Blog', 'Contact'].map((item) => (
-              <Button
-                key={item}
-                variant="text"
-                onClick={() => navigateTo(item === 'Home' ? '/' : `/${item.toLowerCase()}`)}
-                sx={{
-                  color: '#1F2937', // Dark text for contrast against white background
-                  fontWeight: 600,
-                  fontSize: '0.9rem',
-                  textTransform: 'uppercase',
-                  letterSpacing: '0.05em',
-                  '&:hover': {
-                    color: '#000000',
-                    backgroundColor: 'rgba(0, 0, 0, 0.04)'
-                  },
-                }}
-              >
-                {item}
-              </Button>
-            ))}
-          </Box>
+        {/* SPACER */}
+        <Box sx={{ flexGrow: 1 }} />
 
-          {/* RIGHT Actions (Editing Mode) */}
-          {showEditingModeSwitcher && (
-            <Box sx={{ display: { xs: 'none', md: 'flex' }, ml: 2 }}>
-              <SelectContent />
-            </Box>
-          )}
-
-          {/* MOBILE: Menu Button */}
-          <Box sx={{ display: { xs: 'flex', md: 'none' }, ml: 'auto' }}>
-            <IconButton
-              aria-label="Menu button"
-              onClick={toggleDrawer(true)}
-              sx={{ color: '#1F2937' }}
+        {/* RIGHT: Navigation Links (Desktop Only) */}
+        <Box sx={{ display: { xs: 'none', md: 'flex' }, alignItems: 'center', gap: 2 }}>
+          {['Home', 'About', 'Services', 'Events', 'Testimonials', 'Blog', 'Contact'].map((item) => (
+            <Button
+              key={item}
+              variant="text"
+              onClick={() => navigateTo(item === 'Home' ? '/' : `/${item.toLowerCase()}`)}
+              sx={{
+                color: '#1F2937', // Dark text for contrast against white background
+                fontWeight: 600,
+                fontSize: '0.9rem',
+                textTransform: 'uppercase',
+                letterSpacing: '0.05em',
+                '&:hover': {
+                  color: '#000000',
+                  backgroundColor: 'rgba(0, 0, 0, 0.04)'
+                },
+              }}
             >
-              <MenuIcon />
-            </IconButton>
+              {item}
+            </Button>
+          ))}
+        </Box>
+
+        {/* RIGHT Actions (Editing Mode) */}
+        {showEditingModeSwitcher && (
+          <Box sx={{ display: { xs: 'none', md: 'flex' }, ml: 2 }}>
+            <SelectContent />
           </Box>
-        </StyledToolbar>
-      </Container>
+        )}
+
+        {/* MOBILE: Menu Button */}
+        <Box sx={{ display: { xs: 'flex', md: 'none' }, ml: 'auto' }}>
+          <IconButton
+            aria-label="Menu button"
+            onClick={toggleDrawer(true)}
+            sx={{ color: '#1F2937' }}
+          >
+            <MenuIcon />
+          </IconButton>
+        </Box>
+      </StyledToolbar>
+
 
       {/* Mobile Drawer - Outside StyledToolbar */}
       <Drawer
