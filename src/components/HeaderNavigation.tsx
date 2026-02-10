@@ -113,12 +113,15 @@ export default function HeaderNavigation() {
                 variant="text"
                 onClick={() => navigateTo(item === 'Home' ? '/' : `/${item.toLowerCase()}`)}
                 sx={{
-                  color: 'text.primary', // Dark text for contrast
+                  color: '#1F2937', // Dark text for contrast against white background
                   fontWeight: 600,
                   fontSize: '0.9rem',
                   textTransform: 'uppercase',
                   letterSpacing: '0.05em',
-                  '&:hover': { color: 'white' }, // White on hover against yellow
+                  '&:hover': {
+                    color: '#000000',
+                    backgroundColor: 'rgba(0, 0, 0, 0.04)'
+                  },
                 }}
               >
                 {item}
@@ -135,7 +138,11 @@ export default function HeaderNavigation() {
 
           {/* MOBILE: Menu Button */}
           <Box sx={{ display: { xs: 'flex', md: 'none' }, ml: 'auto' }}>
-            <IconButton aria-label="Menu button" onClick={toggleDrawer(true)}>
+            <IconButton
+              aria-label="Menu button"
+              onClick={toggleDrawer(true)}
+              sx={{ color: '#1F2937' }}
+            >
               <MenuIcon />
             </IconButton>
           </Box>
